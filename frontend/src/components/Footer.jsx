@@ -44,7 +44,7 @@ const Footer = () => {
         {/* Copyright */}
         <p className="flex items-center gap-1 text-sm text-neutral-500">
           <FaRegCopyright className="h-4 w-4" />
-           2026 InvenFact Pro. Todos los derechos reservados.
+           2026 🚜 AgrilMarket. Todos los derechos reservados.
         </p>
       </div>
     </footer>

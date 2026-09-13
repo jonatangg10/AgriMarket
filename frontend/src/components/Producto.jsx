@@ -50,6 +50,9 @@ const Producto = ({ producto, agregarAlCarrito }) => {
             </h3>
           </Link>
           <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-xl font-black text-gray-900">{producto.vendedor_nombres} {producto.vendedor_apellidos}</span>
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
             <span className="text-xl font-black text-gray-900">${producto.precio.toFixed(2)}</span>
           </div>
         </div>

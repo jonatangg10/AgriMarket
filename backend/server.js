@@ -257,41 +257,23 @@ db.serialize(() => {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
           `);
 
-          const productosEjemplo = [
-            ['Camiseta Android Studio', 4, 1, 29.99, '/images/camisaandroidstudio.jpg', 15, 'Nuevo', 'Android Dev'],
-            ['Taza Kotlin', 4, 1, 12.50, '/images/tazakotlin.jpg', 8, '-10%', 'Android Dev'],
-            ['Gorra MongoDB', 4, 1, 19.00, '/images/gorramongodb.jpg', 20, '', 'Bases de Datos'],
-            ['Sticker PostgreSQL', 4, 1, 3.99, '/images/CSS.jpeg', 50, 'Nuevo', 'Bases de Datos'],
-            ['Camiseta AWS', 4, 1, 34.99, '/images/camisaaws.jpg', 18, '-15%', 'Cloud Computing'],
-            ['Gorra Azure', 4, 1, 22.00, '/images/Gorra Node.jpg', 15, '', 'Cloud Computing'],
-            ['Taza Docker', 4, 1, 16.50, '/images/tazadocker.png', 25, 'Nuevo', 'Contenedores'],
-            ['Gorra Kubernetes', 4, 1, 23.99, '/images/gorrakubernetes.jpg', 12, '-20%', 'Orquestación'],
-            ['Gorra Python', 4, 1, 21.99, '/images/gorrapython.jpg', 15, '', 'Data Science'],
-            ['Taza Pandas', 4, 1, 15.75, '/images/Taza JavaScript.jpeg', 22, 'Nuevo', 'Data Science'],
-            ['Camiseta React', 4, 1, 28.99, '/images/react.jpeg', 25, '-10%', 'Desarrollo Web'],
-            ['Sticker JavaScript', 4, 1, 3.25, '/images/CSS.jpeg', 60, '', 'Desarrollo Web'],
-            ['Tableta Gráfica', 4, 1, 89.99, '/images/php.jpg', 8, 'Oferta', 'Diseño Gráfico'],
-            ['Poster Tipografía', 4, 1, 12.99, '/images/sql.jpg', 30, 'Nuevo', 'Diseño Gráfico'],
-            ['Mousepad Figma', 4, 1, 19.99, '/images/react.jpeg', 15, '', 'Diseño UI/UX'],
-            ['Taza Adobe XD', 4, 1, 14.50, '/images/Taza JavaScript.jpeg', 20, 'Nuevo', 'Diseño UI/UX'],
-            ['Camiseta CSS', 4, 1, 24.99, '/images/camisacss.jpg', 18, 'Nuevo', 'Frontend'],
-            ['Camiseta TensorFlow', 4, 1, 32.99, '/images/php.jpg', 12, '-20%', 'Inteligencia Artificial'],
-            ['Gorra ChatGPT', 4, 1, 25.99, '/images/gorrachatgpt.jpg', 15, '', 'Inteligencia Artificial'],
-            ['Taza GPT-4', 4, 1, 18.99, '/images/Taza JavaScript.jpeg', 18, '', 'LLMs'],
-            ['Camiseta Bard', 4, 1, 29.99, '/images/Gorra Node.jpg', 10, 'Nuevo', 'LLMs'],
-            ['Libro ML', 4, 1, 22.99, '/images/php.jpg', 12, '-15%', 'Machine Learning'],
-            ['Sticker Scikit', 4, 1, 3.75, '/images/sql.jpg', 35, '', 'Machine Learning'],
-            ['Camiseta Kubernetes', 4, 1, 31.99, '/images/camisakubernetes.png', 10, '-20%', 'Orquestación'],
-            ['Gorra Docker Swarm', 4, 1, 23.99, '/images/gorradocker.jpg', 12, '', 'Contenedores'],
-            ['Taza "Hello World"', 4, 1, 11.99, '/images/Gorra Node.jpg', 30, 'Oferta', 'Programación'],
-            ['Camiseta Código', 4, 1, 26.99, '/images/php.jpg', 18, 'Nuevo', 'Programación'],
-            ['Camiseta TCP/IP', 4, 1, 28.99, '/images/CSS.jpeg', 12, '-15%', 'Redes'],
-            ['Taza Firewall', 4, 1, 16.99, '/images/tazafirewall.jpg', 20, '', 'Redes'],
-            ['Taza Cloud', 4, 1, 15.99, '/images/tazacloud.jpg', 25, '', 'Servicios Cloud'],
-            ['Gorra Serverless', 4, 1, 22.99, '/images/gorraserverless.jpg', 15, 'Nuevo', 'Servicios Cloud'],
-            ['Camiseta NGINX', 4, 1, 27.99, '/images/camisanginex.jpg', 12, '-10%', 'Servidores'],
-            ['Sticker Apache', 4, 1, 3.50, '/images/stikerapache.png', 40, '', 'Servidores']
-          ];
+            const productosEjemplo = [
+              ['Tomates Orgánicos', 4, 1, 3.50, '/images/fondo.png', 100, 'Fresco', 'Hortalizas'],
+              ['Lechuga Hidropónica', 4, 1, 2.00, '/images/fondo.png', 80, 'Nuevo', 'Hortalizas'],
+              ['Mango Azúcar', 4, 1, 1.50, '/images/fondo.png', 120, 'Oferta', 'Frutas'],
+              ['Plátano Verde', 4, 1, 1.20, '/images/fondo.png', 200, '', 'Frutas'],
+              ['Papa Criolla', 4, 1, 2.80, '/images/fondo.png', 150, 'Fresco', 'Tubérculos'],
+              ['Yuca Fresca', 4, 1, 2.50, '/images/fondo.png', 90, '', 'Tubérculos'],
+              ['Huevos de Campo (docena)', 4, 1, 4.00, '/images/fondo.png', 60, 'Nuevo', 'Proteína'],
+              ['Queso Campesino', 4, 1, 5.50, '/images/fondo.png', 40, 'Oferta', 'Lácteos'],
+              ['Leche Orgánica (litro)', 4, 1, 3.00, '/images/fondo.png', 70, '', 'Lácteos'],
+              ['Miel Artesanal', 4, 1, 6.00, '/images/fondo.png', 30, 'Nuevo', 'Procesados Naturales'],
+              ['Café Especial', 4, 1, 8.50, '/images/fondo.png', 50, '-10%', 'Procesados Naturales'],
+              ['Aguacate Hass', 4, 1, 2.20, '/images/fondo.png', 100, 'Fresco', 'Frutas'],
+              ['Naranja Dulce', 4, 1, 1.80, '/images/fondo.png', 120, '', 'Frutas'],
+              ['Frijol Rojo', 4, 1, 3.00, '/images/fondo.png', 80, 'Nuevo', 'Granos'],
+              ['Maíz Amarillo', 4, 1, 2.50, '/images/fondo.png', 90, '', 'Granos'],
+            ];
 
           productosEjemplo.forEach(p => {
 
@@ -388,9 +370,12 @@ app.get('/api/productos/paginados', (req, res) => {
       p.stock,
       p.etiqueta,
       p.categoria,
-      e.nombre AS estado
+      e.nombre AS estado,
+      u.nombres AS vendedor_nombres,
+      u.apellidos AS vendedor_apellidos
     FROM productos p
     JOIN estado e ON p.estado_id = e.id
+    JOIN usuarios u ON p.usuario_id = u.id
     WHERE p.estado_id = 1
   `;
 
@@ -441,6 +426,7 @@ app.get('/api/productos/paginados', (req, res) => {
     });
   });
 });
+
 
 // Actualizar stock al comprar
 app.put('/api/productos/:id/stock', (req, res) => {

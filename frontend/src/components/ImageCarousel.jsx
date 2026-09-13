@@ -54,7 +54,7 @@ function ImageCarousel() {
         {/* Slide 1 - SonarQube */}
         <div className="relative h-80 md:h-[690px] w-full">
           <img 
-            src="/images/sonarque.png" 
+            src="/images/fondo.png" 
             alt="SonarQube Code Quality" 
             className="object-cover w-full h-full"
           />
@@ -73,7 +73,7 @@ function ImageCarousel() {
         {/* Slide 2 - Grafana Cloud */}
         <div className="relative h-80 md:h-[690px] w-full">
           <img 
-            src="/images/grafancloud.png" 
+            src="/images/fondo.png" 
             alt="Grafana Cloud Monitoring" 
             className="object-cover w-full h-full"
           />
@@ -92,7 +92,7 @@ function ImageCarousel() {
         {/* Slide 3 - Oracle Linux (Existente) */}
         <div className="relative h-80 md:h-[690px] w-full">
           <img 
-            src="/images/oracle-linux.png" 
+            src="/images/fondo.png" 
             alt="Oracle Linux Support" 
             className="object-cover w-full h-full"
           />
@@ -111,7 +111,7 @@ function ImageCarousel() {
         {/* Slide 4 - Azure Pipelines (Existente) */}
         <div className="relative h-80 md:h-[690px] w-full">
           <img 
-            src="/images/azure-pipelines.png" 
+            src="/images/fondo.png" 
             alt="Azure DevOps Pipelines" 
             className="object-cover w-full h-full"
           />
@@ -130,7 +130,7 @@ function ImageCarousel() {
         {/* Slide 5 - HashiCorp Vault */}
         <div className="relative h-80 md:h-[690px] w-full">
           <img 
-            src="/images/vaulthaschicorp.jpg" 
+            src="/images/fondo.png" 
             alt="HashiCorp Vault" 
             className="object-cover w-full h-full"
           />
@@ -149,7 +149,7 @@ function ImageCarousel() {
         {/* Slide 6 - Power Automate */}
         <div className="relative h-80 md:h-[690px] w-full">
           <img 
-            src="/images/powerautomate.jpg" 
+            src="/images/fondo.png" 
             alt="Microsoft Power Automate" 
             className="object-cover w-full h-full"
           />

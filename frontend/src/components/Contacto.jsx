@@ -8,7 +8,7 @@ function Contact() {
             <div className="p-8 lg:p-12 flex flex-col justify-center">
               <div className="mb-8">
                 <h2 className="text-3xl font-bold text-gray-800 text-center mb-3">
-                  🛍️ InvenFact Pro
+                  🚜 AgrilMarket
                 </h2>
                 <p className="text-gray-600 text-center leading-relaxed">
                   Completa el siguiente formulario y uno de nuestros asesores

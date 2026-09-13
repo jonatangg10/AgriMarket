@@ -3,12 +3,12 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 
 const logos = [
-  "/jenkins.svg",
-  "/azuredevops.svg",
-  "/grafana.png",
-  "/banner_sonarque.png",
-  "/banner_elastic.png",
-  "/linux.png",
+  "vendendores/fondo.png",
+  "vendendores/fondo.png",
+  "vendendores/fondo.png",
+  "vendendores/fondo.png",
+  "vendendores/fondo.png",
+  "vendendores/fondo.png",
 ];
 
 const LogoCarousel = () => {
