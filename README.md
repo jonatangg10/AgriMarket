@@ -1,4 +1,4 @@
-# E‑Commerce Frontend (Proyecto Personal)
+# AgrilMarket (Proyecto Universidad)
 
 ___
 
