@@ -53,7 +53,7 @@ const Producto = ({ producto, agregarAlCarrito }) => {
             <span className="text-xl font-black text-gray-900">{producto.vendedor_nombres} {producto.vendedor_apellidos}</span>
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-xl font-black text-gray-900">${producto.precio.toFixed(2)}</span>
+            <span className="text-xl font-black text-gray-900">${producto.precio}</span>
           </div>
         </div>
 

@@ -258,22 +258,23 @@ db.serialize(() => {
           `);
 
             const productosEjemplo = [
-              ['Tomates Orgánicos', 4, 1, 3.50, '/images/fondo.png', 100, 'Fresco', 'Hortalizas'],
-              ['Lechuga Hidropónica', 4, 1, 2.00, '/images/fondo.png', 80, 'Nuevo', 'Hortalizas'],
-              ['Mango Azúcar', 4, 1, 1.50, '/images/fondo.png', 120, 'Oferta', 'Frutas'],
-              ['Plátano Verde', 4, 1, 1.20, '/images/fondo.png', 200, '', 'Frutas'],
-              ['Papa Criolla', 4, 1, 2.80, '/images/fondo.png', 150, 'Fresco', 'Tubérculos'],
-              ['Yuca Fresca', 4, 1, 2.50, '/images/fondo.png', 90, '', 'Tubérculos'],
-              ['Huevos de Campo (docena)', 4, 1, 4.00, '/images/fondo.png', 60, 'Nuevo', 'Proteína'],
-              ['Queso Campesino', 4, 1, 5.50, '/images/fondo.png', 40, 'Oferta', 'Lácteos'],
-              ['Leche Orgánica (litro)', 4, 1, 3.00, '/images/fondo.png', 70, '', 'Lácteos'],
-              ['Miel Artesanal', 4, 1, 6.00, '/images/fondo.png', 30, 'Nuevo', 'Procesados Naturales'],
-              ['Café Especial', 4, 1, 8.50, '/images/fondo.png', 50, '-10%', 'Procesados Naturales'],
-              ['Aguacate Hass', 4, 1, 2.20, '/images/fondo.png', 100, 'Fresco', 'Frutas'],
-              ['Naranja Dulce', 4, 1, 1.80, '/images/fondo.png', 120, '', 'Frutas'],
-              ['Frijol Rojo', 4, 1, 3.00, '/images/fondo.png', 80, 'Nuevo', 'Granos'],
-              ['Maíz Amarillo', 4, 1, 2.50, '/images/fondo.png', 90, '', 'Granos'],
+              ['Tomates Orgánicos', 4, 1, 3500, '/images/fondo.png', 100, 'Fresco', 'Hortalizas'],
+              ['Lechuga Hidropónica', 4, 1, 2000, '/images/fondo.png', 80, 'Nuevo', 'Hortalizas'],
+              ['Mango Azúcar', 4, 1, 1500, '/images/fondo.png', 120, 'Oferta', 'Frutas'],
+              ['Plátano Verde', 4, 1, 1200, '/images/fondo.png', 200, '', 'Frutas'],
+              ['Papa Criolla', 4, 1, 2800, '/images/fondo.png', 150, 'Fresco', 'Tubérculos'],
+              ['Yuca Fresca', 4, 1, 2500, '/images/fondo.png', 90, '', 'Tubérculos'],
+              ['Huevos de Campo (docena)', 4, 1, 4000, '/images/fondo.png', 60, 'Nuevo', 'Proteína'],
+              ['Queso Campesino', 4, 1, 5500, '/images/fondo.png', 40, 'Oferta', 'Lácteos'],
+              ['Leche Orgánica (litro)', 4, 1, 3000, '/images/fondo.png', 70, '', 'Lácteos'],
+              ['Miel Artesanal', 4, 1, 6000, '/images/fondo.png', 30, 'Nuevo', 'Procesados Naturales'],
+              ['Café Especial', 4, 1, 8500, '/images/fondo.png', 50, '-10%', 'Procesados Naturales'],
+              ['Aguacate Hass', 4, 1, 2200, '/images/fondo.png', 100, 'Fresco', 'Frutas'],
+              ['Naranja Dulce', 4, 1, 1800, '/images/fondo.png', 120, '', 'Frutas'],
+              ['Frijol Rojo', 4, 1, 3000, '/images/fondo.png', 80, 'Nuevo', 'Granos'],
+              ['Maíz Amarillo', 4, 1, 2500, '/images/fondo.png', 90, '', 'Granos'],
             ];
+
 
           productosEjemplo.forEach(p => {
 
