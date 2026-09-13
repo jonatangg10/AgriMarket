@@ -14,7 +14,7 @@ const DetalleProducto = () => {
   useEffect(() => {
     const fetchProducto = async () => {
       try {
-        const res = await fetch(`https://agrimarket-nafp.onrender.com/api/productos`);
+        const res = await fetch(`https://agrimarket-yfbo.onrender.com/api/productos`);
         const data = await res.json();
         const encontrado = data.find(p => p.id === parseInt(id));
         setProducto(encontrado);

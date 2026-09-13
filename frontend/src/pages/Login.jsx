@@ -16,7 +16,7 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await fetch("https://agrimarket-nafp.onrender.com/api/login", {
+      const res = await fetch("https://agrimarket-yfbo.onrender.com/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo, password }),

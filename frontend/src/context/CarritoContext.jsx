@@ -18,7 +18,7 @@ export const CarritoProvider = ({ children }) => {
     const fetchProductos = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://agrimarket-nafp.onrender.com/api/productos");
+        const response = await fetch("https://agrimarket-yfbo.onrender.com/api/productos");
         if (!response.ok) throw new Error("Error al cargar productos");
         const data = await response.json();
 
@@ -43,7 +43,7 @@ export const CarritoProvider = ({ children }) => {
   useEffect(() => {
     const fetchEstados = async () => {
       try {
-        const response = await fetch("https://agrimarket-nafp.onrender.com/api/estados");
+        const response = await fetch("https://agrimarket-yfbo.onrender.com/api/estados");
         if (!response.ok) throw new Error("Error al cargar estados");
         const data = await response.json();
         setEstados(data);
@@ -66,7 +66,7 @@ const obtenerProductosPaginados = async ({
   try {
     // Usamos el nuevo endpoint /api/productos/paginados
     const response = await fetch(
-      `https://agrimarket-nafp.onrender.com/api/productos/paginados?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(
+      `https://agrimarket-yfbo.onrender.com/api/productos/paginados?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(
         search
       )}&categoria=${encodeURIComponent(categoria)}`
     );
@@ -131,7 +131,7 @@ const obtenerProductosPaginados = async ({
   const actualizarStockBackend = async (productoId, cantidad) => {
     try {
       const response = await fetch(
-        `https://agrimarket-nafp.onrender.com/api/productos/${productoId}/stock`,
+        `https://agrimarket-yfbo.onrender.com/api/productos/${productoId}/stock`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -232,7 +232,7 @@ const obtenerProductosPaginados = async ({
   const inactivarProducto = async (productoId) => {
     try {
       const response = await fetch(
-        `https://agrimarket-nafp.onrender.com/api/productos/${productoId}/estado`,
+        `https://agrimarket-yfbo.onrender.com/api/productos/${productoId}/estado`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

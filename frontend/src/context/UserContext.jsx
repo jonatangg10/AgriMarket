@@ -10,7 +10,7 @@ export const UserProvider = ({ children }) => {
     try {
       setLoadingUsers(true);
       const response = await fetch(
-        `https://agrimarket-nafp.onrender.com/api/usuarios/paginados?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(search)}`
+        `https://agrimarket-yfbo.onrender.com/api/usuarios/paginados?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(search)}`
       );
 
       if (!response.ok) throw new Error("Error al obtener usuarios");
@@ -31,7 +31,7 @@ export const UserProvider = ({ children }) => {
 
   const eliminarUsuario = async (id) => {
     try {
-      const response = await fetch(`https://agrimarket-nafp.onrender.com/api/usuarios/${id}`, {
+      const response = await fetch(`https://agrimarket-yfbo.onrender.com/api/usuarios/${id}`, {
         method: 'DELETE',
       });
       const data = await response.json();
@@ -50,8 +50,8 @@ export const UserProvider = ({ children }) => {
   const guardarUsuario = async (usuario) => {
     try {
       const url = usuario.id 
-        ? `https://agrimarket-nafp.onrender.com/api/usuarios/${usuario.id}` 
-        : `https://agrimarket-nafp.onrender.com/api/usuarios`;
+        ? `https://agrimarket-yfbo.onrender.com/api/usuarios/${usuario.id}` 
+        : `https://agrimarket-yfbo.onrender.com/api/usuarios`;
       
       const method = usuario.id ? 'PUT' : 'POST';
 
