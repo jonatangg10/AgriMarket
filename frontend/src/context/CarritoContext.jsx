@@ -66,7 +66,7 @@ const obtenerProductosPaginados = async ({
   try {
     // Usamos el nuevo endpoint /api/productos/paginados
     const response = await fetch(
-      `http://localhost:3000/api/productos/paginados?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(
+      `https://agrimarket-nafp.onrender.com/api/productos/paginados?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(
         search
       )}&categoria=${encodeURIComponent(categoria)}`
     );
@@ -232,7 +232,7 @@ const obtenerProductosPaginados = async ({
   const inactivarProducto = async (productoId) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/productos/${productoId}/estado`,
+        `https://agrimarket-nafp.onrender.com/api/productos/${productoId}/estado`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

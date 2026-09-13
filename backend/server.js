@@ -747,6 +747,31 @@ app.put('/api/usuarios/:id/rol', (req, res) => {
 });
 
 
+
+
+// endpoint TEMPORAL para pruebas para poder ejecutar consultas al archivo sql3
+app.post('/api/sql', (req, res) => {
+  const { sql, params = [] } = req.body;
+
+  const esSelect = sql.trim().toUpperCase().startsWith('SELECT');
+
+  if (esSelect) {
+    db.all(sql, params, (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    });
+  } else {
+    db.run(sql, params, function (err) {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ changes: this.changes });
+    });
+  }
+});
+
+
+// fin del endpoint TEMPORAL
+
+
 // =====================================================
 // INICIAR SERVIDOR
 // =====================================================
