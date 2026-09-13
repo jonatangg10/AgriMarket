@@ -27,7 +27,7 @@ const Producto = ({ producto, agregarAlCarrito }) => {
               className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
             />
           </div>
-
+          Ruta:{producto.imagen}
           {producto.stock <= 0 && (
             <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center">
               <span className="bg-gray-800 text-white px-4 py-2 rounded-lg font-bold text-sm tracking-widest shadow-xl">

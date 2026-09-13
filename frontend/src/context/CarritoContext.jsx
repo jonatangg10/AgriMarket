@@ -66,7 +66,7 @@ const obtenerProductosPaginados = async ({
   try {
     // Usamos el nuevo endpoint /api/productos/paginados
     const response = await fetch(
-      `https://agrimarket-nafp.onrender.com/api/productos/paginados?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(
+      `http://localhost:3000/api/productos/paginados?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(
         search
       )}&categoria=${encodeURIComponent(categoria)}`
     );
@@ -82,13 +82,23 @@ const obtenerProductosPaginados = async ({
       throw new Error("Formato de respuesta inválido");
     }
 
-    console.log("Datos paginados recibidos:", {
-      página: page,
-      porPágina: pageSize,
-      productosRecibidos: data.productos.length,
-      totalProductos: data.total,
-      filtros: { search, categoria }
-    });
+    // data.productos.forEach((p, i) => {
+    //   console.log(`🧺 Producto ${i + 1}:`, {
+    //     nombre: p.nombre,
+    //     imagen: p.imagen,
+    //     precio: p.precio,
+    //     categoria: p.categoria
+    //   });
+    // });
+
+
+    // console.log("Datos paginados recibidos:", {
+    //   página: page,
+    //   porPágina: pageSize,
+    //   productosRecibidos: data.productos.length,
+    //   totalProductos: data.total,
+    //   filtros: { search, categoria }
+    // });
 
     return {
       productos: data.productos,
