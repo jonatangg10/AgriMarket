@@ -140,7 +140,7 @@ function Navbar() {
             to="/"
             className="text-xl font-bold text-gray-900 tracking-tight"
           >
-            🛍️ InvenFact Pro
+            🛍️ AgrilMarket
           </Link>
         </div>
 
