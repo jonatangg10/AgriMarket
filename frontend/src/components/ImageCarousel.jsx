@@ -3,52 +3,52 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const slides = [
   {
-    img: "/images/fondo.png",
-    alt: "SonarQube Code Quality",
-    badge: { text: "Code Quality & Security", color: "bg-green-600" },
-    title: "SonarQube Analysis",
-    description: "Limpia tu código y asegura tus despliegues. Detección automática de bugs, vulnerabilidades y code smells en más de 30 lenguajes.",
-    button: { text: "Ver Análisis", color: "bg-white text-gray-800 hover:bg-gray-100" }
+    img: "/fondos/Cafe-Huila.png",
+    alt: "Café de Huila",
+    badge: { text: "Región Andina", color: "bg-green-700" },
+    title: "Café Especial de Huila",
+    description: "Cultivado en las montañas del Huila, con lluvias constantes que dan un grano balanceado y aromático. Reconocido mundialmente por su calidad.",
+    button: { text: "Ver Café", color: "bg-green-700 text-white hover:bg-green-800" }
   },
   {
-    img: "/images/fondo.png",
-    alt: "Grafana Cloud Monitoring",
-    badge: { text: "Observability Platform", color: "bg-orange-600" },
-    title: "Grafana Cloud Dashboards",
-    description: "Visualiza métricas, logs y trazas en tiempo real. La solución completa para monitoreo de infraestructura y aplicaciones a escala.",
-    button: { text: "Explorar Dashboards", color: "bg-white text-gray-800 hover:bg-gray-100" }
+    img: "/fondos/Arroz-Llanos.png",
+    alt: "Arroz de los Llanos",
+    badge: { text: "Cosecha Llanera", color: "bg-yellow-600" },
+    title: "Arroz de los Llanos Orientales",
+    description: "Producido en extensas planicies con riego natural. La variabilidad climática del fenómeno del Niño afecta su rendimiento, pero mantiene su sabor tradicional.",
+    button: { text: "Comprar Arroz", color: "bg-yellow-600 text-white hover:bg-yellow-700" }
   },
   {
-    img: "/images/fondo.png",
-    alt: "Oracle Linux Support",
-    badge: { text: "Enterprise Edition", color: "bg-red-600" },
-    title: "Linux Oracle Solutions",
-    description: "Optimiza tu infraestructura con el rendimiento y la seguridad de Oracle Linux. Soporte especializado para entornos críticos.",
-    button: { text: "Explorar Soluciones", color: "bg-blue-600 text-white hover:bg-blue-700" }
+    img: "/fondos/Mango-Tolima.png",
+    alt: "Mango de Tolima",
+    badge: { text: "Frutas Tropicales", color: "bg-orange-500" },
+    title: "Mango Azúcar del Tolima",
+    description: "Cosechado en tierras cálidas del Tolima. Las lluvias intensas favorecen su dulzura y jugosidad, ideal para jugos y postres.",
+    button: { text: "Ver Mangos", color: "bg-orange-500 text-white hover:bg-orange-600" }
   },
   {
-    img: "/images/fondo.png",
-    alt: "Azure DevOps Pipelines",
-    badge: { text: "DevOps & CI/CD", color: "bg-blue-500" },
-    title: "Azure Pipelines",
-    description: "Automatiza tus despliegues con Azure DevOps. Compila, prueba y despliega en cualquier nube con flujos de trabajo eficientes.",
-    button: { text: "Ver Documentación", color: "bg-blue-600 text-white hover:bg-blue-700" }
+    img: "/fondos/Papa-Boyaca.png",
+    alt: "Papa Criolla Boyacá",
+    badge: { text: "Tubérculos Andinos", color: "bg-brown-600" },
+    title: "Papa Criolla de Boyacá",
+    description: "Sembrada en suelos fríos de Boyacá. La cosecha depende de lluvias regulares; resistente a sequías moderadas del fenómeno del Niño.",
+    button: { text: "Comprar Papa", color: "bg-brown-600 text-white hover:bg-brown-700" }
   },
   {
-    img: "/images/fondo.png",
-    alt: "HashiCorp Vault",
-    badge: { text: "Secret Management", color: "bg-gray-800" },
-    title: "HashiCorp Vault",
-    description: "Gestiona secretos y protege datos sensibles de tus aplicaciones. Control de acceso centralizado para contraseñas, tokens y certificados en la nube.",
-    button: { text: "Ver Configuración", color: "bg-blue-600 text-white hover:bg-blue-700" }
+    img: "/fondos/Cacao-Santander.png",
+    alt: "Cacao de Santander",
+    badge: { text: "Cultivo Sostenible", color: "bg-purple-700" },
+    title: "Cacao Fino de Santander",
+    description: "Producido bajo sombra en bosques húmedos. Las lluvias constantes permiten un grano de alta calidad para chocolates artesanales.",
+    button: { text: "Explorar Cacao", color: "bg-purple-700 text-white hover:bg-purple-800" }
   },
   {
-    img: "/images/fondo.png",
-    alt: "Microsoft Power Automate",
-    badge: { text: "Business Process Automation", color: "bg-blue-400" },
-    title: "Power Automate",
-    description: "Optimiza tu productividad conectando tus aplicaciones favoritas. Crea flujos de trabajo inteligentes sin necesidad de código complejo.",
-    button: { text: "Crear Flujo", color: "bg-blue-600 text-white hover:bg-blue-700" }
+    img: "/fondos/Aguacate-Antioquia.png",
+    alt: "Aguacate Hass Antioquia",
+    badge: { text: "Frutas Premium", color: "bg-green-600" },
+    title: "Aguacate Hass de Antioquia",
+    description: "Cultivado en climas templados de Antioquia. Su producción se ve afectada por sequías del fenómeno del Niño, pero conserva su textura cremosa.",
+    button: { text: "Ver Aguacates", color: "bg-green-600 text-white hover:bg-green-700" }
   }
 ];
 

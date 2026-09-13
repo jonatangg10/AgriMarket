@@ -258,21 +258,21 @@ db.serialize(() => {
           `);
 
             const productosEjemplo = [
-              ['Tomates Orgánicos', 4, 1, 3500, '/images/fondo.png', 100, 'Fresco', 'Hortalizas'],
-              ['Lechuga Hidropónica', 4, 1, 2000, '/images/fondo.png', 80, 'Nuevo', 'Hortalizas'],
-              ['Mango Azúcar', 4, 1, 1500, '/images/fondo.png', 120, 'Oferta', 'Frutas'],
-              ['Plátano Verde', 4, 1, 1200, '/images/fondo.png', 200, '', 'Frutas'],
-              ['Papa Criolla', 4, 1, 2800, '/images/fondo.png', 150, 'Fresco', 'Tubérculos'],
-              ['Yuca Fresca', 4, 1, 2500, '/images/fondo.png', 90, '', 'Tubérculos'],
-              ['Huevos de Campo (docena)', 4, 1, 4000, '/images/fondo.png', 60, 'Nuevo', 'Proteína'],
-              ['Queso Campesino', 4, 1, 5500, '/images/fondo.png', 40, 'Oferta', 'Lácteos'],
-              ['Leche Orgánica (litro)', 4, 1, 3000, '/images/fondo.png', 70, '', 'Lácteos'],
-              ['Miel Artesanal', 4, 1, 6000, '/images/fondo.png', 30, 'Nuevo', 'Procesados Naturales'],
-              ['Café Especial', 4, 1, 8500, '/images/fondo.png', 50, '-10%', 'Procesados Naturales'],
-              ['Aguacate Hass', 4, 1, 2200, '/images/fondo.png', 100, 'Fresco', 'Frutas'],
-              ['Naranja Dulce', 4, 1, 1800, '/images/fondo.png', 120, '', 'Frutas'],
-              ['Frijol Rojo', 4, 1, 3000, '/images/fondo.png', 80, 'Nuevo', 'Granos'],
-              ['Maíz Amarillo', 4, 1, 2500, '/images/fondo.png', 90, '', 'Granos'],
+              ['Tomates Orgánicos', 4, 1, 3500, '/images/Tomate-Chonto.png', 100, 'Fresco', 'Hortalizas'],
+              ['Lechuga Hidropónica', 4, 1, 2000, '/images/Lechuga-Hidropónica.png', 80, 'Nuevo', 'Hortalizas'],
+              ['Mango Azúcar', 4, 1, 1500, '/images/Mango-Azucar.png', 120, 'Oferta', 'Frutas'],
+              ['Plátano Verde', 4, 1, 1200, '/images/Platano-Verde.png', 200, '', 'Frutas'],
+              ['Papa Criolla', 4, 1, 2800, '/images/Papa-Criolla.png', 150, 'Fresco', 'Tubérculos'],
+              ['Yuca Fresca', 4, 1, 2500, '/images/Yuca-Fresca.png', 90, '', 'Tubérculos'],
+              ['Huevos de Campo (docena)', 4, 1, 4000, '/images/Huevos-de-Campo-(docena).png', 60, 'Nuevo', 'Proteína'],
+              ['Queso Campesino', 4, 1, 5500, '/images/Queso-Campesino.png', 40, 'Oferta', 'Lácteos'],
+              ['Leche Orgánica (litro)', 4, 1, 3000, '/images/Leche-Organica-(litro).png', 70, '', 'Lácteos'],
+              ['Miel Artesanal', 4, 1, 6000, '/images/Miel-Artesanal.png', 30, 'Nuevo', 'Procesados Naturales'],
+              ['Café Especial', 4, 1, 8500, '/images/Cafe-Especial.png', 50, '-10%', 'Procesados Naturales'],
+              ['Aguacate Hass', 4, 1, 2200, '/images/Aguacate-Hass.png', 100, 'Fresco', 'Frutas'],
+              ['Naranja Dulce', 4, 1, 1800, '/images/Naranja-Dulce.png', 120, '', 'Frutas'],
+              ['Frijol Rojo', 4, 1, 3000, '/images/Frijol-rojo.png', 80, 'Nuevo', 'Granos'],
+              ['Maíz Amarillo', 4, 1, 2500, '/images/Maiz-Amarillo.png', 90, '', 'Granos'],
             ];
 
 
