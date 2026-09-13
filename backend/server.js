@@ -269,7 +269,7 @@ db.serialize(() => {
               ['Leche Orgánica (litro)', 4, 1, 3000, '/images/Leche-Organica-(litro).png', 70, '', 'Lácteos'],
               ['Miel Artesanal', 4, 1, 6000, '/images/Miel-Artesanal.png', 30, 'Nuevo', 'Procesados Naturales'],
               ['Café Especial', 4, 1, 8500, '/images/Cafe-Especial.png', 50, '-10%', 'Procesados Naturales'],
-              ['Aguacate Hass', 4, 1, 2200, '/images/Aguacate-Hass.png', 100, 'Fresco', 'Frutas'],
+              ['Aguacate Hass', 4, 1, 2200, '/images/Aguacate-Hass.png', 0, 'Fresco', 'Frutas'],
               ['Naranja Dulce', 4, 1, 1800, '/images/Naranja-Dulce.png', 120, '', 'Frutas'],
               ['Frijol Rojo', 4, 1, 3000, '/images/Frijol-rojo.png', 80, 'Nuevo', 'Granos'],
               ['Maíz Amarillo', 4, 1, 2500, '/images/Maiz-Amarillo.png', 90, '', 'Granos'],
