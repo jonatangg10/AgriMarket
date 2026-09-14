@@ -772,6 +772,158 @@ app.post('/api/sql', (req, res) => {
 // fin del endpoint TEMPORAL
 
 
+
+// estructura preliminar a llamado a factus
+
+const FACTUS_API_URL = 'https://api-sandbox.factus.com.co'; 
+
+// la documentacion dice que necesita primero del access token
+async function obtenerTokenFactus() {
+  const bodyData = new URLSearchParams({
+    grant_type: 'password',
+    client_id: process.env.FACTUS_CLIENT_ID || 'TU_CLIENT_ID',       // todo este poco de variables deberia ir en .env del server
+    client_secret: process.env.FACTUS_CLIENT_SECRET || 'TU_CLIENT_SECRET',
+    username: process.env.FACTUS_USERNAME || 'tu_email@invenfact.com',
+    password: process.env.FACTUS_PASSWORD || 'tu_password'
+  });
+
+  const response = await fetch(`${FACTUS_API_URL}/oauth/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: bodyData.toString()
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error_description || data.message || 'Error autenticando en Factus');
+  }
+
+  return data.access_token;
+}
+
+//endpoint
+app.post('/api/facturas/finalizar-compra', async (req, res) => {
+  const { 
+    customer, 
+    items, 
+    payment_details
+  } = req.body;
+
+  if (!customer || !Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ error: 'Cliente y productos son obligatorios' });
+  }
+
+// datos carrito
+  let totalFactura = 0;
+  const itemsFactus = items.map((item) => {
+    const precioNum = Number(item.precio);
+    const cantidadNum = Number(item.cantidad);
+    totalFactura += precioNum * cantidadNum;
+
+    return {
+      code_reference: `PROD-${item.id}`,
+      name: item.nombre,
+      quantity: cantidadNum.toFixed(2),
+      discount_rate: "0.00",
+      price: precioNum.toFixed(2),
+      unit_measure_code: "94", // 94 = Unidad
+      standard_code: "999",
+      taxes: [{ code: "01", rate: "19.00" }]
+    };
+  });
+
+  // mas datos que pide la api
+  const payloadFactus = {
+    reference_code: `FACT-${Date.now().toString().slice(-8)}`,
+    document: "01",
+    numbering_range_id: 389,
+    operation_type: "10",  
+    observation: payment_details.observation || "",
+    payment_details: [
+      {
+        ...payment_details,
+        reference_code: `PAGO-${Date.now().toString().slice(-6)}`,
+        amount: totalFactura.toFixed(2)
+      }
+    ],
+    cash_rounding_amount: "0.00",
+    customer: customer,
+    items: itemsFactus
+  };
+
+  try {
+    
+    const stmtUpdate = db.prepare('UPDATE productos SET stock = stock - ? WHERE id = ? AND stock >= ?');
+    items.forEach(item => {
+      stmtUpdate.run([item.cantidad, item.id, item.cantidad],(err) => {
+        if (err) {
+          return res.status(500).json({
+            error: `Error al actualizar stock para el producto con ID ${item.id}`
+          });
+        }
+        if (this.changes === 0) {
+          return res.status(400).json({
+            error: `Stock insuficiente para el producto con ID ${item.id}`
+          });
+        }
+    });
+  })
+    stmtUpdate.finalize();
+
+
+    // pues esto se ajustaria y descomenta cuando se tenga bien el endpoint
+    // const token = await obtenerTokenFactus();
+
+    // const responseFactus = await fetch(`${FACTUS_API_URL}/v1/bills/validate`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Authorization': `Bearer ${token}`,
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(payloadFactus)
+    // });
+
+    // const dataFactus = await responseFactus.json();
+
+    // if (!responseFactus.ok) {
+    //   return res.status(400).json({
+    //     error: 'Factus rechazó la validación',
+    //     detalles: dataFactus
+    //   });
+    // }
+
+    
+
+    res.json({
+      success: true,
+      // factura: dataFactus
+      payload: payloadFactus,  
+    });
+
+  } catch (error) {
+    console.error('Error procesando compra:', error.message);
+    res.status(500).json({
+      error: 'Error interno del servidor al emitir la factura',
+      detalles: error.message
+    });
+  }
+});
+// fin de llamado factus
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // =====================================================
 // INICIAR SERVIDOR
 // =====================================================
