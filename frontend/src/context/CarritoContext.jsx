@@ -9,6 +9,7 @@ export const CarritoProvider = ({ children }) => {
   const [estados, setEstados] = useState([]);
   const [carrito, setCarrito] = useState([]);
   const [carritoVisible, setCarritoVisible] = useState(false);
+  const [comprarVisible, setComprarVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("todos");
@@ -221,18 +222,19 @@ const obtenerProductosPaginados = async ({
 
   // ✅ Finalizar compra
   const finalizarCompra = () => {
-    const doc = generarFactura(carrito);
-    doc.save(`factura-${Date.now().toString().slice(-6)}.pdf`);
-    setCarrito([]);
-    toast.success("¡Gracias por tu compra! Factura generada");
+    // const doc = generarFactura(carrito);
+    // doc.save(`factura-${Date.now().toString().slice(-6)}.pdf`); //ya no necesitamos PDF
+    // setCarrito([]);
+    // toast.success("¡Gracias por tu compra! Factura generada");
     setCarritoVisible(false);
+    setComprarVisible(true);
   };
 
   // 🚫 Inactivar producto
   const inactivarProducto = async (productoId) => {
     try {
       const response = await fetch(
-        `https://agrimarket-yfbo.onrender.com/api/productos/${productoId}/estado`,
+        `https://agrimarket-yfbo.onrender.com/api/productos/${productoId}/estado`, 
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -266,6 +268,7 @@ const obtenerProductosPaginados = async ({
         categoriaSeleccionada,
         setCategoriaSeleccionada,
         carrito,
+        setCarrito,
         carritoVisible,
         setCarritoVisible,
         agregarAlCarrito,
@@ -276,6 +279,8 @@ const obtenerProductosPaginados = async ({
         estados,
         inactivarProducto,
         obtenerProductosPaginados, // 🔄 nueva función de paginación
+        comprarVisible,
+        setComprarVisible
       }}
     >
       {children}

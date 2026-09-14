@@ -5,11 +5,14 @@ import Footer from "./Footer";
 import { CarritoContext } from "../context/CarritoContext";
 import Modal from "./Modal";
 import Carrito from "./Carrito";
+import Comprar from "./Comprar";
+import { Toaster } from 'react-hot-toast';
+
 
 const DetalleProducto = () => {
   const { id } = useParams();
   const [producto, setProducto] = useState(null);
-  const { carritoVisible, setCarritoVisible, agregarAlCarrito } = useContext(CarritoContext);
+  const { carritoVisible, setCarritoVisible, agregarAlCarrito, setComprarVisible, comprarVisible } = useContext(CarritoContext);
 
   useEffect(() => {
     const fetchProducto = async () => {
@@ -37,7 +40,7 @@ const DetalleProducto = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar onAbrirCarrito={() => setCarritoVisible(true)} />
-      
+
       <main className="flex-grow container mx-auto px-4 pt-24 pb-14">
         <div className="mb-6">
           <Link to="/" className="text-blue-600 hover:underline inline-flex items-center">
@@ -59,10 +62,10 @@ const DetalleProducto = () => {
 
           <div className="lg:w-1/2">
             <h1 className="text-3xl font-bold mb-3">{producto.nombre}</h1>
-            
+
             <div className="mb-4">
               <p className="text-2xl font-bold text-gray-800">
-                ${producto.precio.toLocaleString('es-CO', {minimumFractionDigits: 2})}
+                ${producto.precio.toLocaleString('es-CO', { minimumFractionDigits: 2 })}
               </p>
               <p className={`text-sm ${producto.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
                 {producto.stock > 0 ? `Disponible (${producto.stock} unidades)` : "Agotado"}
@@ -84,7 +87,7 @@ const DetalleProducto = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              <button 
+              <button
                 className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded font-medium transition-colors"
                 onClick={() => {
                   agregarAlCarrito(producto);
@@ -94,7 +97,13 @@ const DetalleProducto = () => {
                 Agregar al carrito
               </button>
 
-              <button className="border border-gray-300 hover:bg-gray-100 py-2 px-6 rounded font-medium transition-colors">
+              <button
+                className="border border-gray-300 hover:bg-gray-100 py-2 px-6 rounded font-medium transition-colors"
+                onClick={() => {
+                  agregarAlCarrito(producto);
+                  setComprarVisible(true);
+                }}
+              >
                 Comprar ahora
               </button>
             </div>
@@ -112,6 +121,13 @@ const DetalleProducto = () => {
           </div>
         </div>
       </main>
+      <Modal isOpen={carritoVisible} onClose={() => setCarritoVisible(false)} title="🛒 Tu Carrito">
+        <Carrito />
+      </Modal>
+      <Modal isOpen={comprarVisible} onClose={() => setComprarVisible(false)} title="✅ Finaliza tu compra">
+        <Comprar />
+      </Modal>
+      <Toaster position="bottom-right" />
 
       <Footer />
     </div>

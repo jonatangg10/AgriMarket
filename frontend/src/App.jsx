@@ -10,6 +10,7 @@ import { Toaster } from 'react-hot-toast';
 import ImageCarousel from './components/ImageCarousel';
 import { CarritoContext } from "./context/CarritoContext";
 import Carrito from './components/Carrito';
+import Comprar from './components/Comprar';
 import Filtros from './components/Filtros';
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
@@ -23,6 +24,8 @@ function App() {
     agregarAlCarrito,
     obtenerProductosPaginados,
     error,
+    comprarVisible,
+    setComprarVisible
   } = useContext(CarritoContext);
 
   const [productosPaginados, setProductosPaginados] = useState([]);
@@ -125,6 +128,9 @@ function App() {
       </div>
       <Modal isOpen={carritoVisible} onClose={() => setCarritoVisible(false)} title="🛒 Tu Carrito">
         <Carrito />
+      </Modal>
+      <Modal isOpen={comprarVisible} onClose={() => setComprarVisible(false)} title="✅ Finaliza tu compra">
+        <Comprar />
       </Modal>
       <LogoCarousel />
       <Contact />
