@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
-import { CarritoContext } from "../context/CarritoContext"; // Asegúrate de ajustar la ruta de importación
+import { CarritoContext } from "../context/CarritoContext"; 
 import { toast } from "react-hot-toast";
+import { municipalities } from "../../public/municipios.js";
 
 const FormComprar = () => {
 
@@ -411,17 +412,22 @@ const FormComprar = () => {
                   Código de municipio
                 </label>
 
-                <input
+                <select
                   id="municipality_code"
-                  type="text"
                   name="municipality_code"
                   value={user.municipality_code}
                   onChange={handleChangeUser}
-                  placeholder="Ej. 68679"
                   className={inputClass}
-                  required
-                />
+                >
+                  { municipalities.toSorted((a, b) => a.name.localeCompare(b.name)).map((municipality) => (
+                    <option key={municipality.code} value={municipality.code}>
+                      {municipality.name}
+                    </option>
+                  ))}
+
+                </select>
               </div>
+
 
             </div>
           </div>
