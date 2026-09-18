@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { CarritoContext } from "../context/CarritoContext"; 
+import { CarritoContext } from "../context/CarritoContext";
 import { toast } from "react-hot-toast";
 import { municipalities } from "../../public/municipios.js";
 
@@ -15,8 +15,8 @@ const FormComprar = () => {
   const [user, setuser] = useState({
     identification_document_code: "13",
     identification: "",
-    company: "",
     trade_name: "",
+    names: "",
     address: "",
     email: "",
     phone: "",
@@ -59,7 +59,7 @@ const FormComprar = () => {
       const payload = {
         customer: {
           ...user,
-          trade_name: user.trade_name || user.company,
+          names: user.names || user.trade_name,
         },
         items: carrito.map((prod) => ({
           id: prod.id,
@@ -71,7 +71,7 @@ const FormComprar = () => {
 
 
       };
-
+      
       // ---llamar el endpoint no oficial-----------------------
       const response = await fetch(
         "https://agrimarket-yfbo.onrender.com/api/facturas/finalizar-compra",
@@ -88,13 +88,15 @@ const FormComprar = () => {
       }
       toast.success("¡Factura emitida y compra procesada con éxito!");
       console.log("SERVIDOR RESPONDE:");
-      console.log(data);
+      console.log(data.factura);
+      setTimeout(() => {
+        const ventanaFactura = window.open('about:blank', '_blank');
+        ventanaFactura.location.href = data.factura.links.public_url;
+      }, 2000);
       // ---------------------------------------------------------------------------
 
       setCarrito([]);
       setComprarVisible(false);
-      // console.log("FACTURA GENERADA:");
-      // console.log(payload);
 
     } catch (err) {
       console.error(err);
@@ -251,17 +253,17 @@ const FormComprar = () => {
               {/* Nombre */}
               <div>
                 <label
-                  htmlFor="company"
+                  htmlFor="names"
                   className={labelClass}
                 >
-                  Nombre / Razón social
+                  Nombre
                 </label>
 
                 <input
-                  id="company"
+                  id="names"
                   type="text"
-                  name="company"
-                  value={user.company}
+                  name="names"
+                  value={user.names}
                   onChange={handleChangeUser}
                   placeholder="Nombre completo"
                   className={inputClass}
@@ -419,7 +421,7 @@ const FormComprar = () => {
                   onChange={handleChangeUser}
                   className={inputClass}
                 >
-                  { municipalities.toSorted((a, b) => a.name.localeCompare(b.name)).map((municipality) => (
+                  {municipalities.toSorted((a, b) => a.name.localeCompare(b.name)).map((municipality) => (
                     <option key={municipality.code} value={municipality.code}>
                       {municipality.name}
                     </option>

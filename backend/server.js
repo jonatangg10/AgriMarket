@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
+require('dotenv').config();
 
 const app = express();
 const PORT = 3000;
@@ -257,23 +258,23 @@ db.serialize(() => {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
           `);
 
-            const productosEjemplo = [
-              ['Tomates Orgánicos', 4, 1, 3500, '/images/Tomate-Chonto.png', 100, 'Fresco', 'Hortalizas'],
-              ['Lechuga Hidropónica', 4, 1, 2000, '/images/Lechuga-Hidropónica.png', 80, 'Nuevo', 'Hortalizas'],
-              ['Mango Azúcar', 4, 1, 1500, '/images/Mango-Azucar.png', 120, 'Oferta', 'Frutas'],
-              ['Plátano Verde', 4, 1, 1200, '/images/Platano-Verde.png', 200, '', 'Frutas'],
-              ['Papa Criolla', 4, 1, 2800, '/images/Papa-Criolla.png', 150, 'Fresco', 'Tubérculos'],
-              ['Yuca Fresca', 4, 1, 2500, '/images/Yuca-Fresca.png', 90, '', 'Tubérculos'],
-              ['Huevos de Campo (docena)', 4, 1, 4000, '/images/Huevos-de-Campo-(docena).png', 60, 'Nuevo', 'Proteína'],
-              ['Queso Campesino', 4, 1, 5500, '/images/Queso-Campesino.png', 40, 'Oferta', 'Lácteos'],
-              ['Leche Orgánica (litro)', 4, 1, 3000, '/images/Leche-Organica-(litro).png', 70, '', 'Lácteos'],
-              ['Miel Artesanal', 4, 1, 6000, '/images/Miel-Artesanal.png', 30, 'Nuevo', 'Procesados Naturales'],
-              ['Café Especial', 4, 1, 8500, '/images/Cafe-Especial.png', 50, '-10%', 'Procesados Naturales'],
-              ['Aguacate Hass', 4, 1, 2200, '/images/Aguacate-Hass.png', 0, 'Fresco', 'Frutas'],
-              ['Naranja Dulce', 4, 1, 1800, '/images/Naranja-Dulce.png', 120, '', 'Frutas'],
-              ['Frijol Rojo', 4, 1, 3000, '/images/Frijol-rojo.png', 80, 'Nuevo', 'Granos'],
-              ['Maíz Amarillo', 4, 1, 2500, '/images/Maiz-Amarillo.png', 90, '', 'Granos'],
-            ];
+          const productosEjemplo = [
+            ['Tomates Orgánicos', 4, 1, 3500, '/images/Tomate-Chonto.png', 100, 'Fresco', 'Hortalizas'],
+            ['Lechuga Hidropónica', 4, 1, 2000, '/images/Lechuga-Hidropónica.png', 80, 'Nuevo', 'Hortalizas'],
+            ['Mango Azúcar', 4, 1, 1500, '/images/Mango-Azucar.png', 120, 'Oferta', 'Frutas'],
+            ['Plátano Verde', 4, 1, 1200, '/images/Platano-Verde.png', 200, '', 'Frutas'],
+            ['Papa Criolla', 4, 1, 2800, '/images/Papa-Criolla.png', 150, 'Fresco', 'Tubérculos'],
+            ['Yuca Fresca', 4, 1, 2500, '/images/Yuca-Fresca.png', 90, '', 'Tubérculos'],
+            ['Huevos de Campo (docena)', 4, 1, 4000, '/images/Huevos-de-Campo-(docena).png', 60, 'Nuevo', 'Proteína'],
+            ['Queso Campesino', 4, 1, 5500, '/images/Queso-Campesino.png', 40, 'Oferta', 'Lácteos'],
+            ['Leche Orgánica (litro)', 4, 1, 3000, '/images/Leche-Organica-(litro).png', 70, '', 'Lácteos'],
+            ['Miel Artesanal', 4, 1, 6000, '/images/Miel-Artesanal.png', 30, 'Nuevo', 'Procesados Naturales'],
+            ['Café Especial', 4, 1, 8500, '/images/Cafe-Especial.png', 50, '-10%', 'Procesados Naturales'],
+            ['Aguacate Hass', 4, 1, 2200, '/images/Aguacate-Hass.png', 0, 'Fresco', 'Frutas'],
+            ['Naranja Dulce', 4, 1, 1800, '/images/Naranja-Dulce.png', 120, '', 'Frutas'],
+            ['Frijol Rojo', 4, 1, 3000, '/images/Frijol-rojo.png', 80, 'Nuevo', 'Granos'],
+            ['Maíz Amarillo', 4, 1, 2500, '/images/Maiz-Amarillo.png', 90, '', 'Granos'],
+          ];
 
 
           productosEjemplo.forEach(p => {
@@ -310,15 +311,63 @@ db.serialize(() => {
             }
 
             console.log("Productos iniciales cargados.");
-
+            crearTablasVentas(); //crear la de ventas despues de agregar los productos
           });
 
+        } else {
+          crearTablasVentas(); // o crear lade ventas si ya hay productos
         }
 
       });
 
     });
 
+  }
+
+  // Paso 4 crear tabla de Ventas y Detalle
+  function crearTablasVentas() {
+    db.run(`
+    CREATE TABLE IF NOT EXISTS ventas (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      cliente_documento TEXT NOT NULL,
+      cliente_nombre TEXT NOT NULL,
+      cliente_email TEXT,            
+      cliente_telefono TEXT,          
+      reference_code TEXT UNIQUE NOT NULL,
+      numbering_range_id INTEGER,
+      bill_number TEXT,
+      cufe TEXT,
+      qr_url TEXT,
+      total REAL NOT NULL,
+      estado TEXT DEFAULT 'completado',
+      fecha_creacion TEXT DEFAULT (datetime('now', '-5 hours'))
+    )
+  `, (err) => {
+      if (err) {
+        console.error("Error creando tabla ventas:", err);
+        return;
+      }
+
+      db.run(`
+      CREATE TABLE IF NOT EXISTS detalle_ventas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        venta_id INTEGER NOT NULL,
+        producto_id INTEGER NOT NULL,
+        cantidad INTEGER NOT NULL,
+        precio_unitario REAL NOT NULL,
+        subtotal REAL NOT NULL,
+        FOREIGN KEY (venta_id) REFERENCES ventas(id) ON DELETE CASCADE,
+        FOREIGN KEY (producto_id) REFERENCES productos(id)
+      )
+    `, (err) => {
+        if (err) {
+          console.error("Error creando tabla detalle_ventas:", err);
+          return;
+        }
+
+        console.log("Tablas de ventas y detalle_ventas listas.");
+      });
+    });
   }
 
 });
@@ -747,9 +796,11 @@ app.put('/api/usuarios/:id/rol', (req, res) => {
 });
 
 
+// ====================================================
+// ENDPOINT TEMPORAL , BORRAR EN PRODUCCION
+// =====================================================
 
 
-// endpoint TEMPORAL para pruebas para poder ejecutar consultas al archivo sql3
 app.post('/api/sql', (req, res) => {
   const { sql, params = [] } = req.body;
 
@@ -768,23 +819,29 @@ app.post('/api/sql', (req, res) => {
   }
 });
 
-
 // fin del endpoint TEMPORAL
 
 
 
+// =================================================
+// ENDPOINTS FACTURAS
+// ==================================================
 // estructura preliminar a llamado a factus
 
-const FACTUS_API_URL = 'https://api-sandbox.factus.com.co'; 
+const FACTUS_API_URL = process.env.FACTUS_API_URL;
+
+
+
+// FUNCIONES facturas
 
 // la documentacion dice que necesita primero del access token
 async function obtenerTokenFactus() {
   const bodyData = new URLSearchParams({
     grant_type: 'password',
-    client_id: process.env.FACTUS_CLIENT_ID || 'TU_CLIENT_ID',       // todo este poco de variables deberia ir en .env del server
-    client_secret: process.env.FACTUS_CLIENT_SECRET || 'TU_CLIENT_SECRET',
-    username: process.env.FACTUS_USERNAME || 'tu_email@invenfact.com',
-    password: process.env.FACTUS_PASSWORD || 'tu_password'
+    client_id: process.env.FACTUS_CLIENT_ID ,       // todo este poco de variables deberia ir en .env del server
+    client_secret: process.env.FACTUS_CLIENT_SECRET ,
+    username: process.env.FACTUS_USERNAME ,
+    password: process.env.FACTUS_PASSWORD 
   });
 
   const response = await fetch(`${FACTUS_API_URL}/oauth/token`, {
@@ -798,15 +855,90 @@ async function obtenerTokenFactus() {
   if (!response.ok) {
     throw new Error(data.error_description || data.message || 'Error autenticando en Factus');
   }
-
   return data.access_token;
 }
 
+
+// funcion guardan venta en bd 
+function guardarVentaLocal(payloadFactus) {
+  return new Promise((resolve, reject) => {
+    const customer = payloadFactus.customer;
+
+    // Extraer total desde el primer elemento de payment_details
+    const totalFactura = Number(payloadFactus.payment_details[0].amount);
+
+    const clienteDocumento = customer.identification;
+    const clienteNombre = customer.names;
+    const clienteEmail = customer.email;
+    const clienteTelefono = customer.phone;
+
+    const sqlVenta = `
+      INSERT INTO ventas (
+        cliente_documento,
+        cliente_nombre,
+        cliente_email,
+        cliente_telefono,
+        reference_code,
+        numbering_range_id,
+        total
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const paramsVenta = [
+      clienteDocumento,
+      clienteNombre,
+      clienteEmail,
+      clienteTelefono,
+      payloadFactus.reference_code,
+      payloadFactus.numbering_range_id,
+      totalFactura
+    ];
+
+    db.run(sqlVenta, paramsVenta, function (err) {
+      if (err) return reject(err);
+
+      const ventaId = this.lastID; //ultimo id de la bd
+
+
+      const stmtDetalle = db.prepare(`
+        INSERT INTO detalle_ventas (
+          venta_id,
+          producto_id,
+          cantidad,
+          precio_unitario,
+          subtotal
+        ) VALUES (?, ?, ?, ?, ?)
+      `);
+
+      payloadFactus.items.forEach(item => {
+        // Extraer ID limpiando "PROD-X"
+        const productoId = Number(item.code_reference.replace('PROD-', ''));
+        const cantidadNum = Number(item.quantity);
+        const precioNum = Number(item.price);
+        const subtotal = cantidadNum * precioNum;
+
+        stmtDetalle.run([ventaId, productoId, cantidadNum, precioNum, subtotal], (err) => {
+          if (err) console.error(`Error guardando detalle del producto ${productoId}:`, err);
+        });
+      });
+
+      stmtDetalle.finalize((err) => {
+        if (err) return reject(err);
+        resolve(ventaId);
+      });
+    });
+  });
+}
+
+
+
+
+
 //endpoint
 app.post('/api/facturas/finalizar-compra', async (req, res) => {
-  const { 
-    customer, 
-    items, 
+  const {
+    customer,
+    items,
     payment_details
   } = req.body;
 
@@ -814,7 +946,7 @@ app.post('/api/facturas/finalizar-compra', async (req, res) => {
     return res.status(400).json({ error: 'Cliente y productos son obligatorios' });
   }
 
-// datos carrito
+  // datos carrito
   let totalFactura = 0;
   const itemsFactus = items.map((item) => {
     const precioNum = Number(item.precio);
@@ -829,7 +961,7 @@ app.post('/api/facturas/finalizar-compra', async (req, res) => {
       price: precioNum.toFixed(2),
       unit_measure_code: "94", // 94 = Unidad
       standard_code: "999",
-      taxes: [{ code: "01", rate: "19.00" }]
+      taxes: [{ is_excluded: true }]
     };
   });
 
@@ -838,8 +970,15 @@ app.post('/api/facturas/finalizar-compra', async (req, res) => {
     reference_code: `FACT-${Date.now().toString().slice(-8)}`,
     document: "01",
     numbering_range_id: 389,
-    operation_type: "10",  
+    operation_type: "10",
     observation: payment_details.observation || "",
+    establishment: {
+      name: "AgriMarket",
+      address: "Calle 9 # 5-20",
+      phone_number: "3000000000",
+      email: "contacto@agrimarket.com",
+      municipality_code: "25875",
+    },
     payment_details: [
       {
         ...payment_details,
@@ -853,52 +992,55 @@ app.post('/api/facturas/finalizar-compra', async (req, res) => {
   };
 
   try {
-    
-    const stmtUpdate = db.prepare('UPDATE productos SET stock = stock - ? WHERE id = ? AND stock >= ?');
-    items.forEach(item => {
-      stmtUpdate.run([item.cantidad, item.id, item.cantidad],(err) => {
-        if (err) {
-          return res.status(500).json({
-            error: `Error al actualizar stock para el producto con ID ${item.id}`
-          });
-        }
-        if (this.changes === 0) {
-          return res.status(400).json({
-            error: `Stock insuficiente para el producto con ID ${item.id}`
-          });
-        }
+    // descontar stock
+    for (const item of items) {
+      const result = await new Promise((resolve, reject) => {
+        db.run(
+          'UPDATE productos SET stock = stock - ? WHERE id = ? AND stock >= ?',
+          [item.cantidad, item.id, item.cantidad],
+          function (err) {
+            if (err) return reject(err);
+            resolve(this.changes);
+          }
+        );
+      });
+
+      if (result === 0) {
+        return res.status(400).json({
+          error: `Stock insuficiente para el producto con ID ${item.id}`
+        });
+      }
+    }
+    // guardar venta
+    const ventaIdLocal = await guardarVentaLocal(payloadFactus);
+
+    const token = await obtenerTokenFactus();
+    const responseFactus = await fetch(`${FACTUS_API_URL}/v2/bills/validate`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payloadFactus)
     });
-  })
-    stmtUpdate.finalize();
+
+    const dataFactus = await responseFactus.json();
+
+    // actualizar el cufe y bill_number devueltos por Factus en la DB
+    db.run('UPDATE ventas SET bill_number = ?, cufe = ? WHERE id = ?', [dataFactus.data.number, dataFactus.data.cufe, ventaIdLocal]);
 
 
-    // pues esto se ajustaria y descomenta cuando se tenga bien el endpoint
-    // const token = await obtenerTokenFactus();
-
-    // const responseFactus = await fetch(`${FACTUS_API_URL}/v1/bills/validate`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Authorization': `Bearer ${token}`,
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify(payloadFactus)
-    // });
-
-    // const dataFactus = await responseFactus.json();
-
-    // if (!responseFactus.ok) {
-    //   return res.status(400).json({
-    //     error: 'Factus rechazó la validación',
-    //     detalles: dataFactus
-    //   });
-    // }
-
-    
+    if (!responseFactus.ok) {
+      return res.status(400).json({
+        error: 'Factus rechazó la validación',
+        detalles: dataFactus
+      });
+    }
 
     res.json({
       success: true,
-      // factura: dataFactus
-      payload: payloadFactus,  
+      factura: dataFactus.data,
+      // payload: payloadFactus,
     });
 
   } catch (error) {
