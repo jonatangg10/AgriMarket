@@ -27,22 +27,34 @@ function crearUsuarios(db, callback) {
           { nombres: 'Pepito', apellidos: 'vendedor', num_documento: '9876543220', correo: 'pepitovendedor@invenfact.com', password: 'pepito123', rol: 'vendedor' }
         ];
 
-        const stmt = db.prepare(`
-          INSERT INTO usuarios (nombres, apellidos, num_documento, correo, password, rol)
-          VALUES (?, ?, ?, ?, ?, ?)
-        `);
-
-        usuariosIniciales.forEach(u => {
-          bcrypt.hash(u.password, saltRounds, (err, hash) => {
-            if (err) return console.error(`Error hasheando password de ${u.correo}:`, err);
-            stmt.run([u.nombres, u.apellidos, u.num_documento, u.correo, hash, u.rol]);
-          });
-        });
-
-        stmt.finalize(() => {
-          console.log("Usuarios iniciales creados con contraseñas seguras.");
+        // Usamos Promise.all para esperar todos los hashes
+        Promise.all(
+          usuariosIniciales.map(u =>
+            bcrypt.hash(u.password, saltRounds).then(hash => {
+              return new Promise((resolve, reject) => {
+                db.run(`
+                  INSERT INTO usuarios (nombres, apellidos, num_documento, correo, password, rol)
+                  VALUES (?, ?, ?, ?, ?, ?)
+                `,
+                [u.nombres, u.apellidos, u.num_documento, u.correo, hash, u.rol],
+                (err) => {
+                  if (err) {
+                    console.error(`Error insertando a ${u.correo}:`, err);
+                    reject(err);
+                  } else {
+                    resolve();
+                  }
+                });
+              });
+            })
+          )
+        ).then(() => {
+          console.log("Usuarios iniciales creados con contraseñas seguras (bcryptjs).");
           if (callback) callback();
+        }).catch(err => {
+          console.error("Error creando usuarios iniciales:", err);
         });
+
       } else {
         if (callback) callback();
       }
