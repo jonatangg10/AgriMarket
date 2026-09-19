@@ -11,21 +11,365 @@ app.use(express.json());
 
 const db = new sqlite3.Database('./carrito.db');
 
-const crearUsuarios = require('./db/crearUsuarios');
-const crearProductos = require('./db/crearProductos');
-const crearEstado = require('./db/crearEstado');
-const crearVentas = require('./db/crearVentas');
-
 // Migración: Inicialización de la base de datos
 db.serialize(() => {
+
+  // Activar claves foráneas
   db.run("PRAGMA foreign_keys = ON");
-  crearEstado(db, () => {
-    crearUsuarios(db, () => {
-      crearProductos(db, () => {
-        crearVentas(db);
-      });
+
+  // =====================================================
+  // 1. CREAR TABLA ESTADO
+  // =====================================================
+  db.run(`
+    CREATE TABLE IF NOT EXISTS estado (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre TEXT NOT NULL
+    )
+  `, (err) => {
+
+    if (err) {
+      console.error("Error creando tabla estado:", err);
+      return;
+    }
+
+    // Verificar estados
+    db.get('SELECT COUNT(*) as count FROM estado', (err, row) => {
+
+      if (err) {
+        console.error("Error verificando estados:", err);
+        return;
+      }
+
+      // Insertar estados si no existen
+      if (row.count === 0) {
+
+        db.run(`
+          INSERT INTO estado (id, nombre)
+          VALUES (1, 'Activo'), (2, 'Inactivo')
+        `, (err) => {
+
+          if (err) {
+            console.error("Error insertando estados:", err);
+            return;
+          }
+
+          console.log("Estados iniciales cargados.");
+
+          crearUsuarios();
+        });
+
+      } else {
+        crearUsuarios();
+      }
     });
   });
+
+
+  // =====================================================
+  // 2. CREAR TABLA USUARIOS
+  // =====================================================
+  function crearUsuarios() {
+
+    db.run(`
+      CREATE TABLE IF NOT EXISTS usuarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombres TEXT NOT NULL,
+        apellidos TEXT NOT NULL,
+        num_documento TEXT UNIQUE NOT NULL,
+        correo TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        rol TEXT NOT NULL DEFAULT 'user',
+        fecha_creacion TEXT DEFAULT (datetime('now', '-5 hours'))
+      )
+    `, (err) => {
+
+      if (err) {
+        console.error("Error creando tabla usuarios:", err);
+        return;
+      }
+
+      // Verificar usuarios
+      db.get('SELECT COUNT(*) as count FROM usuarios', (err, row) => {
+
+        if (err) {
+          console.error("Error verificando usuarios:", err);
+          return;
+        }
+
+        if (row.count === 0) {
+
+          const usuariosIniciales = [
+            {
+              id: 1,
+              nombres: 'Jonatan Stiven',
+              apellidos: 'Gutierrez Nieto',
+              num_documento: '1003510994',
+              correo: 'jonatangutierrez@invenfact.com',
+              password: 'jonatan123',
+              rol: 'admin',
+              fecha_creacion: '2023-01-01 00:00:00'
+            },
+            {
+              id: 2,
+              nombres: 'Julian Emiro',
+              apellidos: 'Gonzalez Perez',
+              num_documento: '9876543210',
+              correo: 'juliangonzalez@invenfact.com',
+              password: 'julian123',
+              rol: 'admin',
+              fecha_creacion: '2023-01-01 00:00:00'
+            },
+            {
+              id: 3,
+              nombres: 'Pepito',
+              apellidos: 'usuario',
+              num_documento: '1234567890',
+              correo: 'pepitousuario@invenfact.com',
+              password: 'pepito123',
+              rol: 'user',
+              fecha_creacion: '2023-01-01 00:00:00'
+            },
+            {
+              id: 4,
+              nombres: 'Pepito',
+              apellidos: 'vendedor',
+              num_documento: '9876543220',
+              correo: 'pepitovendedor@invenfact.com',
+              password: 'pepito123',
+              rol: 'vendedor',
+              fecha_creacion: '2023-01-01 00:00:00'
+            }
+          ];
+
+          const stmt = db.prepare(`
+            INSERT INTO usuarios
+            (
+              id,
+              nombres,
+              apellidos,
+              num_documento,
+              correo,
+              password,
+              rol,
+              fecha_creacion
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+          `);
+
+          usuariosIniciales.forEach(u => {
+
+            stmt.run([
+              u.id,
+              u.nombres,
+              u.apellidos,
+              u.num_documento,
+              u.correo,
+              u.password,
+              u.rol,
+              u.fecha_creacion
+            ], (err) => {
+
+              if (err) {
+                console.error(`Error insertando a ${u.correo}:`, err);
+              }
+
+            });
+
+          });
+
+          stmt.finalize((err) => {
+
+            if (err) {
+              console.error("Error finalizando usuarios:", err);
+              return;
+            }
+
+            console.log("Usuarios iniciales cargados desde el array.");
+
+            // IMPORTANTE:
+            // Solo después de terminar los usuarios
+            // se crean los productos.
+            crearProductos();
+
+          });
+
+        } else {
+
+          crearProductos();
+
+        }
+
+      });
+
+    });
+
+  }
+
+
+  // =====================================================
+  // 3. CREAR TABLA PRODUCTOS
+  // =====================================================
+  function crearProductos() {
+
+    db.run(`
+      CREATE TABLE IF NOT EXISTS productos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT NOT NULL,
+        usuario_id INTEGER NOT NULL,
+        estado_id INTEGER NOT NULL,
+        precio REAL NOT NULL,
+        imagen TEXT,
+        stock INTEGER NOT NULL DEFAULT 10,
+        etiqueta TEXT NOT NULL,
+        categoria TEXT NOT NULL,
+
+        FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+        FOREIGN KEY (estado_id) REFERENCES estado(id)
+      )
+    `, (err) => {
+
+      if (err) {
+        console.error("Error creando tabla productos:", err);
+        return;
+      }
+
+      // Verificar productos
+      db.get('SELECT COUNT(*) as count FROM productos', (err, row) => {
+
+        if (err) {
+          console.error("Error verificando productos:", err);
+          return;
+        }
+
+        if (row.count === 0) {
+
+          const stmt = db.prepare(`
+            INSERT INTO productos
+            (
+              nombre,
+              usuario_id,
+              estado_id,
+              precio,
+              imagen,
+              stock,
+              etiqueta,
+              categoria
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+          `);
+
+          const productosEjemplo = [
+            ['Tomates Orgánicos', 4, 1, 3500, '/images/Tomate-Chonto.png', 100, 'Fresco', 'Hortalizas'],
+            ['Lechuga Hidropónica', 4, 1, 2000, '/images/Lechuga-Hidropónica.png', 80, 'Nuevo', 'Hortalizas'],
+            ['Mango Azúcar', 4, 1, 1500, '/images/Mango-Azucar.png', 120, 'Oferta', 'Frutas'],
+            ['Plátano Verde', 4, 1, 1200, '/images/Platano-Verde.png', 200, '', 'Frutas'],
+            ['Papa Criolla', 4, 1, 2800, '/images/Papa-Criolla.png', 150, 'Fresco', 'Tubérculos'],
+            ['Yuca Fresca', 4, 1, 2500, '/images/Yuca-Fresca.png', 90, '', 'Tubérculos'],
+            ['Huevos de Campo (docena)', 4, 1, 4000, '/images/Huevos-de-Campo-(docena).png', 60, 'Nuevo', 'Proteína'],
+            ['Queso Campesino', 4, 1, 5500, '/images/Queso-Campesino.png', 40, 'Oferta', 'Lácteos'],
+            ['Leche Orgánica (litro)', 4, 1, 3000, '/images/Leche-Organica-(litro).png', 70, '', 'Lácteos'],
+            ['Miel Artesanal', 4, 1, 6000, '/images/Miel-Artesanal.png', 30, 'Nuevo', 'Procesados Naturales'],
+            ['Café Especial', 4, 1, 8500, '/images/Cafe-Especial.png', 50, '-10%', 'Procesados Naturales'],
+            ['Aguacate Hass', 4, 1, 2200, '/images/Aguacate-Hass.png', 0, 'Fresco', 'Frutas'],
+            ['Naranja Dulce', 4, 1, 1800, '/images/Naranja-Dulce.png', 120, '', 'Frutas'],
+            ['Frijol Rojo', 4, 1, 3000, '/images/Frijol-rojo.png', 80, 'Nuevo', 'Granos'],
+            ['Maíz Amarillo', 4, 1, 2500, '/images/Maiz-Amarillo.png', 90, '', 'Granos'],
+          ];
+
+
+          productosEjemplo.forEach(p => {
+
+            stmt.run(
+              p[0],
+              p[1],
+              p[2],
+              p[3],
+              p[4],
+              p[5],
+              p[6],
+              p[7],
+              (err) => {
+
+                if (err) {
+                  console.error(
+                    'Error insertando producto:',
+                    p[0],
+                    err
+                  );
+                }
+
+              }
+            );
+
+          });
+
+          stmt.finalize((err) => {
+
+            if (err) {
+              console.error("Error finalizando productos:", err);
+              return;
+            }
+
+            console.log("Productos iniciales cargados.");
+            crearTablasVentas(); //crear la de ventas despues de agregar los productos
+          });
+
+        } else {
+          crearTablasVentas(); // o crear lade ventas si ya hay productos
+        }
+
+      });
+
+    });
+
+  }
+
+  // Paso 4 crear tabla de Ventas y Detalle
+  function crearTablasVentas() {
+    db.run(`
+    CREATE TABLE IF NOT EXISTS ventas (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      cliente_documento TEXT NOT NULL,
+      cliente_nombre TEXT NOT NULL,
+      cliente_email TEXT,            
+      cliente_telefono TEXT,          
+      reference_code TEXT UNIQUE NOT NULL,
+      numbering_range_id INTEGER,
+      bill_number TEXT,
+      cufe TEXT,
+      qr_url TEXT,
+      total REAL NOT NULL,
+      estado TEXT DEFAULT 'completado',
+      fecha_creacion TEXT DEFAULT (datetime('now', '-5 hours'))
+    )
+  `, (err) => {
+      if (err) {
+        console.error("Error creando tabla ventas:", err);
+        return;
+      }
+
+      db.run(`
+      CREATE TABLE IF NOT EXISTS detalle_ventas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        venta_id INTEGER NOT NULL,
+        producto_id INTEGER NOT NULL,
+        cantidad INTEGER NOT NULL,
+        precio_unitario REAL NOT NULL,
+        subtotal REAL NOT NULL,
+        FOREIGN KEY (venta_id) REFERENCES ventas(id) ON DELETE CASCADE,
+        FOREIGN KEY (producto_id) REFERENCES productos(id)
+      )
+    `, (err) => {
+        if (err) {
+          console.error("Error creando tabla detalle_ventas:", err);
+          return;
+        }
+
+        console.log("Tablas de ventas y detalle_ventas listas.");
+      });
+    });
+  }
+
 });
 
 // =====================================================
