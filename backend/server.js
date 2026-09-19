@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 require('dotenv').config();
+const bcrypt = require('bcryptjs');
 
 const app = express();
 const PORT = 3000;
@@ -241,33 +242,37 @@ app.get('/api/estados', (req, res) => {
 // =====================================================
 
 // Login
+
+const bcrypt = require('bcryptjs');
+
 app.post('/api/login', (req, res) => {
   const { correo, password } = req.body;
 
   console.log('Intentando login con:', correo, password);
 
-  db.get(
-    'SELECT * FROM usuarios WHERE correo = ? AND password = ?',
-    [correo, password],
-    (err, user) => {
+  // Buscar usuario solo por correo
+  db.get('SELECT * FROM usuarios WHERE correo = ?', [correo], (err, user) => {
+    if (err) {
+      console.error('Error en la consulta:', err);
+      return res.status(500).json({ error: 'Error en el servidor' });
+    }
+
+    if (!user) {
+      return res.status(401).json({ error: 'Credenciales incorrectas' });
+    }
+
+    // Comparar contraseña ingresada con el hash almacenado
+    bcrypt.compare(password, user.password, (err, isMatch) => {
       if (err) {
-        console.log('Error en la consulta:', err);
-        return res.status(500).json({
-          error: 'Error en el servidor'
-        });
+        console.error('Error comparando password:', err);
+        return res.status(500).json({ error: 'Error en el servidor' });
       }
 
-      console.log('Usuario encontrado en callback:', user);
-
-      if (!user) {
-        return res.status(401).json({
-          error: 'Credenciales incorrectas'
-        });
+      if (!isMatch) {
+        return res.status(401).json({ error: 'Credenciales incorrectas' });
       }
 
-      console.log(
-        `Login exitoso: ${user.nombres} ${user.apellidos}`
-      );
+      console.log(`Login exitoso: ${user.nombres} ${user.apellidos}`);
 
       res.json({
         success: true,
@@ -275,13 +280,14 @@ app.post('/api/login', (req, res) => {
           id: user.id,
           nombres: user.nombres,
           apellidos: user.apellidos,
+          num_documento: user.num_documento,
           correo: user.correo,
           rol: user.rol,
           fecha_creacion: user.fecha_creacion
         }
       });
-    }
-  );
+    });
+  });
 });
 
 
