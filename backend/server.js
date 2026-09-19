@@ -1,12 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
-<<<<<<< HEAD
-const bcrypt = require('bcrypt');
-const saltRounds = 10; // nivel de seguridad del hash
-=======
 require('dotenv').config();
->>>>>>> cacfbbf697ebd6920187b1b8a17531b6cbbf2e7f
 
 const app = express();
 const PORT = 3000;
@@ -74,6 +69,7 @@ db.serialize(() => {
   // 2. CREAR TABLA USUARIOS
   // =====================================================
   function crearUsuarios() {
+
     db.run(`
       CREATE TABLE IF NOT EXISTS usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -86,18 +82,22 @@ db.serialize(() => {
         fecha_creacion TEXT DEFAULT (datetime('now', '-5 hours'))
       )
     `, (err) => {
+
       if (err) {
         console.error("Error creando tabla usuarios:", err);
         return;
       }
-    
+
+      // Verificar usuarios
       db.get('SELECT COUNT(*) as count FROM usuarios', (err, row) => {
+
         if (err) {
           console.error("Error verificando usuarios:", err);
           return;
         }
-      
+
         if (row.count === 0) {
+
           const usuariosIniciales = [
             {
               id: 1,
@@ -140,7 +140,7 @@ db.serialize(() => {
               fecha_creacion: '2023-01-01 00:00:00'
             }
           ];
-        
+
           const stmt = db.prepare(`
             INSERT INTO usuarios
             (
@@ -155,47 +155,54 @@ db.serialize(() => {
             )
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
           `);
-          
+
           usuariosIniciales.forEach(u => {
-            // Hashear la contraseña antes de insertarla
-            bcrypt.hash(u.password, saltRounds, (err, hash) => {
+
+            stmt.run([
+              u.id,
+              u.nombres,
+              u.apellidos,
+              u.num_documento,
+              u.correo,
+              u.password,
+              u.rol,
+              u.fecha_creacion
+            ], (err) => {
+
               if (err) {
-                console.error(`Error hasheando password de ${u.correo}:`, err);
-                return;
+                console.error(`Error insertando a ${u.correo}:`, err);
               }
-            
-              stmt.run([
-                u.id,
-                u.nombres,
-                u.apellidos,
-                u.num_documento,
-                u.correo,
-                hash, // aquí va el hash en vez del texto plano
-                u.rol,
-                u.fecha_creacion
-              ], (err) => {
-                if (err) {
-                  console.error(`Error insertando a ${u.correo}:`, err);
-                }
-              });
+
             });
+
           });
-        
+
           stmt.finalize((err) => {
+
             if (err) {
               console.error("Error finalizando usuarios:", err);
               return;
             }
-          
-            console.log("Usuarios iniciales cargados con contraseñas hasheadas.");
+
+            console.log("Usuarios iniciales cargados desde el array.");
+
+            // IMPORTANTE:
+            // Solo después de terminar los usuarios
+            // se crean los productos.
             crearProductos();
+
           });
-        
+
         } else {
+
           crearProductos();
+
         }
+
       });
+
     });
+
   }
 
 
