@@ -243,8 +243,6 @@ app.get('/api/estados', (req, res) => {
 
 // Login
 
-const bcrypt = require('bcryptjs');
-
 app.post('/api/login', (req, res) => {
   const { correo, password } = req.body;
 
