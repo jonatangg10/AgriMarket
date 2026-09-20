@@ -57,7 +57,7 @@ app.use((req, res, next) => {
 });
 
 // =====================================================
-// ENDPOINTS DE AUTENTICACIÓN
+// ENDPOINTS DE AUTENTICACIÓN / USUARIOS
 // =====================================================
 
   // Importar router de usuarios
@@ -80,262 +80,9 @@ app.use((req, res, next) => {
   const productosRouter = require('./endpoints/productos.js')(db);
   app.use('/api/productos', productosRouter);
 
-
-
-// Actualizar stock al comprar
-app.put('/api/productos/:id/stock', (req, res) => {
-  const { cantidad } = req.body;
-
-  db.run(
-    'UPDATE productos SET stock = stock - ? WHERE id = ? AND stock >= ?',
-    [cantidad, req.params.id, cantidad],
-    function (err) {
-      if (err) {
-        return res.status(500).json({
-          error: 'Error al actualizar stock'
-        });
-      }
-
-      if (this.changes === 0) {
-        return res.status(400).json({
-          error: 'Stock insuficiente'
-        });
-      }
-
-      res.json({ success: true });
-    }
-  );
-});
-
-// Actualizar estado de un producto
-app.put('/api/productos/:id/estado', (req, res) => {
-  const { estado_id } = req.body;
-  const productoId = req.params.id;
-
-  if (!estado_id) {
-    return res.status(400).json({
-      error: 'Se requiere estado_id'
-    });
-  }
-
-  // Verificar que el estado exista
-  db.get(
-    'SELECT id FROM estado WHERE id = ?',
-    [estado_id],
-    (err, row) => {
-      if (err) {
-        console.error('Error al consultar estado:', err);
-        return res.status(500).json({
-          error: 'Error al verificar estado'
-        });
-      }
-
-      if (!row) {
-        return res.status(400).json({
-          error: 'El estado_id no existe'
-        });
-      }
-
-      // Actualizar estado
-      db.run(
-        'UPDATE productos SET estado_id = ? WHERE id = ?',
-        [estado_id, productoId],
-        function (err) {
-          if (err) {
-            console.error('Error al actualizar estado:', err);
-            return res.status(500).json({
-              error: 'Error al actualizar estado'
-            });
-          }
-
-          if (this.changes === 0) {
-            return res.status(404).json({
-              error: 'Producto no encontrado'
-            });
-          }
-
-          res.json({ success: true });
-        }
-      );
-    }
-  );
-});
-
-
-
-
-
-// =====================================================
-// ENDPOINTS DE USUARIOS
-// =====================================================
-
-// Obtener todos los usuarios
-app.get('/api/usuarios', (req, res) => {
-  db.all(
-    `SELECT 
-      id,
-      nombres,
-      apellidos,
-      num_documento,
-      correo,
-      password,
-      rol,
-      fecha_creacion
-    FROM usuarios`,
-    (err, rows) => {
-      if (err) {
-        return res.status(500).json({
-          error: 'Error al obtener usuarios'
-        });
-      }
-
-      res.json({
-        success: true,
-        usuarios: rows
-      });
-    }
-  );
-});
-
-// Obtener usuarios paginados y con búsqueda
-app.get('/api/usuarios/paginados', (req, res) => {
-  const {
-    page = 1,
-    pageSize = 10,
-    search = ''
-  } = req.query;
-
-  const pageInt = Math.max(1, parseInt(page));
-  const pageSizeInt = Math.min(50, Math.max(1, parseInt(pageSize)));
-  const offset = (pageInt - 1) * pageSizeInt;
-
-  let sqlBase = `FROM usuarios WHERE 1=1`;
-  const params = [];
-
-  if (search) {
-    sqlBase += `
-      AND (
-        nombres LIKE ?
-        OR apellidos LIKE ?
-        OR correo LIKE ?
-      )
-    `;
-
-    params.push(
-      `%${search}%`,
-      `%${search}%`,
-      `%${search}%`
-    );
-  }
-
-  const sqlCount = `
-    SELECT COUNT(*) AS total
-    ${sqlBase}
-  `;
-
-  const sqlData = `
-    SELECT 
-      id,
-      nombres,
-      apellidos,
-      correo,
-      rol,
-      fecha_creacion
-    ${sqlBase}
-    ORDER BY nombres ASC
-    LIMIT ? OFFSET ?
-  `;
-
-  db.get(sqlCount, params, (err, countRow) => {
-    if (err) {
-      return res.status(500).json({
-        error: err.message
-      });
-    }
-
-    const total = countRow.total;
-
-    db.all(
-      sqlData,
-      [...params, pageSizeInt, offset],
-      (err, rows) => {
-        if (err) {
-          return res.status(500).json({
-            error: err.message
-          });
-        }
-
-        res.json({
-          usuarios: rows,
-          total: total,
-          page: pageInt,
-          pageSize: pageSizeInt
-        });
-      }
-    );
-  });
-});
-
-// Eliminar usuario
-app.delete('/api/usuarios/:id', (req, res) => {
-  const { id } = req.params;
-
-  db.run(
-    'DELETE FROM usuarios WHERE id = ? AND rol != "admin"',
-    [id],
-    function (err) {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({
-          error: 'Error al eliminar usuario'
-        });
-      }
-
-      if (this.changes === 0) {
-        return res.status(404).json({
-          error: 'Usuario no encontrado o es un Administrador protegido'
-        });
-      }
-
-      res.json({
-        success: true,
-        message: 'Usuario eliminado correctamente'
-      });
-    }
-  );
-});
-
-// Actualizar rol de usuario
-app.put('/api/usuarios/:id/rol', (req, res) => {
-  const { id } = req.params;
-  const { rol } = req.body;
-
-  if (!['admin', 'user'].includes(rol)) {
-    return res.status(400).json({
-      error: 'Rol no válido'
-    });
-  }
-
-  db.run(
-    'UPDATE usuarios SET rol = ? WHERE id = ?',
-    [rol, id],
-    function (err) {
-      if (err) {
-        return res.status(500).json({
-          error: 'Error al actualizar rol'
-        });
-      }
-
-      res.json({ success: true });
-    }
-  );
-});
-
-
 // ====================================================
 // ENDPOINT TEMPORAL , BORRAR EN PRODUCCION
 // =====================================================
-
 
 app.post('/api/sql', (req, res) => {
   const { sql, params = [] } = req.body;
@@ -354,9 +101,6 @@ app.post('/api/sql', (req, res) => {
     });
   }
 });
-
-// fin del endpoint TEMPORAL
-
 
 // =================================================
 // ENDPOINTS MUNICIPIOS Y DEPARTAMENTOS
@@ -399,8 +143,6 @@ app.get('/api/municipios', (req, res) => {
     );
   }
 });
-// fin endpoint municipios y departamentos
-
 
 // =================================================
 // ENDPOINTS FACTURAS

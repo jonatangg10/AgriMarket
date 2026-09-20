@@ -115,5 +115,93 @@ module.exports = (db) => {
     });
   });
 
+  // Actualizar stock al comprar
+  router.put('/:id/stock', (req, res) => {
+    const { cantidad } = req.body;
+    const { id } = req.params;
+
+    db.run(
+      'UPDATE productos SET stock = stock - ? WHERE id = ? AND stock >= ?',
+      [cantidad, id, cantidad],
+      function (err) {
+        if (err) {
+          console.error('Error al actualizar stock:', err);
+
+          return res.status(500).json({
+            error: 'Error al actualizar stock'
+          });
+        }
+
+        if (this.changes === 0) {
+          return res.status(400).json({
+            error: 'Stock insuficiente'
+          });
+        }
+
+        res.json({
+          success: true
+        });
+      }
+    );
+  });
+
+  // Actualizar estado de un producto
+  router.put('/:id/estado', (req, res) => {
+    const { estado_id } = req.body;
+    const productoId = req.params.id;
+  
+    if (!estado_id) {
+      return res.status(400).json({
+        error: 'Se requiere estado_id'
+      });
+    }
+  
+    // Verificar que el estado exista
+    db.get(
+      'SELECT id FROM estado WHERE id = ?',
+      [estado_id],
+      (err, row) => {
+        if (err) {
+          console.error('Error al consultar estado:', err);
+        
+          return res.status(500).json({
+            error: 'Error al verificar estado'
+          });
+        }
+      
+        if (!row) {
+          return res.status(400).json({
+            error: 'El estado_id no existe'
+          });
+        }
+      
+        // Actualizar estado
+        db.run(
+          'UPDATE productos SET estado_id = ? WHERE id = ?',
+          [estado_id, productoId],
+          function (err) {
+            if (err) {
+              console.error('Error al actualizar estado:', err);
+            
+              return res.status(500).json({
+                error: 'Error al actualizar estado'
+              });
+            }
+          
+            if (this.changes === 0) {
+              return res.status(404).json({
+                error: 'Producto no encontrado'
+              });
+            }
+          
+            res.json({
+              success: true
+            });
+          }
+        );
+      }
+    );
+  });
+
   return router;
 };
