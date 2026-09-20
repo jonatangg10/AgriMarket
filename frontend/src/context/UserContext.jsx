@@ -49,12 +49,12 @@ export const UserProvider = ({ children }) => {
   // --- Nueva función para guardar (Crear o Editar) ---
 const guardarUsuario = async (usuario) => {
     try {
-      // const url = usuario.id 
-      //   ? `https://agrimarket-yfbo.onrender.com/api/usuarios/${usuario.id}` 
-      //   : `https://agrimarket-yfbo.onrender.com/api/usuarios`;
       const url = usuario.id 
-        ? `http://localhost:3000/api/usuarios/${usuario.id}` 
-        : `http://localhost:3000/api/usuarios`;
+        ? `https://agrimarket-yfbo.onrender.com/api/usuarios/${usuario.id}` 
+        : `https://agrimarket-yfbo.onrender.com/api/usuarios`;
+      // const url = usuario.id 
+      //   ? `http://localhost:3000/api/usuarios/${usuario.id}` 
+      //   : `http://localhost:3000/api/usuarios`;
       
       const method = usuario.id ? 'PUT' : 'POST';
 
