@@ -18,12 +18,12 @@ const crearEstado = require('./db/crearEstado');
 const crearVentas = require('./db/crearVentas');
 const crearGeneros = require('./db/crearGenero');
 const crearRoles = require('./db/crearRoles');
-const contacto = require('./db/contacto');
+const crearContacto = require('./db/crearContacto.js');
 
 // Migración: Inicialización de la base de datos
 db.serialize(() => {
   db.run("PRAGMA foreign_keys = ON");
-  contacto(db, () => {
+  crearContacto(db, () => {
     crearEstado(db, () => {
       crearGeneros(db, () => {
         crearRoles(db, () => {
