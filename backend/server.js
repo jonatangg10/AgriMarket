@@ -237,25 +237,9 @@ app.put('/api/productos/:id/estado', (req, res) => {
 // ENDPOINTS DE ESTADOS
 // =====================================================
 
-// Obtener todos los estados
-app.get('/api/estados', (req, res) => {
-  db.all(
-    'SELECT id, nombre FROM estado',
-    (err, rows) => {
-      if (err) {
-        console.error('Error al obtener estados:', err);
-        return res.status(500).json({
-          error: 'Error al obtener estados'
-        });
-      }
-
-      res.json(rows);
-    }
-  );
-});
-
-
-
+  // Importar router de estados
+  const estadosRouter = require('./endpoints/estados.js')(db);
+  app.use('/api/estados', estadosRouter);
 
 
 // =====================================================
