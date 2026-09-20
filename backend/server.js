@@ -80,6 +80,14 @@ app.use((req, res, next) => {
   const productosRouter = require('./endpoints/productos.js')(db);
   app.use('/api/productos', productosRouter);
 
+// =====================================================
+// ENDPOINTS DE CONTACTO
+// =====================================================
+
+  // Importar router de contacto
+  const contactoRouter = require('./endpoints/contacto.js')(db);
+  app.use('/api', contactoRouter);
+
 // ====================================================
 // ENDPOINT TEMPORAL , BORRAR EN PRODUCCION
 // =====================================================
