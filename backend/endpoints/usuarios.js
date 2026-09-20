@@ -139,7 +139,8 @@ module.exports = (db, bcrypt) => {
         correo,
         rol_id,
         genero_id,
-        fecha_creacion
+        fecha_creacion,
+        num_documento
       ${sqlBase}
       ORDER BY nombres ASC
       LIMIT ? OFFSET ?
@@ -267,6 +268,102 @@ module.exports = (db, bcrypt) => {
         );
       }
     );
+  });
+
+
+  // Endpoint crear / edutar usuario
+
+  router.post('/usuarios', async (req, res) => {
+    const { nombres, apellidos, num_documento, correo, password, genero_id, rol_id } = req.body;
+
+    if (!nombres || !correo || !password) {
+      return res.status(400).json({ error: 'Nombres, correo y contraseña son obligatorios' });
+    }
+
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const sql = `
+        INSERT INTO usuarios (nombres, apellidos, num_documento, correo, password, genero_id, rol_id, fecha_creacion)
+        VALUES (?, ?, ?, ?, ?, ?, ?, DATETIME('now'))
+      `;
+
+      db.run(
+        sql,
+        [
+          nombres,
+          apellidos || '',
+          num_documento || '',
+          correo,
+          hashedPassword,
+          genero_id || 1,
+          rol_id || 2
+        ],
+        function (err) {
+          if (err) {
+            console.error('Error al insertar usuario:', err);
+            return res.status(500).json({ error: 'El correo o documento ya se encuentra registrado' });
+          }
+
+          res.status(201).json({
+            success: true,
+            message: 'Usuario creado con éxito',
+            id: this.lastID
+          });
+        }
+      );
+    } catch (error) {
+      console.error('Error hasheando contraseña:', error);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  });
+
+  router.put('/usuarios/:id', async (req, res) => {
+    const { id } = req.params;
+    // 👈 Ya no destructuramos num_documento para no modificarlo
+    const { nombres, apellidos, correo, password, genero_id, rol_id } = req.body;
+
+    if (!nombres || !correo) {
+      return res.status(400).json({ error: 'Nombres y correo son obligatorios' });
+    }
+
+    try {
+      // 👈 Excluimos num_documento del SET
+      let sql = `
+      UPDATE usuarios 
+      SET nombres = ?, apellidos = ?, correo = ?, genero_id = ?, rol_id = ?
+    `;
+      let params = [nombres, apellidos, correo, genero_id, rol_id];
+
+
+      if (password && password.trim() !== '') {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        sql += `, password = ?`;
+        params.push(hashedPassword);
+      }
+
+      sql += ` WHERE id = ?`;
+      params.push(id);
+
+      db.run(sql, params, function (err) {
+        if (err) {
+          console.error('Error al actualizar usuario:', err);
+          return res.status(500).json({ error: 'Error al actualizar datos del usuario' });
+        }
+
+        if (this.changes === 0) {
+          return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        res.json({
+          success: true,
+          message: 'Usuario actualizado correctamente'
+        });
+      });
+    } catch (error) {
+      console.error('Error al procesar actualización:', error);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
   });
 
   return router;
