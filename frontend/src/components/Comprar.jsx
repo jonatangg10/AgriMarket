@@ -90,8 +90,7 @@ const FormComprar = () => {
       console.log("SERVIDOR RESPONDE:");
       console.log(data.factura);
       setTimeout(() => {
-        const ventanaFactura = window.open('about:blank', '_blank');
-        ventanaFactura.location.href = data.factura.links.public_url;
+        window.location.href = data?.factura?.links?.public_url;// tocó assi pa mostar algo aunque sea
       }, 2000);
       // ---------------------------------------------------------------------------
 
