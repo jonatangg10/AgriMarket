@@ -146,6 +146,23 @@ const UserForm = ({ usuario, onSave, onCancel }) => {
                         />
                     </div>
 
+                    {/* Género */}
+                    <div>
+                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">
+                            Género
+                        </label>
+                        <select
+                            name="genero_id"
+                            value={formData.genero_id}
+                            onChange={handleChange}
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                        >
+                            <option value={1}>Masculino</option>
+                            <option value={2}>Femenino</option>
+                            <option value={3}>Otro</option>
+                        </select>
+                    </div>
+
                     {/* Rol */}
                     <div>
                         <label className="block text-xs font-bold uppercase text-slate-500 mb-2">

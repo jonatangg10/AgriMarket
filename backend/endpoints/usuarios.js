@@ -275,7 +275,6 @@ module.exports = (db, bcrypt) => {
 
   router.post('/usuarios', async (req, res) => {
     const { nombres, apellidos, num_documento, correo, password, genero_id, rol_id } = req.body;
-
     if (!nombres || !correo || !password) {
       return res.status(400).json({ error: 'Nombres, correo y contraseña son obligatorios' });
     }
@@ -320,7 +319,7 @@ module.exports = (db, bcrypt) => {
 
   router.put('/usuarios/:id', async (req, res) => {
     const { id } = req.params;
-    // 👈 Ya no destructuramos num_documento para no modificarlo
+
     const { nombres, apellidos, correo, password, genero_id, rol_id } = req.body;
 
     if (!nombres || !correo) {
@@ -328,7 +327,6 @@ module.exports = (db, bcrypt) => {
     }
 
     try {
-      // 👈 Excluimos num_documento del SET
       let sql = `
       UPDATE usuarios 
       SET nombres = ?, apellidos = ?, correo = ?, genero_id = ?, rol_id = ?

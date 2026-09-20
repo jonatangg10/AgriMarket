@@ -77,7 +77,7 @@ const AdminUsers = () => {
 
   const handleGuardarUsuario = async (datosUsuario) => {
     const exito = await guardarUsuario(datosUsuario);
-
+    console.log(exito);
     if (exito) {
       setVista("tabla");
       cargarUsuarios();
