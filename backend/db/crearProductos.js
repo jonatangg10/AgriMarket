@@ -27,7 +27,7 @@ function crearProductos(db, callback) {
 
         const productosEjemplo = [
           ['Tomates Orgánicos', 4, 1, 3500, '/images/Tomate-Chonto.png', 100, 'Fresco', 'Hortalizas'],
-          ['Lechuga Hidropónica', 4, 1, 2000, '/images/Lechuga-Hidropónica.png', 80, 'Nuevo', 'Hortalizas'],
+          ['Lechuga Hidropónica', 5, 1, 2000, '/images/Lechuga-Hidropónica.png', 80, 'Nuevo', 'Hortalizas'],
           ['Mango Azúcar', 4, 1, 1500, '/images/Mango-Azucar.png', 120, 'Oferta', 'Frutas']
         ];
 

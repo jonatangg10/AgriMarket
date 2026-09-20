@@ -16,24 +16,41 @@ const crearUsuarios = require('./db/crearUsuarios');
 const crearProductos = require('./db/crearProductos');
 const crearEstado = require('./db/crearEstado');
 const crearVentas = require('./db/crearVentas');
+const crearGeneros = require('./db/crearGenero');
+const crearRoles = require('./db/crearRoles');
+const crearContacto = require('./db/crearContacto.js');
 const crearDepartamentos = require('./db/crearDepartamentos');
 const crearMunicipios = require('./db/crearMunicipios');
 
 // Migración: Inicialización de la base de datos
 db.serialize(() => {
   db.run("PRAGMA foreign_keys = ON");
-  crearEstado(db, () => {
-    crearDepartamentos(db, () => {
-      crearMunicipios(db, () => {
-        crearUsuarios(db, () => {
-          crearProductos(db, () => {
-            crearVentas(db);
+  crearContacto(db, () => {
+    crearEstado(db, () => {
+      crearGeneros(db, () => {
+        crearRoles(db, () => {
+          crearDepartamentos(db, () => {
+            crearMunicipios(db, () => {
+              crearUsuarios(db, () => {
+                crearProductos(db, () => {
+                  crearVentas(db);
+                });
+              });
+            });
           });
         });
       });
     });
   });
 });
+
+// =====================================================
+// ENDPOINTS DE AUTENTICACIÓN
+// =====================================================
+
+// Importar router de usuarios
+const usuariosRouter = require('./endpoints/usuarios.js')(db, bcrypt);
+app.use('/api', usuariosRouter);
 
 // =====================================================
 // ENDPOINTS DE PRODUCTOS
@@ -85,7 +102,8 @@ app.get('/api/productos/paginados', (req, res) => {
       p.categoria,
       e.nombre AS estado,
       u.nombres AS vendedor_nombres,
-      u.apellidos AS vendedor_apellidos
+      u.apellidos AS vendedor_apellidos,
+      u.genero_id AS vendedor_genero_id
     FROM productos p
     JOIN estado e ON p.estado_id = e.id
     JOIN usuarios u ON p.usuario_id = u.id
@@ -243,56 +261,7 @@ app.get('/api/estados', (req, res) => {
 });
 
 
-// =====================================================
-// ENDPOINTS DE AUTENTICACIÓN
-// =====================================================
 
-// Login
-
-app.post('/api/login', (req, res) => {
-  const { correo, password } = req.body;
-
-  console.log('Intentando login con:', correo, password);
-
-  // Buscar usuario solo por correo
-  db.get('SELECT * FROM usuarios WHERE correo = ?', [correo], (err, user) => {
-    if (err) {
-      console.error('Error en la consulta:', err);
-      return res.status(500).json({ error: 'Error en el servidor' });
-    }
-
-    if (!user) {
-      return res.status(401).json({ error: 'Credenciales incorrectas' });
-    }
-
-    // Comparar contraseña ingresada con el hash almacenado
-    bcrypt.compare(password, user.password, (err, isMatch) => {
-      if (err) {
-        console.error('Error comparando password:', err);
-        return res.status(500).json({ error: 'Error en el servidor' });
-      }
-
-      if (!isMatch) {
-        return res.status(401).json({ error: 'Credenciales incorrectas' });
-      }
-
-      console.log(`Login exitoso: ${user.nombres} ${user.apellidos}`);
-
-      res.json({
-        success: true,
-        usuario: {
-          id: user.id,
-          nombres: user.nombres,
-          apellidos: user.apellidos,
-          num_documento: user.num_documento,
-          correo: user.correo,
-          rol: user.rol,
-          fecha_creacion: user.fecha_creacion
-        }
-      });
-    });
-  });
-});
 
 
 // =====================================================
@@ -547,10 +516,10 @@ const FACTUS_API_URL = process.env.FACTUS_API_URL;
 async function obtenerTokenFactus() {
   const bodyData = new URLSearchParams({
     grant_type: 'password',
-    client_id: process.env.FACTUS_CLIENT_ID ,       // todo este poco de variables deberia ir en .env del server
-    client_secret: process.env.FACTUS_CLIENT_SECRET ,
-    username: process.env.FACTUS_USERNAME ,
-    password: process.env.FACTUS_PASSWORD 
+    client_id: process.env.FACTUS_CLIENT_ID,       // todo este poco de variables deberia ir en .env del server
+    client_secret: process.env.FACTUS_CLIENT_SECRET,
+    username: process.env.FACTUS_USERNAME,
+    password: process.env.FACTUS_PASSWORD
   });
 
   const response = await fetch(`${FACTUS_API_URL}/oauth/token`, {
