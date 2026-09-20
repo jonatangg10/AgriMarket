@@ -47,11 +47,14 @@ export const UserProvider = ({ children }) => {
   };
 
   // --- Nueva función para guardar (Crear o Editar) ---
-  const guardarUsuario = async (usuario) => {
+const guardarUsuario = async (usuario) => {
     try {
       const url = usuario.id 
         ? `https://agrimarket-yfbo.onrender.com/api/usuarios/${usuario.id}` 
         : `https://agrimarket-yfbo.onrender.com/api/usuarios`;
+      // const url = usuario.id 
+      //   ? `http://localhost:3000/api/usuarios/${usuario.id}` 
+      //   : `http://localhost:3000/api/usuarios`;
       
       const method = usuario.id ? 'PUT' : 'POST';
 
@@ -61,9 +64,13 @@ export const UserProvider = ({ children }) => {
         body: JSON.stringify(usuario),
       });
 
-      if (!response.ok) throw new Error("Error al guardar usuario");
+      const data = await response.json();
 
-      toast.success(usuario.id ? "Usuario actualizado" : "Usuario creado");
+      if (!response.ok) {
+        throw new Error(data.error || "Error al procesar la solicitud");
+      }
+
+      toast.success(usuario.id ? "Usuario actualizado correctamente" : "Usuario creado correctamente");
       return true;
     } catch (err) {
       toast.error(err.message);
