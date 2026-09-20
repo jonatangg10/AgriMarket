@@ -16,18 +16,35 @@ const crearUsuarios = require('./db/crearUsuarios');
 const crearProductos = require('./db/crearProductos');
 const crearEstado = require('./db/crearEstado');
 const crearVentas = require('./db/crearVentas');
+const crearGeneros = require('./db/crearGenero');
+const crearRoles = require('./db/crearRoles');
+const contacto = require('./db/contacto');
 
 // Migración: Inicialización de la base de datos
 db.serialize(() => {
   db.run("PRAGMA foreign_keys = ON");
-  crearEstado(db, () => {
-    crearUsuarios(db, () => {
-      crearProductos(db, () => {
-        crearVentas(db);
+  contacto(db, () => {
+    crearEstado(db, () => {
+      crearGeneros(db, () => {
+        crearRoles(db, () => {
+          crearUsuarios(db, () => {
+            crearProductos(db, () => {
+              crearVentas(db);
+            });
+          });
+        });
       });
     });
   });
 });
+
+// =====================================================
+// ENDPOINTS DE AUTENTICACIÓN
+// =====================================================
+
+  // Importar router de usuarios
+  const usuariosRouter = require('./endpoints/usuarios.js')(db, bcrypt);
+  app.use('/api', usuariosRouter);
 
 // =====================================================
 // ENDPOINTS DE PRODUCTOS
@@ -237,56 +254,7 @@ app.get('/api/estados', (req, res) => {
 });
 
 
-// =====================================================
-// ENDPOINTS DE AUTENTICACIÓN
-// =====================================================
 
-// Login
-
-app.post('/api/login', (req, res) => {
-  const { correo, password } = req.body;
-
-  console.log('Intentando login con:', correo, password);
-
-  // Buscar usuario solo por correo
-  db.get('SELECT * FROM usuarios WHERE correo = ?', [correo], (err, user) => {
-    if (err) {
-      console.error('Error en la consulta:', err);
-      return res.status(500).json({ error: 'Error en el servidor' });
-    }
-
-    if (!user) {
-      return res.status(401).json({ error: 'Credenciales incorrectas' });
-    }
-
-    // Comparar contraseña ingresada con el hash almacenado
-    bcrypt.compare(password, user.password, (err, isMatch) => {
-      if (err) {
-        console.error('Error comparando password:', err);
-        return res.status(500).json({ error: 'Error en el servidor' });
-      }
-
-      if (!isMatch) {
-        return res.status(401).json({ error: 'Credenciales incorrectas' });
-      }
-
-      console.log(`Login exitoso: ${user.nombres} ${user.apellidos}`);
-
-      res.json({
-        success: true,
-        usuario: {
-          id: user.id,
-          nombres: user.nombres,
-          apellidos: user.apellidos,
-          num_documento: user.num_documento,
-          correo: user.correo,
-          rol: user.rol,
-          fecha_creacion: user.fecha_creacion
-        }
-      });
-    });
-  });
-});
 
 
 // =====================================================
