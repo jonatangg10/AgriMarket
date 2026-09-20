@@ -88,6 +88,23 @@ app.use((req, res, next) => {
   const contactoRouter = require('./endpoints/contacto.js')(db);
   app.use('/api', contactoRouter);
 
+// =====================================================
+// ENDPOINTS DE DEPARTAMENTOS
+// =====================================================
+
+  // Importar router de departamentos
+  const departamentosRouter = require('./endpoints/departamentos.js')(db);
+  app.use('/api/departamentos', departamentosRouter);
+
+
+// =====================================================
+// ENDPOINTS DE MUNICIPIOS
+// =====================================================
+
+  // Importar router de municipios
+  const municipiosRouter = require('./endpoints/municipios.js')(db);
+  app.use('/api/municipios', municipiosRouter);
+
 // ====================================================
 // ENDPOINT TEMPORAL , BORRAR EN PRODUCCION
 // =====================================================
@@ -111,55 +128,11 @@ app.post('/api/sql', (req, res) => {
 });
 
 // =================================================
-// ENDPOINTS MUNICIPIOS Y DEPARTAMENTOS
-// ==================================================
-app.get('/api/departamentos', (req, res) => {
-  db.all('SELECT code, nombre FROM departamentos ORDER BY nombre ASC', (err, rows) => {
-    if (err) {
-      console.error('Error al obtener departamentos:', err);
-      return res.status(500).json({ error: 'Error al obtener departamentos' });
-    }
-    res.json(rows);
-  });
-});
-
-app.get('/api/municipios', (req, res) => {
-  const { departamento } = req.query;
-
-  if (departamento) {
-    db.all(
-      'SELECT code, nombre, departamento_code FROM municipios WHERE departamento_code = ? ORDER BY nombre ASC',
-      [departamento],
-      (err, rows) => {
-        if (err) {
-          console.error('Error al obtener municipios filtrados:', err);
-          return res.status(500).json({ error: 'Error al obtener municipios' });
-        }
-        res.json(rows);
-      }
-    );
-  } else {
-    db.all(
-      'SELECT code, nombre, departamento_code FROM municipios ORDER BY nombre ASC',
-      (err, rows) => {
-        if (err) {
-          console.error('Error al obtener todos los municipios:', err);
-          return res.status(500).json({ error: 'Error al obtener municipios' });
-        }
-        res.json(rows);
-      }
-    );
-  }
-});
-
-// =================================================
 // ENDPOINTS FACTURAS
 // ==================================================
 // estructura preliminar a llamado a factus
 
 const FACTUS_API_URL = process.env.FACTUS_API_URL;
-
-
 
 // FUNCIONES facturas
 
