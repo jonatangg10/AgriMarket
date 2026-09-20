@@ -18,7 +18,7 @@ const crearEstado = require('./db/crearEstado');
 const crearVentas = require('./db/crearVentas');
 const crearGeneros = require('./db/crearGenero');
 const crearRoles = require('./db/crearRoles');
-const crearContacto = require('./db/crearContacto.js');
+const crearContacto = require('./db/crearContacto');
 const crearDepartamentos = require('./db/crearDepartamentos');
 const crearMunicipios = require('./db/crearMunicipios');
 
