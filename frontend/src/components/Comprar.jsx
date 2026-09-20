@@ -1,12 +1,16 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect, useMemo } from "react";
 import { CarritoContext } from "../context/CarritoContext";
 import { toast } from "react-hot-toast";
-import { municipalities } from "../../public/municipios.js";
 
 const FormComprar = () => {
 
   const { carrito, setCarrito, setComprarVisible } = useContext(CarritoContext);
   const [submitting, setSubmitting] = useState(false);
+  const [departamentos, setDepartamentos] = useState([]);
+  const [municipios, setMunicipios] = useState([]);
+  const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState('');
+
+
   const totalCarrito = carrito.reduce(
     (acc, prod) => acc + Number(prod.precio) * Number(prod.cantidad),
     0
@@ -24,7 +28,7 @@ const FormComprar = () => {
     tribute_code: "ZZ",
     country_code: "CO",
     responsibilities: ["R-99-PN"],
-    municipality_code: "68679",
+    municipality_code: "",
   });
   const [payment, setPayment] = useState({
     payment_form: "1",
@@ -32,11 +36,36 @@ const FormComprar = () => {
     observation: "",
   });
 
+  useEffect(() => {
+    Promise.all([
+      fetch('https://agrimarket-yfbo.onrender.com/api/departamentos').then((res) => res.json()),
+      fetch('https://agrimarket-yfbo.onrender.com/api/municipios').then((res) => res.json())
+    ])
+      .then(([deps, munis]) => {
+        setDepartamentos(deps);
+        setMunicipios(munis);
+      })
+      .catch((err) => console.error('Error cargando ubicación:', err));
+  }, []);
+
+  const municipiosFiltrados = useMemo(() => {
+    if (!departamentoSeleccionado) return [];
+    return municipios.filter(
+      (m) => m.departamento_code === departamentoSeleccionado
+    );
+  }, [departamentoSeleccionado, municipios]);
+
   const handleChangeUser = (e) => {
-    setuser({
-      ...user,
-      [e.target.name]: e.target.value,
-    });
+    if (e.target.name != "departamento_code") {
+      setuser({
+        ...user,
+        [e.target.name]: e.target.value,
+      });
+    }
+    else if (e.target.name == "departamento_code") {
+      setDepartamentoSeleccionado(e.target.value);
+      setuser((prev) => ({ ...prev, municipality_code: "" }));
+    }
   };
   const handleChangePayment = (e) => {
     setPayment({
@@ -47,6 +76,7 @@ const FormComprar = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
 
     if (carrito.length === 0) {
       toast.error("El carrito está vacío.");
@@ -71,7 +101,7 @@ const FormComprar = () => {
 
 
       };
-      
+
       // ---llamar el endpoint no oficial-----------------------
       const response = await fetch(
         "https://agrimarket-yfbo.onrender.com/api/facturas/finalizar-compra",
@@ -404,13 +434,43 @@ const FormComprar = () => {
                 </select>
               </div>
 
+              {/* Departamento */}
+              <div>
+                <label
+                  htmlFor="departamento_code"
+                  className={labelClass}
+                >
+                  Departamentos
+                </label>
+
+                <select
+                  id="departamento_code"
+                  name="departamento_code"
+                  value={departamentoSeleccionado}
+                  onChange={handleChangeUser}
+                  className={inputClass}
+                  required={true}
+                >
+                  <option value="">-- Selecciona un departamento --</option>
+                  {departamentos.map((departamento) => (
+                    <option key={departamento.code} value={departamento.code}>
+                      {departamento.nombre}
+                    </option>
+                  ))}
+
+                </select>
+              </div>
+
+
+
+
               {/* Municipio */}
               <div>
                 <label
                   htmlFor="municipality_code"
                   className={labelClass}
                 >
-                  Código de municipio
+                  Municipio
                 </label>
 
                 <select
@@ -419,10 +479,13 @@ const FormComprar = () => {
                   value={user.municipality_code}
                   onChange={handleChangeUser}
                   className={inputClass}
+                  disabled={!departamentoSeleccionado}
+                  required={true}
                 >
-                  {municipalities.toSorted((a, b) => a.name.localeCompare(b.name)).map((municipality) => (
+                  <option value="">-- Selecciona un municipio --</option>
+                  {municipiosFiltrados.toSorted((a, b) => a.nombre.localeCompare(b.nombre)).map((municipality) => (
                     <option key={municipality.code} value={municipality.code}>
-                      {municipality.name}
+                      {municipality.nombre}
                     </option>
                   ))}
 
@@ -541,7 +604,7 @@ const FormComprar = () => {
               type="submit"
               className="w-full rounded-lg bg-green-600 px-8 py-3 font-semibold text-white shadow-sm transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:w-auto"
             >
-              Generar factura
+              {submitting ? "Procesando..." : "Generar factura"}
             </button>
 
           </div>
