@@ -105,9 +105,6 @@ export const CarritoProvider = ({ children }) => {
         : [...prev, { ...producto, cantidad: 1 }];
     });
 
-    setProductos((prev) =>
-      prev.map((p) => (p.id === producto.id ? { ...p, stock: p.stock - 1 } : p))
-    );
 
     toast.success("Producto agregado al carrito");
   };
@@ -128,30 +125,19 @@ export const CarritoProvider = ({ children }) => {
             )
             .filter((item) => item.cantidad > 0)
     );
+    return(cantidadARestaurar)
 
-    setProductos((prev) =>
-      prev.map((p) =>
-        p.id === productoId ? { ...p, stock: p.stock + cantidadARestaurar } : p
-      )
-    );
   };
 
   // ✅ Finalizar compra (ahí sí actualizas BD)
   const finalizarCompra = async () => {
     try {
-      for (const item of carrito) {
-        await fetch(`https://agrimarket-yfbo.onrender.com/api/productos/${item.id}/stock`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cantidad: item.cantidad }),
-        });
-      }
-      setCarrito([]);
-      setCarritoVisible(false);
+      // borré el for que usted puso porque el stock no lo manejo en endpoint desde front sino interno en back en el mismo endpoint que llama a factus
+      setCarritoVisible(false); //anteriormente se le vaciaba carrito porque usted lo ReadableStreamBYOBReader, solo se oculta hasta que se somplete la compra
       setComprarVisible(true);
-      toast.success("¡Gracias por tu compra!");
+      // toast.success("¡Gracias por tu compra!");esto no porque solo se esta abriendo el form de cmpra ,aun no se formaliza
     } catch (err) {
-      toast.error("Error al procesar la compra");
+      toast.error("Error al procesar la compra");//no creo que esto alguna vez llegue a ejecutarse por la simplicidad del try pero bueno ahi lo dejo
     }
   };
 

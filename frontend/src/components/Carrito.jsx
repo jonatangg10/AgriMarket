@@ -2,11 +2,9 @@ import React, { useContext } from 'react';
 import { CarritoContext } from '../context/CarritoContext';
 import { toast } from 'react-hot-toast';
 
-const Carrito = () => {
+const Carrito = ({Eliminar,Agregar}) => {
   const {
     carrito,
-    eliminarDelCarrito,
-    agregarAlCarrito,
     finalizarCompra,
   } = useContext(CarritoContext);
 
@@ -38,7 +36,7 @@ const Carrito = () => {
 
                 <div className="flex items-center mt-2 space-x-2">
                   <button
-                    onClick={() => eliminarDelCarrito(item.id)}
+                    onClick={() => Eliminar(item.id)}
                     className="px-2 bg-gray-200 rounded hover:bg-gray-300"
                   >
                     -
@@ -47,7 +45,7 @@ const Carrito = () => {
                   <button
                     onClick={() => {
                       if (item.stock > 0) {
-                        agregarAlCarrito(item);
+                        Agregar(item);
                       } else {
                         toast.error('Producto agotado');
                       }
@@ -58,7 +56,7 @@ const Carrito = () => {
                     +
                   </button>
                   <button
-                    onClick={() => eliminarDelCarrito(item.id, true)}
+                    onClick={() => Eliminar(item.id, true)}
                     className="ml-auto text-red-500 text-sm hover:text-red-700"
                   >
                     Eliminar

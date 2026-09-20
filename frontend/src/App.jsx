@@ -25,7 +25,8 @@ function App() {
     obtenerProductosPaginados,
     error,
     comprarVisible,
-    setComprarVisible
+    setComprarVisible,
+    eliminarDelCarrito
   } = useContext(CarritoContext);
 
   const [productosPaginados, setProductosPaginados] = useState([]);
@@ -38,7 +39,7 @@ function App() {
     const cargarDatos = async () => {
       setLoadingLocal(true);
       const filtro = categoriaSeleccionada === "todos" ? "" : categoriaSeleccionada;
-      
+
       const res = await obtenerProductosPaginados({
         page: paginaActual,
         pageSize: PAGE_SIZE,
@@ -51,31 +52,47 @@ function App() {
     };
 
     cargarDatos();
-  }, [paginaActual, categoriaSeleccionada, obtenerProductosPaginados]);
+  }, [paginaActual, categoriaSeleccionada]);
 
   useEffect(() => {
     setPaginaActual(1);
   }, [categoriaSeleccionada]);
 
-  const totalPaginas = Math.ceil(totalProductos / PAGE_SIZE);
 
-  if (error) return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-red-500 text-lg">{error}</div>
-    </div>
-  );
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar onAbrirCarrito={() => setCarritoVisible(true)} />
-      <ImageCarousel />    
-      <div className="container mx-auto px-4 pt-10">
-        <Toaster position="bottom-right" />
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Productos Destacados</h1>
-        <Filtros 
-          categorias={categorias}
-          categoriaSeleccionada={categoriaSeleccionada}
-          onCambiarCategoria={setCategoriaSeleccionada}
-        />
+  const restarStocklocal = (producto) => {//cuando agreguen altera el local de productos paginados peero no llama a bd que haga que recargue
+    agregarAlCarrito(producto);
+    setProductosPaginados(
+      (prev) =>
+        prev.map((p) => (p.id === producto.id ? { ...p, stock: p.stock - 1 } : p))
+    );
+  }
+    const sumarStocklocal = (producto, eliminarTodo = false) => {
+      const cantidadARestaurar = eliminarDelCarrito(producto, eliminarTodo);
+      console.log(cantidadARestaurar)
+      setProductosPaginados(
+        (prev) =>
+        prev.map((p) =>p.id === producto ? { ...p, stock: p.stock + cantidadARestaurar } : p)
+      );
+    }
+    const totalPaginas = Math.ceil(totalProductos / PAGE_SIZE);
+
+    if (error) return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-500 text-lg">{error}</div>
+      </div>
+    );
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar onAbrirCarrito={() => setCarritoVisible(true)} />
+        <ImageCarousel />
+        <div className="container mx-auto px-4 pt-10">
+          <Toaster position="bottom-right" />
+          <h1 className="text-3xl font-bold text-gray-800 mb-6">Productos Destacados</h1>
+          <Filtros
+            categorias={categorias}
+            categoriaSeleccionada={categoriaSeleccionada}
+            onCambiarCategoria={setCategoriaSeleccionada}
+          />
           {loadingLocal ? (
             <div className="flex justify-center py-20">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
@@ -84,10 +101,10 @@ function App() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {productosPaginados.map(prod => (
-                  <Producto 
-                    key={prod.id} 
-                    producto={prod} 
-                    agregarAlCarrito={agregarAlCarrito}
+                  <Producto
+                    key={prod.id}
+                    producto={prod}
+                    agregarAlCarrito={restarStocklocal}
                   />
                 ))}
               </div>
@@ -96,7 +113,7 @@ function App() {
                 <div className="mt-12 mb-10 flex items-center justify-between border-t border-gray-200 pt-6">
                   <div className="text-sm text-gray-600 font-medium">
                     Página <span className="text-gray-900">{paginaActual}</span> de <span className="text-gray-900">{totalPaginas}</span>
-                  </div>                 
+                  </div>
                   <div className="flex gap-2">
                     <button
                       onClick={() => {
@@ -125,18 +142,18 @@ function App() {
               )}
             </>
           )}
+        </div>
+        <Modal isOpen={carritoVisible}  onClose={() => setCarritoVisible(false)} title="🛒 Tu Carrito">
+          <Carrito Agregar={restarStocklocal} Eliminar={sumarStocklocal}/>
+        </Modal>
+        <Modal isOpen={comprarVisible} onClose={() => setComprarVisible(false)} title="✅ Finaliza tu compra">
+          <Comprar />
+        </Modal>
+        <LogoCarousel />
+        <Contact />
+        <Footer />
       </div>
-      <Modal isOpen={carritoVisible} onClose={() => setCarritoVisible(false)} title="🛒 Tu Carrito">
-        <Carrito />
-      </Modal>
-      <Modal isOpen={comprarVisible} onClose={() => setComprarVisible(false)} title="✅ Finaliza tu compra">
-        <Comprar />
-      </Modal>
-      <LogoCarousel />
-      <Contact />
-      <Footer />
-    </div>
-  );
-}
+    );
+  }
 
-export default App;
+  export default App;
