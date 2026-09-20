@@ -4,7 +4,7 @@ module.exports = (db) => {
   const router = express.Router();
 
   // Obtener todos los estados
-  router.get('/api/estados', (req, res) => {
+  router.get('/', (req, res) => {
     db.all(
       'SELECT id, nombre FROM estado',
       (err, rows) => {
@@ -21,8 +21,8 @@ module.exports = (db) => {
     );
   });
 
-  // Obtener un estado por ID
-  router.get('/api/estados/:id', (req, res) => {
+  // Obtener estado por ID
+  router.get('/:id', (req, res) => {
     const { id } = req.params;
 
     db.get(

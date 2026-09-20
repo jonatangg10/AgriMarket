@@ -48,9 +48,17 @@ db.serialize(() => {
 // ENDPOINTS DE AUTENTICACIÓN
 // =====================================================
 
-// Importar router de usuarios
-const usuariosRouter = require('./endpoints/usuarios.js')(db, bcrypt);
-app.use('/api', usuariosRouter);
+  // Importar router de usuarios
+  const usuariosRouter = require('./endpoints/usuarios.js')(db, bcrypt);
+  app.use('/api', usuariosRouter);
+
+// =====================================================
+// ENDPOINTS DE ESTADOS
+// =====================================================
+
+  // Importar router de estados
+  const estadosRouter = require('./endpoints/estados.js')(db);
+  app.use('/api/estados', estadosRouter);
 
 // =====================================================
 // ENDPOINTS DE PRODUCTOS
@@ -239,13 +247,7 @@ app.put('/api/productos/:id/estado', (req, res) => {
 });
 
 
-// =====================================================
-// ENDPOINTS DE ESTADOS
-// =====================================================
 
-  // Importar router de estados
-  const estadosRouter = require('./endpoints/estados.js')(db);
-  app.use('/api/estados', estadosRouter);
 
 
 // =====================================================
