@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 function Contact() {
 
@@ -9,8 +10,6 @@ function Contact() {
     mensaje: "",
     acepta_politicas: false
   });
-
-  const [mensaje, setMensaje] = useState("");
 
   // Actualizar campos
   const handleChange = (e) => {
@@ -31,22 +30,27 @@ function Contact() {
 
     try {
 
-      const respuesta = await fetch("https://agrimarket-yfbo.onrender.com/api/contacto", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formulario)
-      });
+      const respuesta = await fetch(
+        "https://agrimarket-yfbo.onrender.com/api/contacto",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formulario)
+        }
+      );
 
       const datos = await respuesta.json();
 
       if (!respuesta.ok) {
-        setMensaje(datos.mensaje);
+
+        toast.error(datos.mensaje);
+
         return;
       }
 
-      setMensaje(datos.mensaje);
+      toast.success(datos.mensaje);
 
       // Limpiar formulario
       setFormulario({
@@ -61,7 +65,7 @@ function Contact() {
 
       console.error("Error enviando contacto:", error);
 
-      setMensaje("No se pudo enviar el mensaje.");
+      toast.error("No se pudo enviar el mensaje.");
 
     }
 
@@ -203,12 +207,6 @@ function Contact() {
                   Enviar mensaje
                 </button>
 
-                {mensaje && (
-                  <p className="text-center text-sm text-gray-600">
-                    {mensaje}
-                  </p>
-                )}
-
               </form>
 
             </div>
@@ -219,7 +217,7 @@ function Contact() {
 
               <iframe
                 className="w-full h-full"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127303.4912234057!2d-74.45781615!3d5.0166667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e40f90e9d0d3885%3A0x6b6f3a3a71b12271!2sVilleta%2C%20Cundinamarca%2C%20Colombia!5e0!3m2!1sen!2sus!4v1714156789000!5m2!1sen!2sus"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127303.4912234057!2d-74.45781615!3d5.0166667!2m3!1f0!2f768!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e40f90e9d0d3885%3A0x6b6f3a3a71b12271!2sVilleta%2C%20Cundinamarca%2C%20Colombia!5e0!3m2!1sen!2sus!4v1714156789000!5m2!1sen!2sus"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
