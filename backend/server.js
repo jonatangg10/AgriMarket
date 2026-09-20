@@ -44,6 +44,18 @@ db.serialize(() => {
   });
 });
 
+app.use((req, res, next) => {
+  const inicio = Date.now();
+  res.on('finish', () => {
+    const duracion = Date.now() - inicio;
+    console.log(`➡️ ${req.method} ${req.originalUrl} | ${res.statusCode} | ${duracion}ms`);
+    if (['POST', 'PUT'].includes(req.method)) {
+      console.log('📦 Body:', req.body);
+    }
+  });
+  next();
+});
+
 // =====================================================
 // ENDPOINTS DE AUTENTICACIÓN
 // =====================================================
@@ -64,32 +76,11 @@ db.serialize(() => {
 // ENDPOINTS DE PRODUCTOS
 // =====================================================
 
-app.use((req, res, next) => {
-  const inicio = Date.now();
-  res.on('finish', () => {
-    const duracion = Date.now() - inicio;
-    console.log(`➡️ ${req.method} ${req.originalUrl} | ${res.statusCode} | ${duracion}ms`);
-    if (['POST', 'PUT'].includes(req.method)) {
-      console.log('📦 Body:', req.body);
-    }
-  });
-  next();
-});
+  // Importar router de productos
+  const productosRouter = require('./endpoints/productos.js')(db);
+  app.use('/api/productos', productosRouter);
 
-// Obtener todos los productos
-app.get('/api/productos', (req, res) => {
-  db.all(
-    'SELECT id, nombre, usuario_id, estado_id, precio, imagen, stock, etiqueta, categoria FROM productos',
-    (err, rows) => {
-      if (err) {
-        console.error('Error:', err);
-        return res.status(500).json({ error: 'Error al obtener productos' });
-      }
 
-      res.json(rows);
-    }
-  );
-});
 
 // Obtener productos paginados con filtros
 app.get('/api/productos/paginados', (req, res) => {
