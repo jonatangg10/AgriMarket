@@ -16,14 +16,20 @@ const crearUsuarios = require('./db/crearUsuarios');
 const crearProductos = require('./db/crearProductos');
 const crearEstado = require('./db/crearEstado');
 const crearVentas = require('./db/crearVentas');
+const crearDepartamentos = require('./db/crearDepartamentos');
+const crearMunicipios = require('./db/crearMunicipios');
 
 // Migración: Inicialización de la base de datos
 db.serialize(() => {
   db.run("PRAGMA foreign_keys = ON");
   crearEstado(db, () => {
-    crearUsuarios(db, () => {
-      crearProductos(db, () => {
-        crearVentas(db);
+    crearDepartamentos(db, () => {
+      crearMunicipios(db, () => {
+        crearUsuarios(db, () => {
+          crearProductos(db, () => {
+            crearVentas(db);
+          });
+        });
       });
     });
   });
@@ -481,6 +487,49 @@ app.post('/api/sql', (req, res) => {
 
 // fin del endpoint TEMPORAL
 
+
+// =================================================
+// ENDPOINTS MUNICIPIOS Y DEPARTAMENTOS
+// ==================================================
+app.get('/api/departamentos', (req, res) => {
+  db.all('SELECT code, nombre FROM departamentos ORDER BY nombre ASC', (err, rows) => {
+    if (err) {
+      console.error('Error al obtener departamentos:', err);
+      return res.status(500).json({ error: 'Error al obtener departamentos' });
+    }
+    res.json(rows);
+  });
+});
+
+app.get('/api/municipios', (req, res) => {
+  const { departamento } = req.query;
+
+  if (departamento) {
+    db.all(
+      'SELECT code, nombre, departamento_code FROM municipios WHERE departamento_code = ? ORDER BY nombre ASC',
+      [departamento],
+      (err, rows) => {
+        if (err) {
+          console.error('Error al obtener municipios filtrados:', err);
+          return res.status(500).json({ error: 'Error al obtener municipios' });
+        }
+        res.json(rows);
+      }
+    );
+  } else {
+    db.all(
+      'SELECT code, nombre, departamento_code FROM municipios ORDER BY nombre ASC',
+      (err, rows) => {
+        if (err) {
+          console.error('Error al obtener todos los municipios:', err);
+          return res.status(500).json({ error: 'Error al obtener municipios' });
+        }
+        res.json(rows);
+      }
+    );
+  }
+});
+// fin endpoint municipios y departamentos
 
 
 // =================================================
