@@ -54,7 +54,7 @@ const Producto = ({ producto, agregarAlCarrito }) => {
                 : 'Sin stock disponible'}
             </span>
             <span className="text-sm text-gray-600 font-medium">
-              🧑‍🌾 {producto.vendedor_nombres?.split(" ")[0]} {producto.vendedor_apellidos?.split(" ")[0]}
+              🧑‍🌾 {producto.vendedor_genero_id} {producto.vendedor_nombres?.split(" ")[0]} {producto.vendedor_apellidos?.split(" ")[0]}
             </span>
           </div>
         </div>

@@ -96,7 +96,8 @@ app.get('/api/productos/paginados', (req, res) => {
       p.categoria,
       e.nombre AS estado,
       u.nombres AS vendedor_nombres,
-      u.apellidos AS vendedor_apellidos
+      u.apellidos AS vendedor_apellidos,
+      u.genero_id AS vendedor_genero_id
     FROM productos p
     JOIN estado e ON p.estado_id = e.id
     JOIN usuarios u ON p.usuario_id = u.id
