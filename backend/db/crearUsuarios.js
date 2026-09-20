@@ -25,11 +25,11 @@ function crearUsuarios(db, callback) {
 
       if (row.count === 0) {
         const usuariosIniciales = [
-          { nombres: 'Jonatan Stiven', apellidos: 'Gutierrez Nieto', num_documento: '1003510994', correo: 'jonatangutierrez@agrilmarket.com', password: 'jonatan123', genero_id: 1, rol_id: 1 },
-          { nombres: 'Julian Emiro', apellidos: 'Gonzalez Perez', num_documento: '9876543210', correo: 'juliangonzalez@agrilmarket.com', password: 'julian123', genero_id: 1, rol_id: 1 },
-          { nombres: 'Maria Jose', apellidos: 'Ramirez Ocampo', num_documento: '1234567890', correo: 'mariaramirez@agrilmarket.com', password: 'pepito123', genero_id: 2, rol_id: 2 },
-          { nombres: 'Carlos Eduardo', apellidos: 'Gomez Martinez', num_documento: '9876543220', correo: 'carlosgomez@agrilmarket.com', password: 'pepito123', genero_id: 1, rol_id: 3 },
-          { nombres: 'Maria Liliana', apellidos: 'Lopez Ramirez', num_documento: '9876543221', correo: 'marialopez@agrilmarket.com', password: 'pepito123', genero_id: 2, rol_id: 3 },
+          { id: 1, nombres: 'Jonatan Stiven', apellidos: 'Gutierrez Nieto', num_documento: '1003510994', correo: 'jonatangutierrez@agrilmarket.com', password: 'jonatan123', genero_id: 1, rol_id: 1 },
+          { id: 2, nombres: 'Julian Emiro', apellidos: 'Gonzalez Perez', num_documento: '9876543210', correo: 'juliangonzalez@agrilmarket.com', password: 'julian123', genero_id: 1, rol_id: 1 },
+          { id: 3, nombres: 'Maria Jose', apellidos: 'Ramirez Ocampo', num_documento: '1234567890', correo: 'mariaramirez@agrilmarket.com', password: 'pepito123', genero_id: 2, rol_id: 2 },
+          { id: 4, nombres: 'Carlos Eduardo', apellidos: 'Gomez Martinez', num_documento: '9876543220', correo: 'carlosgomez@agrilmarket.com', password: 'pepito123', genero_id: 1, rol_id: 3 },
+          { id: 5, nombres: 'Maria Liliana', apellidos: 'Lopez Ramirez', num_documento: '9876543221', correo: 'marialopez@agrilmarket.com', password: 'pepito123', genero_id: 2, rol_id: 3 },
         ];
 
         // Usamos Promise.all para esperar todos los hashes
@@ -38,10 +38,10 @@ function crearUsuarios(db, callback) {
             bcrypt.hash(u.password, saltRounds).then(hash => {
               return new Promise((resolve, reject) => {
                 db.run(`
-                  INSERT INTO usuarios (nombres, apellidos, num_documento, correo, password, genero_id, rol_id)
-                  VALUES (?, ?, ?, ?, ?, ?, ?)
+                  INSERT INTO usuarios (id, nombres, apellidos, num_documento, correo, password, genero_id, rol_id)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 `,
-                [u.nombres, u.apellidos, u.num_documento, u.correo, hash, u.genero_id, u.rol_id],
+                [u.id, u.nombres, u.apellidos, u.num_documento, u.correo, hash, u.genero_id, u.rol_id],
                 (err) => {
                   if (err) {
                     console.error(`Error insertando a ${u.correo}:`, err);
