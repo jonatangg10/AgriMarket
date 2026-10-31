@@ -113,34 +113,13 @@ function Navbar() {
   const navLinks = [
     { name: "Inicio", action: scrollToInicio },
 
-    {
-      name: "Categorías",
-      dropdown: categorias
-        .filter((cat) => cat.toLowerCase() !== "todos")
-        .map((cat) => ({
-          name: cat.charAt(0).toUpperCase() + cat.slice(1),
-          path: `/categorias/${cat.toLowerCase()}`,
-        })),
-    },
+    { name: "Categorías", path: "/categorías" },
 
     { name: "Ofertas", path: "/ofertas" },
 
-    {
-      name: "Novedades",
-      dropdown: [
-        { name: "Nuevos productos", path: "/novedades" },
-        { name: "Últimos ingresos", path: "/ultimos-ingresos" },
-      ],
-    },
+    { name: "Últimos ingresos", path: "/ultimos-ingresos" },
 
-    {
-      name: "Soporte",
-      dropdown: [
-        { name: "Centro de ayuda", path: "/soporte" },
-        { name: "Contacto", path: "/contacto" },
-        { name: "Devoluciones", path: "/devoluciones" },
-      ],
-    },
+    { name: "Contacto", path: "/contacto" },
 
     { name: "Mis pedidos", path: "/pedidos", auth: false },
   ];
