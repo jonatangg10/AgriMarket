@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Modal from './components/Modal';
 import LogoCarousel from './components/LogoCarousel';
 import Contact from './components/Contacto';
+import HowItWorks from './components/HowItWorks';
 import Footer from './components/Footer';
 import './App.css';
 import { Toaster } from 'react-hot-toast';
@@ -151,6 +152,7 @@ function App() {
         </Modal>
         <LogoCarousel />
         <Contact />
+        <HowItWorks />
         <Footer />
       </div>
     );

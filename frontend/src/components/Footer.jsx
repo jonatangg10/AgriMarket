@@ -1,53 +1,43 @@
-import { FaWhatsapp, FaGithub, FaLinkedin, FaRegCopyright, FaInstagram, FaYoutube } from "react-icons/fa6";
+import {
+  FaWhatsapp,
+  FaRegCopyright,
+} from "react-icons/fa6";
 
-const githubURL = import.meta.env.VITE_GITHUB_URL;
-const linkedinURL = import.meta.env.VITE_LINKEDIN_URL;
-const instagramURL = import.meta.env.VITE_INSTAGRAM_URL;
+const whatsappURL = "https://wa.link/rnqsri";
+
+const links = [
+  { name: "Inicio", href: "#inicio" },
+  { name: "Categorías", href: "#" },
+  { name: "Ofertas", href: "#" },
+  { name: "Novedades", href: "#" },
+  { name: "Soporte", href: "#" },
+  { name: "Mis pedidos", href: "#" },
+];
 
 const Footer = () => {
   return (
-    <footer className="bg-neutral-900 text-neutral-300 py-10 rounded-lg">
-      <div className="max-w-6xl mx-auto flex flex-col items-center gap-6 px-6">
-        {/* Navigation Links with Icons */}
-        <nav className="grid grid-cols-3 gap-x-6 gap-y-3 text-sm font-medium sm:flex sm:flex-wrap sm:justify-center sm:gap-6">
-          <a href="#inicio" className="text-center hover:text-white">
-            Inicio
-          </a>
-          <a href="#" className="text-center hover:text-white">
-            Categorias
-          </a>
-          <a href="#" className="text-center hover:text-white">
-            Ofertas
-          </a>
-          <a href="#" className="text-center hover:text-white">
-            Novedades
-          </a>
-          <a href="#" className="text-center hover:text-white">
-            Soporte
-          </a>
-          <a href="#" className="text-center hover:text-white">
-            Mis pedidos
-          </a>
-        </nav>
+    <footer className="mt-16 w-full bg-[#101E16] py-10 text-[#C9D6CD]">
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6">
+        {/* Fila superior: marca + WhatsApp */}
+        <div className="flex flex-col items-center justify-between gap-6 text-center sm:flex-row sm:text-left">
+          <div>
+            <p className="text-lg font-bold text-white">AgrilMarket</p>
+            <p className="mt-1 flex items-center justify-center gap-1 whitespace-nowrap text-xs sm:justify-start sm:text-sm">
+              <FaRegCopyright className="h-3.5 w-3.5 shrink-0" />
+              2026 AgrilMarket. Todos los derechos reservados.
+            </p>
+          </div>
 
-        {/* Social Media Icons */}
-        <div className="flex gap-6 text-neutral-400">
-          <a target="_blank" href={githubURL} className="hover:text-white">
-            <FaGithub className="h-5 w-5" />
-          </a>
-          <a target="_blank" href={linkedinURL} className="hover:text-white">
-            <FaLinkedin className="h-5 w-5" />
-          </a>
-          <a target="_blank" href={instagramURL} className="hover:text-white">
-            <FaInstagram className="h-5 w-5" />
+          <a
+            href={whatsappURL}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#F6D77A] px-5 py-3 text-sm font-bold text-[#2B2000] transition-colors hover:bg-[#F1CB5C]"
+          >
+            <FaWhatsapp className="h-5 w-5" />
+            Escríbenos por WhatsApp
           </a>
         </div>
-
-        {/* Copyright */}
-        <p className="flex items-center justify-center gap-1 whitespace-nowrap text-xs text-neutral-500 sm:text-sm">
-          <FaRegCopyright className="h-4 w-4 shrink-0" />
-          2026 🚜 AgrilMarket. Todos los derechos reservados.
-        </p>
       </div>
     </footer>
   );
