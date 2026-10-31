@@ -102,16 +102,20 @@ function ImageCarousel() {
         )}
       >
         {slides.map((slide, index) => (
-          <div key={index} className="relative h-80 md:h-[690px] w-full">
+          <div key={index} className="relative h-[420px] sm:h-[480px] md:h-[690px] w-full">
             <img src={slide.img} alt={slide.alt} className="object-cover w-full h-full" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end pb-8 md:pb-12 px-6 md:px-12">
               <div className="text-left">
                 <span className={`${slide.badge.color} text-white text-xs font-bold px-2 py-1 rounded mb-3 inline-block`}>
                   {slide.badge.text}
                 </span>
-                <h3 className="text-2xl md:text-4xl font-bold text-white mb-2 uppercase">{slide.title}</h3>
-                <p className="text-white text-sm md:text-lg max-w-xl">{slide.description}</p>
-                <button className={`mt-4 px-6 py-2 rounded-md font-medium transition-colors cursor-pointer ${slide.button.color}`}>
+                <h3 className="text-xl sm:text-2xl md:text-4xl font-bold text-white mb-2 uppercase leading-tight">
+                  {slide.title}
+                </h3>
+                <p className="text-xs sm:text-sm md:text-lg text-white max-w-xl line-clamp-2 md:line-clamp-none">
+                  {slide.description}
+                </p>
+                <button className={`mt-3 md:mt-4 px-5 py-1.5 md:px-6 md:py-2 rounded-md text-sm md:text-base font-medium transition-colors cursor-pointer ${slide.button.color}`}>
                   {slide.button.text}
                 </button>
               </div>

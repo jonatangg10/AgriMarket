@@ -2,6 +2,7 @@ import {
   ShoppingCartIcon,
   UserCircleIcon,
   Bars3Icon,
+  XMarkIcon,
   ArrowRightOnRectangleIcon,
   WrenchScrewdriverIcon,
   ChevronDownIcon,
@@ -32,6 +33,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
+  const [openMobileSubmenu, setOpenMobileSubmenu] = useState(null); // 🔹 submenús en móvil
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const timeoutRef = useRef(null);
@@ -68,6 +70,26 @@ function Navbar() {
     };
   }, []);
 
+  // 🔹 cierra el menú móvil si la pantalla pasa a desktop
+  useEffect(() => {
+    if (!isMobile) {
+      setMenuOpen(false);
+      setOpenMobileSubmenu(null);
+    }
+  }, [isMobile]);
+
+  // 🔹 bloquea el scroll del body mientras el menú móvil está abierto
+  useEffect(() => {
+    if (isMobile && menuOpen) {
+      const previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+
+      return () => {
+        document.body.style.overflow = previousOverflow;
+      };
+    }
+  }, [isMobile, menuOpen]);
+
   const handleLogout = () => {
     setUserMenuOpen(false);
     navigate("/");
@@ -84,6 +106,7 @@ function Navbar() {
         block: "start",
       });
     }
+    setMenuOpen(false); // 🔹 cierra el menú móvil al navegar
   };
 
   const navLinks = [
@@ -132,7 +155,11 @@ function Navbar() {
               onClick={() => setMenuOpen(!menuOpen)}
               className="p-2 hover:bg-gray-50 rounded-lg"
             >
-              <Bars3Icon className="h-6 w-6 text-gray-900" />
+              {menuOpen ? (
+                <XMarkIcon className="h-6 w-6 text-gray-900" />
+              ) : (
+                <Bars3Icon className="h-6 w-6 text-gray-900" />
+              )}
             </button>
           )}
 
@@ -273,7 +300,7 @@ function Navbar() {
                         <p className="px-4 pb-2 text-[10px] uppercase font-bold tracking-wider text-gray-400">
                           Administración
                         </p>
-                                        
+
                         <Link
                           to="/admin"
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
@@ -281,7 +308,7 @@ function Navbar() {
                           <WrenchScrewdriverIcon className="h-4 w-4 mr-3 text-gray-400" />
                           Panel Administrativo
                         </Link>
-                                        
+
                         <Link
                           to="/admin-productos"
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
@@ -289,7 +316,7 @@ function Navbar() {
                           <WrenchScrewdriverIcon className="h-4 w-4 mr-3 text-gray-400" />
                           Administrar Productos
                         </Link>
-                                        
+
                         <Link
                           to="/admin-users"
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
@@ -323,6 +350,75 @@ function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* 🔹 Mobile Menu Panel - overlay a pantalla completa */}
+      {isMobile && menuOpen && (
+        <div className="fixed inset-x-0 top-16 bottom-0 bg-white overflow-y-auto z-40">
+          <div className="flex flex-col py-2">
+            {navLinks.map((link) => (
+              <div key={link.name} className="border-b border-gray-50 last:border-b-0">
+
+                {/* LINK NORMAL */}
+                {link.path && !link.dropdown && (!link.auth || isAuthenticated) && (
+                  <Link
+                    to={link.path}
+                    onClick={() => setMenuOpen(false)}
+                    className="block px-4 py-4 text-base font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    {link.name}
+                  </Link>
+                )}
+
+                {/* BOTÓN ACCIÓN */}
+                {link.action && (
+                  <button
+                    onClick={link.action}
+                    className="block w-full text-left px-4 py-4 text-base font-medium text-gray-700 hover:bg-gray-50"
+                  >
+                    {link.name}
+                  </button>
+                )}
+
+                {/* DROPDOWN (acordeón en móvil) */}
+                {link.dropdown && (
+                  <>
+                    <button
+                      onClick={() =>
+                        setOpenMobileSubmenu(
+                          openMobileSubmenu === link.name ? null : link.name
+                        )
+                      }
+                      className="flex items-center justify-between w-full px-4 py-4 text-base font-medium text-gray-700 hover:bg-gray-50"
+                    >
+                      {link.name}
+                      <ChevronDownIcon
+                        className={`h-4 w-4 transition-transform duration-300 ${
+                          openMobileSubmenu === link.name ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+
+                    {openMobileSubmenu === link.name && (
+                      <div className="bg-gray-50">
+                        {link.dropdown.map((item) => (
+                          <Link
+                            key={item.name}
+                            to={item.path}
+                            onClick={() => setMenuOpen(false)}
+                            className="block px-8 py-3 text-sm text-gray-600 hover:bg-gray-100"
+                          >
+                            {item.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
