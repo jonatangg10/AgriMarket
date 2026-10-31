@@ -120,7 +120,7 @@ const Login = () => {
 
         <div className="hidden md:flex w-1/2">
           <img
-            src="/images/aws.jpg"
+            src="fondos/Aguacate-Antioquia.png"
             alt="Imagen de inicio de sesión"
             className="object-cover w-full h-full"
           />
