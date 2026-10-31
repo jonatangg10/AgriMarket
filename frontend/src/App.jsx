@@ -3,7 +3,6 @@ import Producto from './components/Producto';
 import Navbar from './components/Navbar';
 import Modal from './components/Modal';
 import LogoCarousel from './components/LogoCarousel';
-import Contact from './components/Contacto';
 import HowItWorks from './components/HowItWorks';
 import Footer from './components/Footer';
 import './App.css';
@@ -151,7 +150,6 @@ function App() {
           <Comprar />
         </Modal>
         <LogoCarousel />
-        <Contact />
         <HowItWorks />
         <Footer />
       </div>
