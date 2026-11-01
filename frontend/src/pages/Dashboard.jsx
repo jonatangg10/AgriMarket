@@ -70,7 +70,7 @@ const Dashboard = () => {
               Filtros
             </button>
 
-            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20">
+            <button className="px-4 py-2 bg-[#14432F] hover:bg-blue-500 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20">
               Generar Reporte
             </button>
           </div>
@@ -120,7 +120,7 @@ const Dashboard = () => {
               className="bg-white border border-slate-200/80 p-6 rounded-3xl shadow-sm"
             >
               <div className="flex justify-between items-start mb-4">
-                <div className="p-3 rounded-2xl bg-slate-50 text-blue-600 border border-slate-100">
+                <div className="p-3 rounded-2xl bg-slate-50 text-[#14432F] border border-slate-100">
                   <stat.icon className="w-5 h-5" />
                 </div>
 
@@ -173,7 +173,7 @@ const Dashboard = () => {
                     className={`w-full rounded-t-xl
                       ${
                         i === 2
-                          ? "bg-blue-600"
+                          ? "bg-[#14432F]"
                           : "bg-slate-200"
                       }`}
                     style={{ height: `${h}%` }}
@@ -194,7 +194,7 @@ const Dashboard = () => {
                 Últimos Registros
               </h3>
 
-              <button className="text-sm font-bold text-blue-600">
+              <button className="text-sm font-bold text-[#14432F]">
                 Ver Detalles
               </button>
             </div>

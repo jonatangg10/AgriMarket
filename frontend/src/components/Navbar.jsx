@@ -17,8 +17,8 @@ import { useAuth } from "../context/AuthContext";
 const theme = {
   textPrimary: "text-gray-900",
   textMuted: "text-gray-500",
-  accentText: "text-blue-600",
-  accentBg: "bg-blue-600",
+  accentText: "text-[#14432F]",
+  accentBg: "bg-[#14432F]",
   accentHover: "hover:text-blue-700",
   transition: "transition-all duration-300 ease-in-out",
 };

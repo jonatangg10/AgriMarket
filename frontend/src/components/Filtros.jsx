@@ -11,7 +11,7 @@ const Filtros = ({ categorias, categoriaSeleccionada, onCambiarCategoria }) => {
             onClick={() => onCambiarCategoria(categoria)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               categoria === categoriaSeleccionada
-                ? 'bg-blue-600 text-white'
+                ? 'bg-[#14432F] text-white'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >

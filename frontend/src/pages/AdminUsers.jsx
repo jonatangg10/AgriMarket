@@ -141,7 +141,7 @@ const AdminUsers = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => handleEditar(row.original)}
-              className="text-blue-600 hover:text-blue-800 transition-colors"
+              className="text-[#14432F] hover:text-blue-800 transition-colors"
               title="Editar"
             >
               <PencilIcon className="h-5 w-5" />
@@ -195,7 +195,7 @@ const AdminUsers = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-                  <UserIcon className="h-8 w-8 text-blue-600" />
+                  <UserIcon className="h-8 w-8 text-[#14432F]" />
                   Gestión de Usuarios
                 </h1>
                 <p className="text-slate-500 mt-2 font-medium">
@@ -205,7 +205,7 @@ const AdminUsers = () => {
 
               <button
                 onClick={handleCrearNuevo}
-                className="flex items-center gap-2 px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20"
+                className="flex items-center gap-2 px-5 py-3 bg-[#14432F] hover:bg-blue-500 text-white rounded-2xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20"
               >
                 <PlusIcon className="h-5 w-5" />
                 Nuevo Usuario

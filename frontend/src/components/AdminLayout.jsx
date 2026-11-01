@@ -164,7 +164,7 @@ const AdminLayout = ({ children, activeTab }) => {
                   text-sm font-bold transition-all
                   ${
                     activeTab === item.id
-                      ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                      ? "bg-[#14432F] text-white shadow-lg shadow-blue-600/20"
                       : "text-slate-600 hover:bg-slate-100"
                   }
                 `}

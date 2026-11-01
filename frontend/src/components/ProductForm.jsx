@@ -82,9 +82,9 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
 
             <div className="flex items-center gap-3 mb-8">
                 {isEditing ? (
-                    <PencilSquareIcon className="h-7 w-7 text-blue-600" />
+                    <PencilSquareIcon className="h-7 w-7 text-[#14432F]" />
                 ) : (
-                    <CubeIcon className="h-7 w-7 text-blue-600" />
+                    <CubeIcon className="h-7 w-7 text-[#14432F]" />
                 )}
                 <h2 className="text-2xl font-black text-slate-900">
                     {isEditing ? "Editar Producto" : "Registrar Nuevo Producto"}
@@ -224,7 +224,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                     </button>
                     <button
                         type="submit"
-                        className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20"
+                        className="px-6 py-3 bg-[#14432F] hover:bg-blue-500 text-white rounded-2xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20"
                     >
                         {isEditing ? "Guardar Cambios" : "Crear Producto"}
                     </button>
