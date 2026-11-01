@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect,useContext } from "react";
 import { ArrowLeftIcon, CubeIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import { UserContext } from "../context/UserContext";
 
 const ProductForm = ({ producto, onSave, onCancel }) => {
     const isEditing = Boolean(producto?.id);
-
+    const { obtenerUsuariosPorRol } = useContext(UserContext);
+    const [vendedores, setVendedores] = useState([]);
     const [preview, setPreview] = useState(
         producto?.imagen && producto.imagen.startsWith('/uploads')
             ? `https://agrimarket-yfbo.onrender.com${producto.imagen}`
@@ -18,8 +20,16 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
         categoria: "",
         imagen: "",
         estado_id: 1,
-        usuario_id: 1, // Por ahora fijo, luego lo tomarás del admin logueado
+        usuario_id: "",
     });
+
+    useEffect(() => {
+        const cargarVendedores = async () => {
+            const data = await obtenerUsuariosPorRol(3); // 3 es el rol de Vendedor
+            setVendedores(data);
+        };
+        cargarVendedores();
+    }, []);
 
     useEffect(() => {
         if (isEditing) {
@@ -31,9 +41,8 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                 categoria: producto.categoria || "",
                 imagen: producto.imagen || "",
                 estado_id: producto.estado_id || 1,
-                usuario_id: producto.usuario_id || 1,
+                usuario_id: producto.usuario_id || "",
                 imagenExistente: producto.imagen || "", // Guardamos la url vieja por si no sube foto nueva
-                usuario_id: producto.usuario_id || 1,
             });
         }
     }, [producto, isEditing]);
@@ -109,6 +118,21 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                         />
                     </div>
 
+                    {/* Vendedor / Usuario */}
+                    <div>
+                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">
+                            Asignar a Vendedor (Usuario ID)
+                        </label>
+                        <select name="usuario_id" value={formData.usuario_id} onChange={handleChange} required>
+                            <option value="">Selecciona un vendedor...</option>
+                            {vendedores.map(vend => (
+                                <option key={vend.id} value={vend.id}>
+                                    {vend.nombres} {vend.apellidos}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
                     <div>
                         <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Precio</label>
                         <input
@@ -180,7 +204,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                             }}
                             className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all"
                         />
-                            {/* esto namas pa preview */}
+                        {/* esto namas pa preview */}
                         {preview && (
                             <div className="mt-4">
                                 <p className="text-xs text-slate-500 mb-2">Vista previa:</p>
