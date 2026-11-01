@@ -149,13 +149,13 @@ module.exports = (db) => {
   router.put('/:id/estado', (req, res) => {
     const { estado_id } = req.body;
     const productoId = req.params.id;
-  
+
     if (!estado_id) {
       return res.status(400).json({
         error: 'Se requiere estado_id'
       });
     }
-  
+
     // Verificar que el estado exista
     db.get(
       'SELECT id FROM estado WHERE id = ?',
@@ -163,18 +163,18 @@ module.exports = (db) => {
       (err, row) => {
         if (err) {
           console.error('Error al consultar estado:', err);
-        
+
           return res.status(500).json({
             error: 'Error al verificar estado'
           });
         }
-      
+
         if (!row) {
           return res.status(400).json({
             error: 'El estado_id no existe'
           });
         }
-      
+
         // Actualizar estado
         db.run(
           'UPDATE productos SET estado_id = ? WHERE id = ?',
@@ -182,18 +182,18 @@ module.exports = (db) => {
           function (err) {
             if (err) {
               console.error('Error al actualizar estado:', err);
-            
+
               return res.status(500).json({
                 error: 'Error al actualizar estado'
               });
             }
-          
+
             if (this.changes === 0) {
               return res.status(404).json({
                 error: 'Producto no encontrado'
               });
             }
-          
+
             res.json({
               success: true
             });
@@ -201,6 +201,123 @@ module.exports = (db) => {
         );
       }
     );
+  });
+
+
+  // =====================================================
+  // ENDPOINTS ADMIN (CRUD)
+  // =====================================================
+
+  // Crear un nuevo producto
+  router.post('/', (req, res) => {
+    const { nombre, usuario_id, estado_id, precio, imagen, stock, etiqueta, categoria } = req.body;
+
+    // Validación básica de campos requeridos
+    if (!nombre || !usuario_id || !estado_id || precio === undefined || !etiqueta || !categoria) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios' });
+    }
+
+    const sql = `
+      INSERT INTO productos (nombre, usuario_id, estado_id, precio, imagen, stock, etiqueta, categoria)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    // Si no envían imagen o stock, asignamos valores por defecto (vacío y 0)
+    const params = [
+      nombre,
+      usuario_id,
+      estado_id,
+      precio,
+      imagen || '',
+      stock !== undefined ? stock : 10,
+      etiqueta,
+      categoria
+    ];
+
+    db.run(sql, params, function (err) {
+      if (err) {
+        console.error('Error al crear producto:', err);
+        return res.status(500).json({ error: 'Error al guardar el producto en la base de datos' });
+      }
+
+      res.status(201).json({
+        success: true,
+        id: this.lastID,
+        message: 'Producto creado correctamente'
+      });
+    });
+  });
+
+  // Editar un producto existente
+  router.put('/:id', (req, res) => {
+    const { id } = req.params;
+    const { nombre, usuario_id, estado_id, precio, imagen, stock, etiqueta, categoria } = req.body;
+
+    if (!nombre || !usuario_id || !estado_id || precio === undefined || !etiqueta || !categoria) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios para actualizar' });
+    }
+
+    const sql = `
+      UPDATE productos 
+      SET nombre = ?, 
+          usuario_id = ?, 
+          estado_id = ?, 
+          precio = ?, 
+          imagen = ?, 
+          stock = ?, 
+          etiqueta = ?, 
+          categoria = ?
+      WHERE id = ?
+    `;
+
+    const params = [
+      nombre,
+      usuario_id,
+      estado_id,
+      precio,
+      imagen || '',
+      stock !== undefined ? stock : 10,
+      etiqueta,
+      categoria,
+      id
+    ];
+
+    db.run(sql, params, function (err) {
+      if (err) {
+        console.error('Error al actualizar producto:', err);
+        return res.status(500).json({ error: 'Error al actualizar el producto' });
+      }
+
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Producto no encontrado' });
+      }
+
+      res.json({
+        success: true,
+        message: 'Producto actualizado correctamente'
+      });
+    });
+  });
+
+  // Eliminar un producto
+  router.delete('/:id', (req, res) => {
+    const { id } = req.params;
+
+    db.run('DELETE FROM productos WHERE id = ?', [id], function (err) {
+      if (err) {
+        console.error('Error al eliminar producto:', err);
+        return res.status(500).json({ error: 'Error al eliminar el producto' });
+      }
+
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Producto no encontrado' });
+      }
+
+      res.json({
+        success: true,
+        message: 'Producto eliminado correctamente'
+      });
+    });
   });
 
   return router;
