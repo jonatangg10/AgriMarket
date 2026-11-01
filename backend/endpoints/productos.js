@@ -1,5 +1,4 @@
 const express = require('express');
-const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -230,15 +229,24 @@ module.exports = (db) => {
   // ENDPOINTS ADMIN (CRUD CON IMÁGENES)
   // ==========================================
 
-  // CREAR PRODUCTO (upload.single('imagen'))
+  // CREAR PRODUCTO
   router.post('/', upload.single('imagen'), (req, res) => {
     const { nombre, usuario_id, estado_id, precio, stock, etiqueta, categoria } = req.body;
     
     // Si multer subió un archivo, guardamos la ruta. Si no, vacío.
     const imagenUrl = req.file ? `/uploads/${req.file.filename}` : '';
 
-    if (!nombre || !usuario_id || !estado_id || precio === undefined || !etiqueta || !categoria) {
-      return res.status(400).json({ error: 'Faltan campos obligatorios' });
+    // Convertimos los valores de texto a números reales, porque form data al parecer pasa todos a string
+    const precioNum = parseFloat(precio);
+    const estadoIdNum = parseInt(estado_id, 10);
+    const usuarioIdNum = parseInt(usuario_id, 10);
+    
+    // Si el stock viene vacío o indefinido, usamos 10 por defecto
+    const stockNum = stock ? parseInt(stock, 10) : 10;
+
+    //  Validamos asegurándonos de que los números sean válidos 
+    if (!nombre || isNaN(usuarioIdNum) || isNaN(estadoIdNum) || isNaN(precioNum) || !etiqueta || !categoria) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios o tienen formato inválido' });
     }
 
     const sql = `
@@ -246,9 +254,10 @@ module.exports = (db) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
     
+    // Pasamos las variables numéricas ya parseadas a los parámetros de SQLite
     const params = [
-      nombre, usuario_id, estado_id, precio, imagenUrl, 
-      stock !== undefined ? stock : 10, etiqueta, categoria
+      nombre, usuarioIdNum, estadoIdNum, precioNum, imagenUrl, 
+      stockNum, etiqueta, categoria
     ];
 
     db.run(sql, params, function (err) {
@@ -262,11 +271,16 @@ module.exports = (db) => {
     const { id } = req.params;
     const { nombre, usuario_id, estado_id, precio, stock, etiqueta, categoria, imagenExistente } = req.body;
 
-    if (!nombre || !usuario_id || !estado_id || precio === undefined || !etiqueta || !categoria) {
+    // Convertimos los valores
+    const precioNum = parseFloat(precio);
+    const estadoIdNum = parseInt(estado_id, 10);
+    const usuarioIdNum = parseInt(usuario_id, 10);
+    const stockNum = stock ? parseInt(stock, 10) : 10;
+
+    if (!nombre || isNaN(usuarioIdNum) || isNaN(estadoIdNum) || isNaN(precioNum) || !etiqueta || !categoria) {
       return res.status(400).json({ error: 'Faltan campos obligatorios para actualizar' });
     }
 
-    // Si subió un archivo nuevo, usamos ese. Si no, mantenemos el que ya tenía.
     const imagenFinal = req.file ? `/uploads/${req.file.filename}` : (imagenExistente || '');
 
     const sql = `
@@ -275,9 +289,10 @@ module.exports = (db) => {
       WHERE id = ?
     `;
 
+    // Pasamos las variables numéricas 
     const params = [
-      nombre, usuario_id, estado_id, precio, imagenFinal, 
-      stock !== undefined ? stock : 10, etiqueta, categoria, id
+      nombre, usuarioIdNum, estadoIdNum, precioNum, imagenFinal, 
+      stockNum, etiqueta, categoria, parseInt(id, 10)
     ];
 
     db.run(sql, params, function (err) {
