@@ -111,6 +111,20 @@ function Navbar() {
       block: "start",
     });
   };
+  
+  const scrollToCategorias = () => {
+    setMenuOpen(false);
+
+    if (location.pathname !== "/") {
+      navigate("/", { state: { scrollTo: "categorias" } });
+      return;
+    }
+
+    document.getElementById("categorias")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
 
   // Al llegar al home con una sección pendiente, hace el scroll
   useEffect(() => {
@@ -132,7 +146,7 @@ function Navbar() {
   const navLinks = [
     { name: "Inicio", action: scrollToInicio },
 
-    { name: "Categorías", path: "/categorias" },
+    { name: "Categorías", action: scrollToCategorias },
 
     { name: "Ofertas", path: "/ofertas" },
 

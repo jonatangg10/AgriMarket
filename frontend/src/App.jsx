@@ -152,7 +152,7 @@ function App() {
       <Toaster position="bottom-right" />
 
       {/* EXPLORA POR CATEGORÍA */}
-      <section className="mx-auto max-w-6xl px-4 pt-14">
+      <section id="categorias" className="mx-auto max-w-6xl px-4 pt-14">
         <h2 className="mb-5 text-2xl font-extrabold tracking-tight text-[#17261D] sm:text-3xl">
           Explora por categoría
         </h2>

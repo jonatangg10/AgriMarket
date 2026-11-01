@@ -30,7 +30,7 @@ function crearUsuarios(db, callback) {
           { id: 3, nombres: 'Maria Jose', apellidos: 'Ramirez Ocampo', num_documento: '1234567890', correo: 'mariaramirez@agrilmarket.com', password: 'pepito123', genero_id: 2, rol_id: 2 },
           { id: 4, nombres: 'Carlos Eduardo', apellidos: 'Gomez Martinez', num_documento: '9876543220', correo: 'carlosgomez@agrilmarket.com', password: 'pepito123', genero_id: 1, rol_id: 3 },
           { id: 5, nombres: 'Maria Liliana', apellidos: 'Lopez Ramirez', num_documento: '9876543221', correo: 'marialopez@agrilmarket.com', password: 'pepito123', genero_id: 2, rol_id: 3 },
-          { id: 6, nombres: 'admin', apellidos: 'admin', num_documento: '0000000000', correo: 'admin', password: 'admin', genero_id: 1, rol_id: 1 },
+          { id: 6, nombres: 'admin', apellidos: 'admin', num_documento: '0000000000', correo: 'admin@admin.com', password: 'admin123', genero_id: 1, rol_id: 1 },
         ];
 
         // Usamos Promise.all para esperar todos los hashes
