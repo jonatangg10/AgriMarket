@@ -1,105 +1,140 @@
-import React, { memo } from "react";
-import { IoAdd } from "react-icons/io5";
+import React, { memo, useState } from "react";
 import { Link } from "react-router-dom";
 
+// Datos fijos por ahora: la unidad no cambia el precio ni lo que se agrega al carrito
+const UNIDADES = [
+  { nombre: "Libra", sufijo: "lb" },
+  { nombre: "Kilo", sufijo: "kg" },
+  { nombre: "Bulto", sufijo: "bulto" },
+];
+
 const Producto = ({ producto, agregarAlCarrito }) => {
+  const [unidad, setUnidad] = useState("Kilo");
 
   const handleAgregar = (e) => {
-    e.preventDefault(); // Evita comportamientos inesperados si el botón propaga eventos
+    e.preventDefault();
     if (producto.stock > 0) {
       agregarAlCarrito(producto);
     }
   };
 
-  const getStockBadge = () => {
-    if (producto.stock <= 0) return "bg-red-100 text-red-700";
-    if (producto.stock <= 5) return "bg-orange-100 text-orange-700";
-    return "bg-green-100 text-green-700";
-  };
+  const sufijoUnidad = UNIDADES.find((u) => u.nombre === unidad)?.sufijo;
 
-  const badgeColor = producto.etiqueta?.includes("-")
-    ? "bg-pink-600"
-    : "bg-yellow-500";
+  const agotado = producto.stock <= 0;
+  const pocasUnidades = producto.stock > 0 && producto.stock <= 5;
+
+  const stockBadge = agotado
+    ? "bg-red-100 text-red-800"
+    : pocasUnidades
+    ? "bg-[#FBD9C9] text-[#6B2A0E]"
+    : "bg-[#E3F1E7] text-[#14532D]";
+
+  const stockTexto = agotado
+    ? "Agotado"
+    : pocasUnidades
+    ? `Quedan ${producto.stock}`
+    : `${producto.stock} disp.`;
+
+  // Etiquetas con "-" (ej. "-20%") se tratan como oferta
+  const etiquetaColor = producto.etiqueta?.includes("-")
+    ? "bg-[#FBD9C9] text-[#6B2A0E]"
+    : "bg-[#F6D77A] text-[#4A3500]";
+
+  const vendedor = [
+    producto.vendedor_nombres?.split(" ")[0],
+    producto.vendedor_apellidos?.split(" ")[0],
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 flex flex-col h-full">
-      <Link to={`/producto/${producto.id}`} className="flex flex-col flex-grow">
-        <div className="relative group">
+    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-[#E1E8DA] bg-white transition-shadow duration-300 hover:shadow-md">
+      {/* Imagen + nombre + vendedor: llevan al detalle */}
+      <Link to={`/producto/${producto.id}`} className="flex flex-col">
+        <div className="group relative overflow-hidden bg-[#DCE6D3]">
           {producto.etiqueta && (
-            <div
-              className={`absolute top-3 left-3 z-10 ${badgeColor} text-white text-[10px] uppercase font-black px-2 py-1 rounded-md shadow-sm`}
+            <span
+              className={`absolute left-3 top-3 z-10 rounded-full px-2.5 py-1 text-[11px] font-bold ${etiquetaColor}`}
             >
               {producto.etiqueta}
-            </div>
+            </span>
           )}
 
-          <div className="block overflow-hidden bg-gray-50">
-            <img
-              src={producto.imagen}
-              alt={producto.nombre}
-              className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-          </div>
-          
-          {producto.stock <= 0 && (
-            <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-center justify-center">
-              <span className="bg-gray-800 text-white px-4 py-2 rounded-lg font-bold text-sm tracking-widest shadow-xl">
+          <img
+            src={producto.imagen}
+            alt={producto.nombre}
+            className="h-44 w-full object-cover transition-transform duration-500 group-hover:scale-105 sm:h-48"
+          />
+
+          {agotado && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white/60">
+              <span className="rounded-lg bg-[#17261D] px-4 py-2 text-sm font-bold tracking-widest text-white">
                 AGOTADO
               </span>
             </div>
           )}
         </div>
 
-        <div className="p-5 flex flex-col flex-grow">
-          <h3 className="font-bold text-gray-800 text-lg leading-tight hover:text-green-700 transition-colors line-clamp-2 min-h-[2.5rem] text-center">
+        <div className="flex flex-col gap-1 px-4 pt-4">
+          <h3 className="line-clamp-2 text-base font-bold leading-tight text-[#17261D]">
             {producto.nombre}
           </h3>
-
-          <div className="mt-2 mb-2 border-t border-b border-gray-200 py-1 text-center">
-            <span className="text-2xl font-extrabold text-gray-900 block leading-none">
-              ${producto.precio.toLocaleString("es-CO")}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between mb-4">
-            <span
-              className={`text-[11px] font-bold px-2 py-1 rounded-md uppercase tracking-tighter ${getStockBadge()}`}
-            >
-              {producto.stock > 0
-                ? `${producto.stock} unidades disponibles`
-                : "Sin stock disponible"}
-            </span>
-            <span className="text-sm text-gray-600 font-medium">
-              {producto.vendedor_genero_id === 1 ? "👨🏽‍🦱" : "👩🏻"}{" "}
-              {producto.vendedor_nombres?.split(" ")[0]}{" "}
-              {producto.vendedor_apellidos?.split(" ")[0]}
-            </span>
-          </div>
+          {vendedor && (
+            <p className="text-xs text-[#4F6355]">Vendido por {vendedor}</p>
+          )}
         </div>
       </Link>
 
-      {/* Botón de acción fuera del Link */}
-      <div className="p-5 pt-0">
+      {/* Controles: fuera del Link para no navegar al tocarlos */}
+      <div className="mt-auto flex flex-col gap-3 p-4 pt-3">
+        {/* Selector de unidad (visual por ahora) */}
+        <div className="flex flex-wrap gap-1.5">
+          {UNIDADES.map((u) => (
+            <button
+              key={u.nombre}
+              type="button"
+              aria-pressed={unidad === u.nombre}
+              onClick={() => setUnidad(u.nombre)}
+              className={`min-h-8 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
+                unidad === u.nombre
+                  ? "border-[#14432F] bg-[#14432F] text-white"
+                  : "border-[#C9D6C0] bg-white text-[#17261D] hover:bg-[#EAF0E2]"
+              }`}
+            >
+              {u.nombre}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-baseline justify-between gap-2">
+          <span className="text-2xl font-extrabold text-[#17261D]">
+            ${producto.precio.toLocaleString("es-CO")}
+            <span className="ml-1 text-xs font-medium text-[#4F6355]">
+              / {sufijoUnidad}
+            </span>
+          </span>
+
+          <span
+            className={`whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-bold ${stockBadge}`}
+          >
+            {stockTexto}
+          </span>
+        </div>
+
         <button
+          type="button"
           onClick={handleAgregar}
-          disabled={producto.stock <= 0}
-          className={`w-full py-3 rounded-lg flex items-center justify-center gap-2 font-bold text-sm transition-all shadow-sm ${
-            producto.stock > 0
-              ? "bg-green-600 hover:bg-green-700 text-white active:scale-95"
-              : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+          disabled={agotado}
+          className={`min-h-11 w-full rounded-xl py-3 text-sm font-bold transition-colors ${
+            agotado
+              ? "cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400"
+              : "bg-[#14432F] text-white hover:bg-[#0E3323] active:scale-[0.98]"
           }`}
         >
-          {producto.stock > 0 ? (
-            <>
-              <IoAdd className="text-lg" />
-              Añadir al carrito
-            </>
-          ) : (
-            "No disponible"
-          )}
+          {agotado ? "No disponible" : "Añadir al carrito"}
         </button>
       </div>
-    </div>
+    </article>
   );
 };
 

@@ -16,7 +16,7 @@ const links = [
 
 const Footer = () => {
   return (
-    <footer className="mt-16 w-full bg-[#101E16] py-10 text-[#C9D6CD]">
+    <footer className="mt-12 w-full bg-[#101E16] py-10 text-[#C9D6CD]">
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6">
         {/* Fila superior: marca + WhatsApp */}
         <div className="flex flex-col items-center justify-between gap-6 text-center sm:flex-row sm:text-left">
