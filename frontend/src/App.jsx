@@ -119,12 +119,26 @@ function App() {
     return Object.entries(conteo).sort((a, b) => a[0].localeCompare(b[0]));
   }, [productosPaginados, municipiosSel]);
 
+  // Solo municipios que realmente tienen productos (para el buscador del hero)
+  const municipiosConProductos = useMemo(
+    () =>
+      municipiosDisponibles
+        .filter(([, cantidad]) => cantidad > 0)
+        .map(([municipio]) => municipio),
+    [municipiosDisponibles]
+  );
+
   const toggleMunicipio = (municipio) => {
     setMunicipiosSel((prev) =>
       prev.includes(municipio)
         ? prev.filter((m) => m !== municipio)
         : [...prev, municipio]
     );
+  };
+
+  // Desde el hero: un solo municipio a la vez ("" = todos)
+  const handleMunicipioHero = (valor) => {
+    setMunicipiosSel(valor ? [valor] : []);
   };
 
   // Techo del slider de precio, según los productos cargados
@@ -191,7 +205,14 @@ function App() {
   return (
     <div className="min-h-screen bg-[#F5F7F1]">
       <Navbar onAbrirCarrito={() => setCarritoVisible(true)} />
-      <ImageCarousel />
+      <ImageCarousel
+        busqueda={busqueda}
+        onBusquedaChange={setBusqueda}
+        municipios={municipiosConProductos}
+        municipiosSel={municipiosSel}
+        onMunicipioChange={handleMunicipioHero}
+        onBuscar={irAProductos}
+      />
       <Toaster position="bottom-right" />
 
       {/* EXPLORA POR CATEGORÍA */}
