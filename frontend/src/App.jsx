@@ -47,6 +47,13 @@ function App() {
   const [soloConStock, setSoloConStock] = useState(false);
   const [filtrosAbiertos, setFiltrosAbiertos] = useState(false); // solo móvil
 
+  // esto pa oscilar entre las de front precargadas y las nuevas de back
+  const obtenerUrlImagen = (ruta) => {
+    if (!ruta) return "/images/placeholder.jpg";
+    if (ruta.startsWith('/uploads/')) return `https://agrimarket-yfbo.onrender.com${ruta}`;
+    return ruta;
+  };
+
   useEffect(() => {
     const cargarDatos = async () => {
       setLoadingLocal(true);
@@ -58,7 +65,12 @@ function App() {
         categoria: filtro
       });
 
-      setProductosPaginados(res.productos || []);
+      const productosListos = (res.productos || []).map(p => ({
+        ...p,
+        imagen: obtenerUrlImagen(p.imagen)
+      }));
+      setProductosPaginados(productosListos);
+
       setTotalProductos(res.total || 0);
       setLoadingLocal(false);
     };
