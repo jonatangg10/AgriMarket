@@ -36,7 +36,8 @@ module.exports = (db) => {
         imagen,
         stock,
         etiqueta,
-        categoria
+        categoria,
+        municipio_code
       FROM productos`,
       (err, rows) => {
         if (err) {
@@ -79,10 +80,12 @@ module.exports = (db) => {
         e.nombre AS estado,
         u.nombres AS vendedor_nombres,
         u.apellidos AS vendedor_apellidos,
-        u.genero_id AS vendedor_genero_id
+        u.genero_id AS vendedor_genero_id,
+        m.nombre AS municipio_nombre
       FROM productos p
       JOIN estado e ON p.estado_id = e.id
       JOIN usuarios u ON p.usuario_id = u.id
+      JOIN municipios m ON p.municipio_code = m.code
       WHERE p.estado_id = 1
     `;
 
