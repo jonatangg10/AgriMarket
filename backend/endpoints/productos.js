@@ -1,4 +1,26 @@
 const express = require('express');
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Configuración de Multer para guardar imágenes
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const dir = './public/uploads';
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir, { recursive: true }); // Crea la carpeta si no existe
+    }
+    cb(null, dir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname)); 
+  }
+});
+const upload = multer({ storage: storage });
+
+
 
 module.exports = (db) => {
   const router = express.Router();
@@ -204,15 +226,17 @@ module.exports = (db) => {
   });
 
 
-  // =====================================================
-  // ENDPOINTS ADMIN (CRUD)
-  // =====================================================
+  // ==========================================
+  // ENDPOINTS ADMIN (CRUD CON IMÁGENES)
+  // ==========================================
 
-  // Crear un nuevo producto
-  router.post('/', (req, res) => {
-    const { nombre, usuario_id, estado_id, precio, imagen, stock, etiqueta, categoria } = req.body;
+  // CREAR PRODUCTO (upload.single('imagen'))
+  router.post('/', upload.single('imagen'), (req, res) => {
+    const { nombre, usuario_id, estado_id, precio, stock, etiqueta, categoria } = req.body;
+    
+    // Si multer subió un archivo, guardamos la ruta. Si no, vacío.
+    const imagenUrl = req.file ? `/uploads/${req.file.filename}` : '';
 
-    // Validación básica de campos requeridos
     if (!nombre || !usuario_id || !estado_id || precio === undefined || !etiqueta || !categoria) {
       return res.status(400).json({ error: 'Faltan campos obligatorios' });
     }
@@ -221,102 +245,52 @@ module.exports = (db) => {
       INSERT INTO productos (nombre, usuario_id, estado_id, precio, imagen, stock, etiqueta, categoria)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
-
-    // Si no envían imagen o stock, asignamos valores por defecto (vacío y 0)
+    
     const params = [
-      nombre,
-      usuario_id,
-      estado_id,
-      precio,
-      imagen || '',
-      stock !== undefined ? stock : 10,
-      etiqueta,
-      categoria
+      nombre, usuario_id, estado_id, precio, imagenUrl, 
+      stock !== undefined ? stock : 10, etiqueta, categoria
     ];
 
     db.run(sql, params, function (err) {
-      if (err) {
-        console.error('Error al crear producto:', err);
-        return res.status(500).json({ error: 'Error al guardar el producto en la base de datos' });
-      }
-
-      res.status(201).json({
-        success: true,
-        id: this.lastID,
-        message: 'Producto creado correctamente'
-      });
+      if (err) return res.status(500).json({ error: 'Error al crear producto' });
+      res.status(201).json({ success: true, id: this.lastID, imagen: imagenUrl });
     });
   });
 
-  // Editar un producto existente
-  router.put('/:id', (req, res) => {
+  // EDITAR PRODUCTO
+  router.put('/:id', upload.single('imagen'), (req, res) => {
     const { id } = req.params;
-    const { nombre, usuario_id, estado_id, precio, imagen, stock, etiqueta, categoria } = req.body;
+    const { nombre, usuario_id, estado_id, precio, stock, etiqueta, categoria, imagenExistente } = req.body;
 
     if (!nombre || !usuario_id || !estado_id || precio === undefined || !etiqueta || !categoria) {
       return res.status(400).json({ error: 'Faltan campos obligatorios para actualizar' });
     }
 
+    // Si subió un archivo nuevo, usamos ese. Si no, mantenemos el que ya tenía.
+    const imagenFinal = req.file ? `/uploads/${req.file.filename}` : (imagenExistente || '');
+
     const sql = `
       UPDATE productos 
-      SET nombre = ?, 
-          usuario_id = ?, 
-          estado_id = ?, 
-          precio = ?, 
-          imagen = ?, 
-          stock = ?, 
-          etiqueta = ?, 
-          categoria = ?
+      SET nombre = ?, usuario_id = ?, estado_id = ?, precio = ?, imagen = ?, stock = ?, etiqueta = ?, categoria = ?
       WHERE id = ?
     `;
 
     const params = [
-      nombre,
-      usuario_id,
-      estado_id,
-      precio,
-      imagen || '',
-      stock !== undefined ? stock : 10,
-      etiqueta,
-      categoria,
-      id
+      nombre, usuario_id, estado_id, precio, imagenFinal, 
+      stock !== undefined ? stock : 10, etiqueta, categoria, id
     ];
 
     db.run(sql, params, function (err) {
-      if (err) {
-        console.error('Error al actualizar producto:', err);
-        return res.status(500).json({ error: 'Error al actualizar el producto' });
-      }
-
-      if (this.changes === 0) {
-        return res.status(404).json({ error: 'Producto no encontrado' });
-      }
-
-      res.json({
-        success: true,
-        message: 'Producto actualizado correctamente'
-      });
+      if (err) return res.status(500).json({ error: 'Error al actualizar producto' });
+      res.json({ success: true, imagen: imagenFinal });
     });
   });
 
-  // Eliminar un producto
+  // ELIMINAR PRODUCTO
   router.delete('/:id', (req, res) => {
-    const { id } = req.params;
-
-    db.run('DELETE FROM productos WHERE id = ?', [id], function (err) {
-      if (err) {
-        console.error('Error al eliminar producto:', err);
-        return res.status(500).json({ error: 'Error al eliminar el producto' });
-      }
-
-      if (this.changes === 0) {
-        return res.status(404).json({ error: 'Producto no encontrado' });
-      }
-
-      res.json({
-        success: true,
-        message: 'Producto eliminado correctamente'
-      });
+    db.run('DELETE FROM productos WHERE id = ?', [req.params.id], function (err) {
+      if (err) return res.status(500).json({ error: 'Error al eliminar producto' });
+      res.json({ success: true });
     });
   });
 

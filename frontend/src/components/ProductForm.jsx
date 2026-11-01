@@ -4,6 +4,12 @@ import { ArrowLeftIcon, CubeIcon, PencilSquareIcon } from "@heroicons/react/24/o
 const ProductForm = ({ producto, onSave, onCancel }) => {
     const isEditing = Boolean(producto?.id);
 
+    const [preview, setPreview] = useState(
+        producto?.imagen && producto.imagen.startsWith('/uploads')
+            ? `https://agrimarket-yfbo.onrender.com${producto.imagen}`
+            : producto?.imagen || null
+    );
+
     const [formData, setFormData] = useState({
         nombre: "",
         precio: "",
@@ -11,7 +17,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
         etiqueta: "",
         categoria: "",
         imagen: "",
-        estado_id: 1, 
+        estado_id: 1,
         usuario_id: 1, // Por ahora fijo, luego lo tomarás del admin logueado
     });
 
@@ -26,9 +32,13 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                 imagen: producto.imagen || "",
                 estado_id: producto.estado_id || 1,
                 usuario_id: producto.usuario_id || 1,
+                imagenExistente: producto.imagen || "", // Guardamos la url vieja por si no sube foto nueva
+                usuario_id: producto.usuario_id || 1,
             });
         }
     }, [producto, isEditing]);
+
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -46,7 +56,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
             precio: parseFloat(formData.precio),
             stock: parseInt(formData.stock, 10),
             estado_id: parseInt(formData.estado_id, 10),
-            usuario_id: parseInt(formData.usuario_id, 10) 
+            usuario_id: parseInt(formData.usuario_id, 10)
         });
     };
 
@@ -152,16 +162,31 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                         </select>
                     </div>
 
+                    {/* INPUT DE IMAGEN */}
                     <div className="md:col-span-2">
-                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">URL de la Imagen (Ruta)</label>
+                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Imagen del Producto</label>
                         <input
-                            type="text"
+                            type="file"
+                            accept="image/*"
                             name="imagen"
-                            value={formData.imagen}
-                            onChange={handleChange}
-                            placeholder="Ej: /images/Tomate-Chonto.png"
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                            onChange={(e) => {
+                                const file = e.target.files[0];
+                                if (file) {
+                                    // guardamos el archivo para enviarlo
+                                    setFormData(prev => ({ ...prev, imagen: file }));
+                                    // guardamos vista previa temporal
+                                    setPreview(URL.createObjectURL(file));
+                                }
+                            }}
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all"
                         />
+                            {/* esto namas pa preview */}
+                        {preview && (
+                            <div className="mt-4">
+                                <p className="text-xs text-slate-500 mb-2">Vista previa:</p>
+                                <img src={preview} alt="Vista previa" className="h-32 w-32 object-cover rounded-xl border border-slate-200 shadow-sm" />
+                            </div>
+                        )}
                     </div>
                 </div>
 

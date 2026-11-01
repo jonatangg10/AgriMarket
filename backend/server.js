@@ -10,6 +10,9 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+
 const db = new sqlite3.Database('./carrito.db');
 
 const crearUsuarios = require('./db/crearUsuarios');

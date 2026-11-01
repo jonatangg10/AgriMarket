@@ -1,7 +1,7 @@
 import { useContext, useMemo, useState, useEffect } from "react";
 import AdminLayout from "../components/AdminLayout";
-import { ProductContext } from "../context/ProductContext"; 
-import ProductForm from "../components/ProductForm"; 
+import { ProductContext } from "../context/ProductContext";
+import ProductForm from "../components/ProductForm";
 
 import {
   PencilIcon,
@@ -19,13 +19,13 @@ import {
 const AdminProductos = () => {
   const {
     obtenerProductosPaginados,
-    eliminarProducto, 
-    guardarProducto,  
-    loadingProducts: loading, 
-    categorias, 
-  } = useContext(ProductContext); 
+    eliminarProducto,
+    guardarProducto,
+    loadingProducts: loading,
+    categorias,
+  } = useContext(ProductContext);
 
-  const [vista, setVista] = useState("tabla"); 
+  const [vista, setVista] = useState("tabla");
 
   const [globalFilter, setGlobalFilter] = useState("");
   const [categoriaFilter, setCategoriaFilter] = useState("");
@@ -38,12 +38,23 @@ const AdminProductos = () => {
     pageSize: 10,
   });
 
+  // esto porque teniamos las imagenes en front y ahora las nuevas se guardan en el node
+  const obtenerUrlImagen = (ruta) => {
+    if (!ruta) return "/images/placeholder.jpg";
+    // si la imagen viene del backend (multer)
+    if (ruta.startsWith('/uploads/')) {
+      return `https://agrimarket-yfbo.onrender.com${ruta}`;
+    }
+    // Si la imagen viene del frontend (las que ya estaban)
+    return ruta;
+  };
+
   const cargarProductos = async () => {
     const { productos: productosData, total } = await obtenerProductosPaginados({
-        page: pagination.pageIndex + 1,
-        pageSize: pagination.pageSize,
-        search: globalFilter,
-        categoria: categoriaFilter,
+      page: pagination.pageIndex + 1,
+      pageSize: pagination.pageSize,
+      search: globalFilter,
+      categoria: categoriaFilter,
     });
 
     setProductosPaginados(productosData || []);
@@ -93,7 +104,7 @@ const AdminProductos = () => {
         cell: ({ row }) => (
           <div className="flex items-center gap-3">
             <img
-              src={row.original.imagen || "/images/placeholder.jpg"}
+              src={obtenerUrlImagen(row.original.imagen)}
               alt={row.original.nombre}
               className="h-11 w-11 object-cover rounded-xl border border-slate-200"
             />
@@ -123,10 +134,9 @@ const AdminProductos = () => {
         cell: (info) => (
           <span
             className={`px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider
-              ${
-                info.getValue() < 5
-                  ? "bg-rose-50 text-rose-600 border border-rose-200"
-                  : "bg-emerald-50 text-emerald-600 border border-emerald-200"
+              ${info.getValue() < 5
+                ? "bg-rose-50 text-rose-600 border border-rose-200"
+                : "bg-emerald-50 text-emerald-600 border border-emerald-200"
               }`}
           >
             {info.getValue()} unid.
@@ -201,7 +211,7 @@ const AdminProductos = () => {
               </div>
 
               <button
-                onClick={handleCrearNuevo} 
+                onClick={handleCrearNuevo}
                 className="flex items-center gap-2 px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20"
               >
                 <PlusIcon className="h-5 w-5" />
@@ -232,9 +242,9 @@ const AdminProductos = () => {
                 >
                   <option value="">Todas las categorías</option>
                   {categorias?.map((cat, i) => (
-                      <option key={i} value={cat}>
-                        {cat}
-                      </option>
+                    <option key={i} value={cat}>
+                      {cat}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -242,7 +252,7 @@ const AdminProductos = () => {
               <div className="overflow-x-auto">
                 {loading ? (
                   <div className="py-16 text-center text-slate-500 font-medium flex justify-center">
-                     <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
                   </div>
                 ) : productosPaginados.length === 0 ? (
                   <div className="py-16 text-center text-slate-500 font-medium">
