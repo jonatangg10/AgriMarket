@@ -364,14 +364,22 @@ function Navbar() {
                       </button>
                     </>
                   ) : (
-                    <div className="px-3 py-1">
+                    <div className="px-3 py-1 flex flex-col gap-2">
                       <Link
                         to="/login"
                         className="flex items-center justify-center w-full py-2 border border-gray-200 rounded-md text-gray-900 text-sm font-semibold hover:bg-gray-50 transition-all shadow-sm"
                       >
                         Iniciar sesión
                       </Link>
+
+                      <Link
+                        to="/registrarse"
+                        className="flex items-center justify-center w-full py-2 border border-gray-200 rounded-md text-gray-900 text-sm font-semibold hover:bg-gray-50 transition-all shadow-sm"
+                      >
+                        Registrarse
+                      </Link>
                     </div>
+                    
                   )}
                 </div>
               )}

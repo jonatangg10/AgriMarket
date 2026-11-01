@@ -5,6 +5,7 @@ import Dashboard from "../pages/Dashboard";
 import Admin from "../pages/Admin";
 import AdminUsers from "../pages/AdminUsers";
 import Login from "../pages/Login";
+import Registrarse from "../pages/Registrarse";
 import ContactoPage from "../pages/Contact";
 import PrivateRoute from "./PrivateRoute";
 
@@ -14,6 +15,7 @@ const AppRoutes = () => {
       <Route path="/" element={<App />} />
       <Route path="/producto/:id" element={<DetalleProducto />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/registrarse" element={<Registrarse />} />
       <Route path="/contacto" element={<ContactoPage  />} />
 
       {/* Rutas Protegidas (Solo Admin) */}

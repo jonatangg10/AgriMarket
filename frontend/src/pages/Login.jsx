@@ -50,7 +50,7 @@ const Login = () => {
 
         {/* Formulario */}
         <div className="w-full md:w-1/2 p-8 sm:p-10">
-          <h2 className="text-2xl font-bold text-gray-900">Iniciar Sesión</h2>
+          <h2 className="text-2xl font-bold text-[#14432F]">Iniciar Sesión</h2>
           <p className="text-gray-500 text-sm mb-6">
             Si ya tienes una cuenta, inicia sesión
           </p>
@@ -89,12 +89,12 @@ const Login = () => {
             </div>
 
             <div className="text-right">
-              <button type="button" className="text-sm text-blue-600 hover:underline">
+              <button type="button" className="text-sm text-[#14432F] hover:underline">
                 ¿Olvidaste tu contraseña?
               </button>
             </div>
 
-            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+            <button className="w-full bg-[#14432F] hover:bg-[#0E3323] text-white font-semibold py-3 rounded-lg transition">
               Ingresar
             </button>
           </form>
@@ -113,12 +113,12 @@ const Login = () => {
             Iniciar sesión con Google
           </button>
 
-          <p className="text-sm text-gray-600 text-center mt-6">
+          <p className="text-sm text-[#14432F] text-center mt-6">
             ¿No tienes una cuenta?
           </p>
           <button
             onClick={() => navigate("/register")}
-            className="mt-2 border border-blue-600 text-blue-600 w-full py-2 rounded-lg hover:bg-blue-50 transition"
+            className="mt-2 border border-[#14432F] text-[#14432F] w-full py-2 rounded-lg hover:bg-[#14432F] hover:text-white transition"
           >
             Registrarse
           </button>

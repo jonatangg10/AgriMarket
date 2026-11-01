@@ -10,8 +10,10 @@ function crearProductos(db, callback) {
       stock INTEGER NOT NULL DEFAULT 10,
       etiqueta TEXT NOT NULL,
       categoria TEXT NOT NULL,
+      municipio_code TEXT NOT NULL,
       FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
-      FOREIGN KEY (estado_id) REFERENCES estado(id)
+      FOREIGN KEY (estado_id) REFERENCES estado(id),
+      FOREIGN KEY (municipio_code) REFERENCES municipios(code)
     )
   `, (err) => {
     if (err) return console.error("Error creando tabla productos:", err);
@@ -21,14 +23,14 @@ function crearProductos(db, callback) {
 
       if (row.count === 0) {
         const stmt = db.prepare(`
-          INSERT INTO productos (nombre, usuario_id, estado_id, precio, imagen, stock, etiqueta, categoria)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+          INSERT INTO productos (nombre, usuario_id, estado_id, precio, imagen, stock, etiqueta, categoria, municipio_code)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `);
 
         const productosEjemplo = [
-          ['Tomates Orgánicos', 4, 1, 3500, '/images/Tomate-Chonto.png', 100, 'Fresco', 'Hortalizas'],
-          ['Lechuga Hidropónica', 5, 1, 2000, '/images/Lechuga-Hidropónica.png', 80, 'Nuevo', 'Hortalizas'],
-          ['Mango Azúcar', 4, 1, 1500, '/images/Mango-Azucar.png', 120, 'Oferta', 'Frutas']
+          ['Tomates Orgánicos', 4, 1, 3500, '/images/Tomate-Chonto.png', 100, 'Fresco', 'Hortalizas', 25875],
+          ['Lechuga Hidropónica', 5, 1, 2000, '/images/Lechuga-Hidropónica.png', 80, 'Nuevo', 'Hortalizas', 25718],
+          ['Mango Azúcar', 4, 1, 1500, '/images/Mango-Azucar.png', 120, 'Oferta', 'Frutas', 25320]
         ];
 
         productosEjemplo.forEach(p => stmt.run(p, (err) => {
