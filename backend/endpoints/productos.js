@@ -74,7 +74,7 @@ module.exports = (db) => {
         p.stock,
         p.etiqueta,
         p.categoria,
-        p.usuario_id, /* agregado para tenerlo al editar
+        p.usuario_id,
         p.estado_id,
         e.nombre AS estado,
         u.nombres AS vendedor_nombres,
