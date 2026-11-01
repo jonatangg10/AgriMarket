@@ -14,7 +14,6 @@ import Comprar from './components/Comprar';
 import { ChevronLeftIcon, ChevronRightIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
 
 // Datos fijos por ahora (aún no existen en la BD)
-const MUNICIPIOS = ["Villeta", "Sasaima", "Guaduas", "Tobia"];
 const CULTIVOS = ["Orgánico", "Cosechado hoy", "Compra por bulto"];
 
 const capitalizar = (texto) => texto.charAt(0).toUpperCase() + texto.slice(1);
@@ -42,6 +41,7 @@ function App() {
 
   // Filtros (se aplican sobre los productos de la página cargada)
   const [busqueda, setBusqueda] = useState("");
+  const [municipiosSel, setMunicipiosSel] = useState([]);
   const [precioMax, setPrecioMax] = useState(null); // null = sin límite
   const [orden, setOrden] = useState("recientes");
   const [soloConStock, setSoloConStock] = useState(false);
@@ -101,19 +101,48 @@ function App() {
 
   const totalPaginas = Math.ceil(totalProductos / PAGE_SIZE);
 
+  // Municipios disponibles según los productos cargados, con su conteo
+  const municipiosDisponibles = useMemo(() => {
+    const conteo = {};
+
+    productosPaginados.forEach((p) => {
+      if (p.municipio_nombre) {
+        conteo[p.municipio_nombre] = (conteo[p.municipio_nombre] || 0) + 1;
+      }
+    });
+
+    // Mantiene visibles los seleccionados aunque no estén en esta página
+    municipiosSel.forEach((m) => {
+      if (!(m in conteo)) conteo[m] = 0;
+    });
+
+    return Object.entries(conteo).sort((a, b) => a[0].localeCompare(b[0]));
+  }, [productosPaginados, municipiosSel]);
+
+  const toggleMunicipio = (municipio) => {
+    setMunicipiosSel((prev) =>
+      prev.includes(municipio)
+        ? prev.filter((m) => m !== municipio)
+        : [...prev, municipio]
+    );
+  };
+
   // Techo del slider de precio, según los productos cargados
   const precioTecho = useMemo(() => {
     const maximo = Math.max(0, ...productosPaginados.map((p) => Number(p.precio) || 0));
     return Math.max(10000, Math.ceil(maximo / 500) * 500);
   }, [productosPaginados]);
 
-  // Aplica búsqueda, precio, stock y orden
+  // Aplica búsqueda, municipio, precio, stock y orden
   const productosVisibles = useMemo(() => {
     let lista = [...productosPaginados];
 
     if (busqueda.trim()) {
       const q = busqueda.trim().toLowerCase();
       lista = lista.filter((p) => p.nombre?.toLowerCase().includes(q));
+    }
+    if (municipiosSel.length > 0) {
+      lista = lista.filter((p) => municipiosSel.includes(p.municipio_nombre));
     }
     if (precioMax !== null) {
       lista = lista.filter((p) => Number(p.precio) <= precioMax);
@@ -125,12 +154,14 @@ function App() {
     if (orden === "mayor") lista.sort((a, b) => Number(b.precio) - Number(a.precio));
 
     return lista;
-  }, [productosPaginados, busqueda, precioMax, soloConStock, orden]);
+  }, [productosPaginados, busqueda, municipiosSel, precioMax, soloConStock, orden]);
 
-  const hayFiltros = busqueda || precioMax !== null || soloConStock || orden !== "recientes";
+  const hayFiltros =
+    busqueda || municipiosSel.length > 0 || precioMax !== null || soloConStock || orden !== "recientes";
 
   const limpiarFiltros = () => {
     setBusqueda("");
+    setMunicipiosSel([]);
     setPrecioMax(null);
     setSoloConStock(false);
     setOrden("recientes");
@@ -213,6 +244,11 @@ function App() {
           >
             <AdjustmentsHorizontalIcon className="h-5 w-5" />
             Filtros
+            {municipiosSel.length > 0 && (
+              <span className="rounded-full bg-[#14432F] px-2 text-xs text-white">
+                {municipiosSel.length}
+              </span>
+            )}
           </button>
         </div>
 
@@ -245,15 +281,26 @@ function App() {
               />
             </label>
 
-            {/* Municipio: datos fijos, aún sin efecto */}
+            {/* Municipio: valores reales de producto.municipio_nombre */}
             <fieldset className="flex flex-col gap-2 text-sm">
               <legend className="mb-2 font-bold text-[#17261D]">Municipio</legend>
-              {MUNICIPIOS.map((m) => (
-                <label key={m} className="flex items-center gap-2 text-[#17261D]">
-                  <input type="checkbox" className={checkboxClass} />
-                  {m}
-                </label>
-              ))}
+
+              {municipiosDisponibles.length === 0 ? (
+                <p className="text-xs text-[#4F6355]">Sin municipios para mostrar.</p>
+              ) : (
+                municipiosDisponibles.map(([municipio, cantidad]) => (
+                  <label key={municipio} className="flex items-center gap-2 text-[#17261D]">
+                    <input
+                      type="checkbox"
+                      checked={municipiosSel.includes(municipio)}
+                      onChange={() => toggleMunicipio(municipio)}
+                      className={checkboxClass}
+                    />
+                    <span className="flex-1">{municipio}</span>
+                    <span className="text-xs text-[#4F6355]">{cantidad}</span>
+                  </label>
+                ))
+              )}
             </fieldset>
 
             {/* Cultivo: datos fijos, aún sin efecto */}
