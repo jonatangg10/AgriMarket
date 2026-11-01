@@ -11,7 +11,7 @@ import {
 
 import { useContext, useState, useEffect, useRef } from "react";
 import { CarritoContext } from "../context/CarritoContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const theme = {
@@ -24,12 +24,12 @@ const theme = {
 };
 
 function Navbar() {
-  const { carrito, setCarritoVisible, categorias } =
-    useContext(CarritoContext);
+  const { carrito, setCarritoVisible } = useContext(CarritoContext);
 
   const { isAuthenticated, logout, usuario } = useAuth();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -97,23 +97,42 @@ function Navbar() {
     setTimeout(() => logout(), 50);
   };
 
-  // Scroll suave hacia la sección inicio
+  // Ir a la sección inicio (si estás en otra página, vuelve al home primero)
   const scrollToInicio = () => {
-    const section = document.getElementById("inicio");
-
-    if (section) {
-      section.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
     setMenuOpen(false);
+
+    if (location.pathname !== "/") {
+      navigate("/", { state: { scrollTo: "inicio" } });
+      return;
+    }
+
+    document.getElementById("inicio")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
+
+  // Al llegar al home con una sección pendiente, hace el scroll
+  useEffect(() => {
+    if (location.pathname === "/" && location.state?.scrollTo) {
+      const id = location.state.scrollTo;
+
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+
+      // limpia el estado para que no se repita al recargar
+      navigate("/", { replace: true, state: null });
+    }
+  }, [location]);
 
   const navLinks = [
     { name: "Inicio", action: scrollToInicio },
 
-    { name: "Categorías", path: "/categorías" },
+    { name: "Categorías", path: "/categorias" },
 
     { name: "Ofertas", path: "/ofertas" },
 
@@ -126,7 +145,7 @@ function Navbar() {
 
   return (
     <header className="fixed top-0 w-full z-50">
-      {/* 🔹 Barra de envíos (h-9 = 36px) */}
+      {/* Barra de envíos (h-9 = 36px) */}
       <div className="h-9 bg-[#14432F] text-white flex items-center justify-center gap-2 px-4 text-xs sm:text-sm">
         <TruckIcon className="h-4 w-4 shrink-0 text-[#F6D77A]" />
         <p className="truncate">
