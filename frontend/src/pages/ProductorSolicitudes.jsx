@@ -142,7 +142,7 @@ const ProductorSolicitudes = () => {
         id: "estado",
         header: "Estado de Entrega",
         cell: ({ row }) => {
-          const estadoActual = row.original.estado_venta_id || 1;
+          const estadoActual = row.original.estado_id || 1;
           const configEstado = ESTADOS_VENTA.find(e => e.id === estadoActual) || ESTADOS_VENTA[0];
 
           return (
