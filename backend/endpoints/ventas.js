@@ -18,7 +18,7 @@ module.exports = (db) => {
         cufe,
         qr_url,
         total,
-        estado,
+        estado_id,
         fecha_creacion
       FROM ventas
       ORDER BY id DESC
@@ -52,7 +52,7 @@ module.exports = (db) => {
         v.reference_code,
         v.cufe,
         v.total,
-        v.estado,
+        v.estado_id,
         v.fecha_creacion
       FROM ventas v
       JOIN detalle_ventas dv ON v.id = dv.venta_id
@@ -88,11 +88,11 @@ module.exports = (db) => {
           dv.cantidad,
           dv.precio_unitario,
           dv.subtotal,
-          dv.estado_venta_id,
+          dv.estado_id,
           ev.estado AS estado_pedido
         FROM detalle_ventas dv
         JOIN productos p ON p.id = dv.producto_id
-        LEFT JOIN estado_venta ev ON dv.estado_venta_id = ev.id
+        LEFT JOIN estado_venta ev ON dv.estado_id = ev.id
         WHERE dv.venta_id IN (${placeholders}) AND p.usuario_id = ?
       `;
 
@@ -147,7 +147,7 @@ module.exports = (db) => {
 
       const ventaId = row.venta_id;
 
-      db.run('UPDATE detalle_ventas SET estado_venta_id = ? WHERE id = ?', [estado_venta_id, detalle_id], function (err) {
+      db.run('UPDATE detalle_ventas SET estado_id = ? WHERE id = ?', [estado_venta_id, detalle_id], function (err) {
 
         if (err) {
           return res.status(500).json({
@@ -155,7 +155,7 @@ module.exports = (db) => {
           });
         }
 
-        db.all('SELECT DISTINCT estado_venta_id FROM detalle_ventas WHERE venta_id = ?', [ventaId], (err, estadosDistintos) => {
+        db.all('SELECT DISTINCT estado_id FROM detalle_ventas WHERE venta_id = ?', [ventaId], (err, estadosDistintos) => {
 
           if (err) {
             return res.status(500).json({
@@ -163,9 +163,9 @@ module.exports = (db) => {
             });
           }
 
-          if (estadosDistintos.length === 1 && estadosDistintos[0].estado_venta_id !== null) {
+          if (estadosDistintos.length === 1 && estadosDistintos[0].estado_id !== null) {
 
-            db.run('UPDATE ventas SET estado = ? WHERE id = ?', [estado_venta_id, ventaId], (err) => {
+            db.run('UPDATE ventas SET estado_id = ? WHERE id = ?', [estado_venta_id, ventaId], (err) => {
 
               if (err) {
                 console.error('Error al actualizar venta general');
@@ -205,7 +205,7 @@ module.exports = (db) => {
         cufe,
         qr_url,
         total,
-        estado,
+        estado_id,
         fecha_creacion
       FROM ventas
       WHERE id = ?
