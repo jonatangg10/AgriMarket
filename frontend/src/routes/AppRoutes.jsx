@@ -8,6 +8,7 @@ import Login from "../pages/Login";
 import Registrarse from "../pages/Registrarse";
 import ContactoPage from "../pages/Contact";
 import PrivateRoute from "./PrivateRoute";
+import ProductorSolicitudes from "../pages/ProductorSolicitudes";
 
 const AppRoutes = () => {
   return (
@@ -40,6 +41,14 @@ const AppRoutes = () => {
         element={
           <PrivateRoute>
             <AdminUsers />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/productor-Solicitudes"
+        element={
+          <PrivateRoute>
+            <ProductorSolicitudes />
           </PrivateRoute>
         }
       />

@@ -13,12 +13,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
             ? `https://agrimarket-yfbo.onrender.com${producto.imagen}`
             : producto?.imagen || null
     );
-    const municipiosFiltrados = useMemo(() => {
-        if (!formData.departamento_code) return [];
-        return municipios.filter(
-            (m) => m.departamento_code === formData.departamento_code
-        );
-    }, [formData.departamento_code, municipios]);
+    
 
     const [formData, setFormData] = useState({
         nombre: "",
@@ -32,6 +27,13 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
         municipio_code: "",
         departamento_code: "",
     });
+
+    const municipiosFiltrados = useMemo(() => {
+        if (!formData.departamento_code) return [];
+        return municipios.filter(
+            (m) => m.departamento_code === formData.departamento_code
+        );
+    }, [formData.departamento_code, municipios]);
 
     useEffect(() => {
         const cargarVendedores = async () => {
@@ -62,7 +64,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                 estado_id: producto.estado_id || 1,
                 usuario_id: producto.usuario_id || "",
                 municipio_code: producto.municipio_code || "",
-                departamento_code: producto.departamento_code || "",
+                departamento_code: producto.municipio_departamento_code || "", 
                 imagenExistente: producto.imagen || "", // Guardamos la url vieja por si no sube foto nueva
             });
         }

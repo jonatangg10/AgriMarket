@@ -35,7 +35,14 @@ const Login = () => {
       // 👉 Guardar usuario en el AuthContext
       login(data.usuario);
 
-      navigate("/admin");
+      if (data.usuario.rol === 1) {//admin
+        navigate("/admin"); 
+      } else if (data.usuario.rol === 3) { //productor
+        navigate("/productor-solicitudes"); 
+      } else {
+        navigate("/admin"); //users
+      }
+      
     } catch (error) {
       setError("Error de conexión con el servidor");
     }

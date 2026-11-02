@@ -102,7 +102,6 @@ const FormComprar = () => {
 
       };
 
-      // ---llamar el endpoint no oficial-----------------------
       const response = await fetch(
         "https://agrimarket-yfbo.onrender.com/api/facturas/finalizar-compra",
         // "http://localhost:3000/api/facturas/finalizar-compra",

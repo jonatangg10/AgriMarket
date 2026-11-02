@@ -355,6 +355,20 @@ function Navbar() {
                         </div>
                       )}
 
+                      {/*  Enlaces para Productor Agrícola (Rol 3) */}
+                      {usuario?.rol === 3 && (
+                        <div className="border-t border-gray-100 mt-2 pt-2">
+                          <p className="px-4 pb-2 text-[10px] uppercase font-bold tracking-wider text-gray-400">
+                            Panel de Productor
+                          </p>
+                          <Link to="/productor-solicitudes" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                            {/* Puedes usar otro icono si prefieres, importándolo arriba */}
+                            <WrenchScrewdriverIcon className="h-4 w-4 mr-3 text-gray-400" /> 
+                            Solicitudes de Compra
+                          </Link>
+                        </div>
+                      )}
+
                       <button
                         onClick={handleLogout}
                         className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"

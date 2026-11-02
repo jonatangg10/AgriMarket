@@ -12,7 +12,8 @@ function crearVentas(db) {
       cufe TEXT,
       qr_url TEXT,
       total REAL NOT NULL,
-      estado TEXT DEFAULT 'completado',
+      estado_id INTEGER NOT NULL DEFAULT 1,
+      FOREIGN KEY (estado_id) REFERENCES estado_venta(id),
       fecha_creacion TEXT DEFAULT (datetime('now', '-5 hours'))
     )
   `, (err) => {
@@ -26,6 +27,8 @@ function crearVentas(db) {
         cantidad INTEGER NOT NULL,
         precio_unitario REAL NOT NULL,
         subtotal REAL NOT NULL,
+        estado_id INTEGER NOT NULL DEFAULT 1,
+        FOREIGN KEY (estado_id) REFERENCES estado_venta(id),
         FOREIGN KEY (venta_id) REFERENCES ventas(id) ON DELETE CASCADE,
         FOREIGN KEY (producto_id) REFERENCES productos(id)
       )

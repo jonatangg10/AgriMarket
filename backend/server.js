@@ -24,6 +24,7 @@ const crearRoles = require('./db/crearRoles');
 const crearContacto = require('./db/crearContacto');
 const crearDepartamentos = require('./db/crearDepartamentos');
 const crearMunicipios = require('./db/crearMunicipios');
+const crearEstadoVenta = require('./db/crearEstadoVenta');
 
 // Migración: Inicialización de la base de datos
 db.serialize(() => {
@@ -35,8 +36,10 @@ db.serialize(() => {
           crearDepartamentos(db, () => {
             crearMunicipios(db, () => {
               crearUsuarios(db, () => {
-                crearProductos(db, () => {
-                  crearVentas(db);
+                crearProductos(db, () => {                  
+                  crearEstadoVenta(db, () => {
+                    crearVentas(db); 
+                  });
                 });
               });
             });
