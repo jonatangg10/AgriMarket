@@ -79,8 +79,12 @@ const Producto = ({ producto, agregarAlCarrito }) => {
           <h3 className="line-clamp-2 text-base font-bold leading-tight text-[#17261D]">
             {producto.nombre}
           </h3>
-          {vendedor && (
-            <p className="text-xs text-[#4F6355]">Vendido por {vendedor}</p>
+          {(vendedor || producto.municipio_nombre) && (
+            <p className="text-xs text-[#4F6355]">
+              {vendedor && `Vendido por ${vendedor}`}
+              {vendedor && producto.municipio_nombre && " · "}
+              {producto.municipio_nombre}
+            </p>
           )}
         </div>
       </Link>

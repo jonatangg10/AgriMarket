@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 // Datos fijos por ahora (luego pueden venir de la BD)
 const slides = [
@@ -28,12 +29,15 @@ const slides = [
   },
 ];
 
-const municipios = ["Villeta", "Sasaima", "Guaduas", "Tobia", "Nimaima", "La Vega"];
-
-function ImageCarousel() {
+function ImageCarousel({
+  busqueda = "",
+  onBusquedaChange = () => {},
+  municipios = [], // solo municipios que tienen productos
+  municipiosSel = [],
+  onMunicipioChange = () => {},
+  onBuscar = () => {},
+}) {
   const [actual, setActual] = useState(0);
-  const [busqueda, setBusqueda] = useState("");
-  const [municipio, setMunicipio] = useState("");
 
   // Rotación automática cada 5 s
   useEffect(() => {
@@ -43,10 +47,30 @@ function ImageCarousel() {
     return () => clearInterval(id);
   }, []);
 
-  const handleBuscar = (e) => {
+  // Lista ordenada y sin repetidos. Si hay uno marcado que no está en la lista, también se incluye
+  const listaMunicipios = useMemo(() => {
+    const unicos = new Set(municipios.filter(Boolean));
+    if (municipiosSel.length === 1) unicos.add(municipiosSel[0]);
+    return [...unicos].sort((a, b) => a.localeCompare(b));
+  }, [municipios, municipiosSel]);
+
+  // "" = todos, un municipio = ese, "__varios" = hay varios marcados en el panel lateral
+  const valorSelect =
+    municipiosSel.length === 0
+      ? ""
+      : municipiosSel.length === 1
+      ? municipiosSel[0]
+      : "__varios";
+
+  const handleMunicipio = (e) => {
+    const valor = e.target.value;
+    if (valor === "__varios") return;
+    onMunicipioChange(valor); // filtra de inmediato
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: conectar con el filtro de productos (busqueda, municipio)
-    console.log({ busqueda, municipio });
+    onBuscar(); // App baja hasta la lista de productos
   };
 
   const slide = slides[actual];
@@ -70,7 +94,8 @@ function ImageCarousel() {
           </p>
 
           <form
-            onSubmit={handleBuscar}
+            onSubmit={handleSubmit}
+            role="search"
             className="mt-6 flex flex-wrap gap-2 rounded-2xl border border-[#C9D6C0] bg-white p-2"
           >
             <label htmlFor="hero-busqueda" className="sr-only">
@@ -80,27 +105,39 @@ function ImageCarousel() {
               id="hero-busqueda"
               type="text"
               value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
+              onChange={(e) => onBusquedaChange(e.target.value)}
               placeholder="Busca mango, papa criolla, café..."
               className="min-h-11 min-w-[160px] flex-1 border-0 bg-transparent px-3 text-sm outline-none placeholder:text-gray-400"
             />
 
-            <label htmlFor="hero-municipio" className="sr-only">
-              Municipio
-            </label>
-            <select
-              id="hero-municipio"
-              value={municipio}
-              onChange={(e) => setMunicipio(e.target.value)}
-              className="min-h-11 rounded-xl border border-[#C9D6C0] bg-white px-3 text-sm font-medium"
-            >
-              <option value="">Todos los municipios</option>
-              {municipios.map((m) => (
-                <option key={m} value={m}>
-                  {m}
-                </option>
-              ))}
-            </select>
+            {/* Desplegable de municipios con productos */}
+            <div className="relative w-full sm:w-56">
+              <label htmlFor="hero-municipio" className="sr-only">
+                Municipio
+              </label>
+              <select
+                id="hero-municipio"
+                value={valorSelect}
+                onChange={handleMunicipio}
+                className="min-h-11 w-full cursor-pointer appearance-none rounded-xl border border-[#C9D6C0] bg-white py-2 pl-3 pr-10 text-sm font-medium text-[#17261D] outline-none focus:border-[#14432F] focus:ring-2 focus:ring-[#CFE7D6]"
+              >
+                <option value="">Todos los municipios</option>
+                {municipiosSel.length > 1 && (
+                  <option value="__varios" disabled>
+                    {municipiosSel.length} municipios
+                  </option>
+                )}
+                {listaMunicipios.map((m) => (
+                  <option key={m} value={m}>
+                    {m}
+                  </option>
+                ))}
+              </select>
+              <ChevronDownIcon
+                className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#4F6355]"
+                aria-hidden="true"
+              />
+            </div>
 
             <button
               type="submit"
