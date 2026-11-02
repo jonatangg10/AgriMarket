@@ -42,7 +42,7 @@ function Navbar() {
 
   const totalItems = carrito.reduce((t, i) => t + i.cantidad, 0);
 
-  const isAdmin = usuario?.rol === "admin";
+  const isAdmin = usuario?.rol === 1; 
 
   const handleMouseEnter = (menuName) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);

@@ -81,7 +81,9 @@ module.exports = (db) => {
         u.nombres AS vendedor_nombres,
         u.apellidos AS vendedor_apellidos,
         u.genero_id AS vendedor_genero_id,
-        m.nombre AS municipio_nombre
+        m.nombre AS municipio_nombre,
+        m.code AS municipio_code,
+        m.departamento_code AS municipio_departamento_code
       FROM productos p
       JOIN estado e ON p.estado_id = e.id
       JOIN usuarios u ON p.usuario_id = u.id
