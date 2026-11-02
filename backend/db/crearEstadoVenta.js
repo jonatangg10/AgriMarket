@@ -11,9 +11,10 @@ function crearEstadoVentas(db, callback) {
       if (err) return console.error("Error verificando estado_venta:", err);
 
       if (row.count === 0) {
+        // CORREGIDO: Se ponen dos interrogantes porque son dos columnas (id, estado)
         const stmt = db.prepare(`
-          INSERT INTO estado_venta (id,estado)
-          VALUES (?)
+          INSERT INTO estado_venta (id, estado)
+          VALUES (?, ?)
         `);
 
         // Estados predeterminados para las solicitudes de compra

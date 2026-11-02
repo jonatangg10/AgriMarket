@@ -12,9 +12,9 @@ function crearVentas(db) {
       cufe TEXT,
       qr_url TEXT,
       total REAL NOT NULL,
-      estado_id INTEGER NOT NULL DEFAULT 1,
-      FOREIGN KEY (estado_id) REFERENCES estado_venta(id),
-      fecha_creacion TEXT DEFAULT (datetime('now', '-5 hours'))
+     estado_id INTEGER NOT NULL DEFAULT 1,
+      fecha_creacion TEXT DEFAULT (datetime('now', '-5 hours')),
+      FOREIGN KEY (estado_id) REFERENCES estado_venta(id)
     )
   `, (err) => {
     if (err) return console.error("Error creando tabla ventas:", err);
