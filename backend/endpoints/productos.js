@@ -236,7 +236,7 @@ module.exports = (db) => {
 
   // CREAR PRODUCTO
   router.post('/', upload.single('imagen'), (req, res) => {
-    const { nombre, usuario_id, estado_id, precio, stock, etiqueta, categoria } = req.body;
+    const { nombre, usuario_id, estado_id, precio, stock, etiqueta, categoria, municipio_code } = req.body;
     
     // Si multer subió un archivo, guardamos la ruta. Si no, vacío.
     const imagenUrl = req.file ? `/uploads/${req.file.filename}` : '';
@@ -245,7 +245,8 @@ module.exports = (db) => {
     const precioNum = parseFloat(precio);
     const estadoIdNum = parseInt(estado_id, 10);
     const usuarioIdNum = parseInt(usuario_id, 10);
-    
+    const municipioCodeNum = parseInt(municipio_code, 10);
+
     // Si el stock viene vacío o indefinido, usamos 10 por defecto
     const stockNum = stock ? parseInt(stock, 10) : 10;
 
@@ -255,14 +256,14 @@ module.exports = (db) => {
     }
 
     const sql = `
-      INSERT INTO productos (nombre, usuario_id, estado_id, precio, imagen, stock, etiqueta, categoria)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO productos (nombre, usuario_id, estado_id, precio, imagen, stock, etiqueta, categoria, municipio_code)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     
     // Pasamos las variables numéricas ya parseadas a los parámetros de SQLite
     const params = [
       nombre, usuarioIdNum, estadoIdNum, precioNum, imagenUrl, 
-      stockNum, etiqueta, categoria
+      stockNum, etiqueta, categoria, municipioCodeNum
     ];
 
     db.run(sql, params, function (err) {
@@ -274,13 +275,14 @@ module.exports = (db) => {
   // EDITAR PRODUCTO
   router.put('/:id', upload.single('imagen'), (req, res) => {
     const { id } = req.params;
-    const { nombre, usuario_id, estado_id, precio, stock, etiqueta, categoria, imagenExistente } = req.body;
+    const { nombre, usuario_id, estado_id, precio, stock, etiqueta, categoria, imagenExistente,municipio_code } = req.body;
 
     // Convertimos los valores
     const precioNum = parseFloat(precio);
     const estadoIdNum = parseInt(estado_id, 10);
     const usuarioIdNum = parseInt(usuario_id, 10);
     const stockNum = stock ? parseInt(stock, 10) : 10;
+    const municipioCodeNum = parseInt(municipio_code, 10);
 
     if (!nombre || isNaN(usuarioIdNum) || isNaN(estadoIdNum) || isNaN(precioNum) || !etiqueta || !categoria) {
       return res.status(400).json({ error: 'Faltan campos obligatorios para actualizar' });
@@ -290,14 +292,14 @@ module.exports = (db) => {
 
     const sql = `
       UPDATE productos 
-      SET nombre = ?, usuario_id = ?, estado_id = ?, precio = ?, imagen = ?, stock = ?, etiqueta = ?, categoria = ?
+      SET nombre = ?, usuario_id = ?, estado_id = ?, precio = ?, imagen = ?, stock = ?, etiqueta = ?, categoria = ?, municipio_code = ?
       WHERE id = ?
     `;
 
     // Pasamos las variables numéricas 
     const params = [
       nombre, usuarioIdNum, estadoIdNum, precioNum, imagenFinal, 
-      stockNum, etiqueta, categoria, parseInt(id, 10)
+      stockNum, etiqueta, categoria, municipioCodeNum, parseInt(id, 10)
     ];
 
     db.run(sql, params, function (err) {

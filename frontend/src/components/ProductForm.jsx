@@ -1,4 +1,4 @@
-import { useState, useEffect,useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import { ArrowLeftIcon, CubeIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { UserContext } from "../context/UserContext";
 
@@ -6,11 +6,20 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
     const isEditing = Boolean(producto?.id);
     const { obtenerUsuariosPorRol } = useContext(UserContext);
     const [vendedores, setVendedores] = useState([]);
+    const [departamentos, setDepartamentos] = useState([]);
+    const [municipios, setMunicipios] = useState([]);
+    const [departamentoSeleccionado, setDepartamentoSeleccionado] = useState('');
     const [preview, setPreview] = useState(
         producto?.imagen && producto.imagen.startsWith('/uploads')
             ? `https://agrimarket-yfbo.onrender.com${producto.imagen}`
             : producto?.imagen || null
     );
+    const municipiosFiltrados = useMemo(() => {
+        if (!departamentoSeleccionado) return [];
+        return municipios.filter(
+            (m) => m.departamento_code === departamentoSeleccionado
+        );
+    }, [departamentoSeleccionado, municipios]);
 
     const [formData, setFormData] = useState({
         nombre: "",
@@ -21,6 +30,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
         imagen: "",
         estado_id: 1,
         usuario_id: "",
+        municipio_code: "",
     });
 
     useEffect(() => {
@@ -29,6 +39,15 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
             setVendedores(data);
         };
         cargarVendedores();
+        Promise.all([
+            fetch('https://agrimarket-yfbo.onrender.com/api/departamentos').then((res) => res.json()),
+            fetch('https://agrimarket-yfbo.onrender.com/api/municipios').then((res) => res.json())
+        ])
+            .then(([deps, munis]) => {
+                setDepartamentos(deps);
+                setMunicipios(munis);
+            })
+            .catch((err) => console.error('Error cargando ubicación:', err));
     }, []);
 
     useEffect(() => {
@@ -42,6 +61,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                 imagen: producto.imagen || "",
                 estado_id: producto.estado_id || 1,
                 usuario_id: producto.usuario_id || "",
+                municipio_code: producto.municipio_code || "",
                 imagenExistente: producto.imagen || "", // Guardamos la url vieja por si no sube foto nueva
             });
         }
@@ -160,6 +180,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                         />
                     </div>
 
+
                     <div>
                         <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Etiqueta</label>
                         <input
@@ -172,6 +193,63 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                             className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
                         />
                     </div>
+
+                    {/* Departamento */}
+                    <div>
+                        <label
+                            htmlFor="departamento_code"
+                            className="block text-xs font-bold uppercase text-slate-500 mb-2"
+                        >
+                            Departamentos
+                        </label>
+
+                        <select
+                            id="departamento_code"
+                            name="departamento_code"
+                            value={departamentoSeleccionado}
+                            onChange={(e) => setDepartamentoSeleccionado(e.target.value)}
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                            required={true}
+                        >
+                            <option value="">-- Selecciona un departamento --</option>
+                            {departamentos.map((departamento) => (
+                                <option key={departamento.code} value={departamento.code}>
+                                    {departamento.nombre}
+                                </option>
+                            ))}
+
+                        </select>
+                    </div>
+
+
+                    {/* Municipio */}
+                    <div>
+                        <label
+                            htmlFor="municipio_code"
+                            className="block text-xs font-bold uppercase text-slate-500 mb-2"
+                        >
+                            Municipio
+                        </label>
+
+                        <select
+                            id="municipio_code"
+                            name="municipio_code"
+                            value={formData.municipio_code}
+                            onChange={handleChange}
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                            disabled={!departamentoSeleccionado}
+                            required={true}
+                        >
+                            <option value="">-- Selecciona un municipio --</option>
+                            {municipiosFiltrados.toSorted((a, b) => a.nombre.localeCompare(b.nombre)).map((municipality) => (
+                                <option key={municipality.code} value={municipality.code}>
+                                    {municipality.nombre}
+                                </option>
+                            ))}
+
+                        </select>
+                    </div>
+
 
                     <div>
                         <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Estado</label>
