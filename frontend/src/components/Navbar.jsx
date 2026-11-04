@@ -42,7 +42,7 @@ function Navbar() {
 
   const totalItems = carrito.reduce((t, i) => t + i.cantidad, 0);
 
-  const isAdmin = usuario?.rol === 1; 
+  const isAdmin = usuario?.rol === 1;
 
   const handleMouseEnter = (menuName) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -111,7 +111,7 @@ function Navbar() {
       block: "start",
     });
   };
-  
+
   const scrollToCategorias = () => {
     setMenuOpen(false);
 
@@ -213,11 +213,10 @@ function Navbar() {
                     {link.path && !link.dropdown && (!link.auth || isAuthenticated) && (
                       <Link
                         to={link.path}
-                        className={`text-sm font-medium ${theme.transition} ${
-                          link.highlight
+                        className={`text-sm font-medium ${theme.transition} ${link.highlight
                             ? theme.accentText
                             : "text-gray-600 hover:text-gray-900"
-                        }`}
+                          }`}
                       >
                         {link.name}
                       </Link>
@@ -239,9 +238,8 @@ function Navbar() {
                         {link.name}
 
                         <ChevronDownIcon
-                          className={`h-3 w-3 transition-transform duration-300 ${
-                            openMenu === link.name ? "rotate-180" : ""
-                          }`}
+                          className={`h-3 w-3 transition-transform duration-300 ${openMenu === link.name ? "rotate-180" : ""
+                            }`}
                         />
                       </button>
                     )}
@@ -250,13 +248,11 @@ function Navbar() {
                   {/* DROPDOWN MENU */}
                   {link.dropdown && (
                     <div
-                      className={`absolute left-0 top-full min-w-[180px] pt-1 ${
-                        theme.transition
-                      } ${
-                        openMenu === link.name
+                      className={`absolute left-0 top-full min-w-[180px] pt-1 ${theme.transition
+                        } ${openMenu === link.name
                           ? "opacity-100 visible translate-y-0"
                           : "opacity-0 invisible translate-y-2"
-                      }`}
+                        }`}
                     >
                       <div className="bg-white border border-gray-100 rounded-lg shadow-xl py-1">
                         {link.dropdown.map((item) => (
@@ -317,9 +313,8 @@ function Navbar() {
                         </p>
 
                         <p className="text-sm font-bold text-gray-900 truncate">
-                          {`${usuario?.nombres?.split(" ")[0] || ""} ${
-                            usuario?.apellidos?.split(" ")[0] || ""
-                          }`}
+                          {`${usuario?.nombres?.split(" ")[0] || ""} ${usuario?.apellidos?.split(" ")[0] || ""
+                            }`}
                         </p>
                       </div>
 
@@ -361,9 +356,16 @@ function Navbar() {
                           <p className="px-4 pb-2 text-[10px] uppercase font-bold tracking-wider text-gray-400">
                             Panel de Productor
                           </p>
+                          <Link
+                            to="/admin-productos"
+                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                          >
+                            <WrenchScrewdriverIcon className="h-4 w-4 mr-3 text-gray-400" />
+                            Mis Productos
+                          </Link>
                           <Link to="/productor-solicitudes" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                             {/* Puedes usar otro icono si prefieres, importándolo arriba */}
-                            <WrenchScrewdriverIcon className="h-4 w-4 mr-3 text-gray-400" /> 
+                            <WrenchScrewdriverIcon className="h-4 w-4 mr-3 text-gray-400" />
                             Solicitudes de Compra
                           </Link>
                         </div>
@@ -393,7 +395,7 @@ function Navbar() {
                         Registrarse
                       </Link>
                     </div>
-                    
+
                   )}
                 </div>
               )}
@@ -442,9 +444,8 @@ function Navbar() {
                       >
                         {link.name}
                         <ChevronDownIcon
-                          className={`h-4 w-4 transition-transform duration-300 ${
-                            openMobileSubmenu === link.name ? "rotate-180" : ""
-                          }`}
+                          className={`h-4 w-4 transition-transform duration-300 ${openMobileSubmenu === link.name ? "rotate-180" : ""
+                            }`}
                         />
                       </button>
 

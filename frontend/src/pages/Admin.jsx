@@ -2,6 +2,7 @@ import { useContext, useMemo, useState, useEffect } from "react";
 import AdminLayout from "../components/AdminLayout";
 import { ProductContext } from "../context/ProductContext";
 import ProductForm from "../components/ProductForm";
+import { useAuth } from "../context/AuthContext";
 
 import {
   PencilIcon,
@@ -24,6 +25,8 @@ const AdminProductos = () => {
     loadingProducts: loading,
     categorias,
   } = useContext(ProductContext);
+
+  const { usuario } = useAuth();
 
   const [vista, setVista] = useState("tabla");
 
@@ -55,6 +58,7 @@ const AdminProductos = () => {
       pageSize: pagination.pageSize,
       search: globalFilter,
       categoria: categoriaFilter,
+      usuario_id: usuario?.rol === 1 ? "" : (usuario?.id || "")
     });
 
     setProductosPaginados(productosData || []);

@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext, useMemo } from "react";
 import { ArrowLeftIcon, CubeIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { UserContext } from "../context/UserContext";
+import { useAuth } from "../context/AuthContext";
 
 const ProductForm = ({ producto, onSave, onCancel }) => {
     const isEditing = Boolean(producto?.id);
@@ -8,6 +9,8 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
     const [vendedores, setVendedores] = useState([]);
     const [departamentos, setDepartamentos] = useState([]);
     const [municipios, setMunicipios] = useState([]);
+    const { usuario } = useAuth();
+    const esVendedor = usuario?.rol === 3;
     const [preview, setPreview] = useState(
         producto?.imagen && producto.imagen.startsWith('/uploads')
             ? `https://agrimarket-yfbo.onrender.com${producto.imagen}`
@@ -23,7 +26,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
         categoria: "",
         imagen: "",
         estado_id: 1,
-        usuario_id: "",
+        usuario_id: esVendedor ? usuario.id : "",
         municipio_code: "",
         departamento_code: "",
     });
@@ -142,19 +145,28 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                     </div>
 
                     {/* Vendedor / Usuario */}
-                    <div>
-                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">
-                            Asignar a Vendedor (Usuario ID)
-                        </label>
-                        <select name="usuario_id" value={formData.usuario_id} onChange={handleChange} required>
-                            <option value="">Selecciona un vendedor...</option>
-                            {vendedores.map(vend => (
-                                <option key={vend.id} value={vend.id}>
-                                    {vend.nombres} {vend.apellidos}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+
+                    {!esVendedor && (
+                        <div>
+                            <label className="block text-xs font-bold uppercase text-slate-500 mb-2">
+                                Asignar a Vendedor (Usuario ID)
+                            </label>
+                            <select
+                                name="usuario_id"
+                                value={formData.usuario_id}
+                                onChange={handleChange}
+                                required
+                                className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                            >
+                                <option value="">Selecciona un vendedor...</option>
+                                {vendedores.map(vend => (
+                                    <option key={vend.id} value={vend.id}>
+                                        {vend.nombres} {vend.apellidos}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
 
                     <div>
                         <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Precio</label>

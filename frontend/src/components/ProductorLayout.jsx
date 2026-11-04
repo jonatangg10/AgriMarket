@@ -81,7 +81,7 @@ const ProductorLayout = ({ children, activeTab }) => {
       id: "productos",
       label: "Mis Productos",
       icon: FiBox,
-      path: "/productor-solicitudes", //aun no se crea
+      path: "/admin-productos", 
     },
     {
       id: "solicitudes",

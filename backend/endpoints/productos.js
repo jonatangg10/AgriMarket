@@ -59,7 +59,8 @@ module.exports = (db) => {
       page = 1,
       pageSize = 10,
       search = '',
-      categoria = ''
+      categoria = '',
+      usuario_id = ''
     } = req.query;
 
     const pageInt = Math.max(1, parseInt(page));
@@ -101,6 +102,11 @@ module.exports = (db) => {
     if (categoria) {
       sql += ' AND p.categoria = ?';
       params.push(categoria);
+    }
+    
+    if (usuario_id) {
+      sql += ' AND p.usuario_id = ?';
+      params.push(usuario_id);
     }
 
     const sqlPaginada = `${sql} ORDER BY p.nombre LIMIT ? OFFSET ?`;

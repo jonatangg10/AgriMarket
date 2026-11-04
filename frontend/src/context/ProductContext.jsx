@@ -9,14 +9,15 @@ export const ProductProvider = ({ children }) => {
     // Categorías de ejemplo para el filtro, luego puedes hacerlas dinámicas
     const categorias = ["Frutas", "Hortalizas", "Tubérculos"];
 
-    const obtenerProductosPaginados = async ({ page, pageSize, search = "", categoria = "" }) => {
+    const obtenerProductosPaginados = async ({ page, pageSize, search = "", categoria = "", usuario_id = "" }) => {
         try {
             setLoadingProducts(true);
             const queryParams = new URLSearchParams({
                 page,
                 pageSize,
                 search,
-                categoria
+                categoria,
+                usuario_id
             });
 
             const response = await fetch(
