@@ -44,7 +44,7 @@ const Carrito = ({Eliminar,Agregar}) => {
                   <span className="w-8 text-center">{item.cantidad}</span>
                   <button
                     onClick={() => {
-                      if (item.stock > 0) {
+                      if (item.stock > item.cantidad) {
                         Agregar(item);
                       } else {
                         toast.error('Producto agotado');
