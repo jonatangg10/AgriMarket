@@ -3,6 +3,7 @@ import AdminLayout from "../components/AdminLayout";
 import { ProductContext } from "../context/ProductContext";
 import ProductForm from "../components/ProductForm";
 import { useAuth } from "../context/AuthContext";
+import ProductorLayout from "../components/ProductorLayout";
 
 import {
   PencilIcon,
@@ -191,9 +192,11 @@ const AdminProductos = () => {
     manualPagination: true,
     pageCount: Math.ceil(totalProductos / pagination.pageSize),
   });
+  
+  const Layout = usuario?.rol === 3 ? ProductorLayout : AdminLayout;
 
   return (
-    <AdminLayout activeTab="productos">
+    <Layout activeTab="productos">
       <div className="space-y-8">
         {vista === "formulario" ? (
           <ProductForm
@@ -334,7 +337,7 @@ const AdminProductos = () => {
           </>
         )}
       </div>
-    </AdminLayout>
+    </Layout>
   );
 };
 
