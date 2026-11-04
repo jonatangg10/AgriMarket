@@ -65,10 +65,11 @@ function App() {
         categoria: filtro
       });
 
-      const productosListos = (res.productos || []).map(p => ({
+      const productosListos = (res.productos || []).filter((p) => Number(p.estado_id) === 1).map(p => ({//mas facil quitar los inactivos en vista que en consulta
         ...p,
         imagen: obtenerUrlImagen(p.imagen)
       }));
+
       setProductosPaginados(productosListos);
 
       setTotalProductos(res.total || 0);

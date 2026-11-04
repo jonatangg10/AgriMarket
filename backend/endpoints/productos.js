@@ -84,12 +84,13 @@ module.exports = (db) => {
         u.genero_id AS vendedor_genero_id,
         m.nombre AS municipio_nombre,
         m.code AS municipio_code,
-        m.departamento_code AS municipio_departamento_code
+        m.departamento_code AS municipio_departamento_code,
+        p.estado_id AS estado_id
       FROM productos p
       JOIN estado e ON p.estado_id = e.id
       JOIN usuarios u ON p.usuario_id = u.id
       JOIN municipios m ON p.municipio_code = m.code
-      WHERE p.estado_id = 1
+      WHERE p.estado_id = 1 OR p.estado_id = 2
     `;
 
     const params = [];
