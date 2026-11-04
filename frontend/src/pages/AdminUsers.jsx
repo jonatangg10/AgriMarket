@@ -1,7 +1,7 @@
 import { useContext, useMemo, useState, useEffect } from "react";
 
 import AdminLayout from "../components/AdminLayout";
-
+import { toast ,Toaster} from 'react-hot-toast';
 import { UserContext } from "../context/UserContext";
 import UserForm from "../components/UserForm";
 
@@ -71,7 +71,9 @@ const AdminUsers = () => {
   const handleEliminar = async (id) => {
     if (window.confirm("¿Estás seguro de eliminar este usuario?")) {
       const exito = await eliminarUsuario(id);
-      if (exito) cargarUsuarios();
+      if (exito) {
+        cargarUsuarios();
+      }
     }
   };
 
@@ -182,6 +184,7 @@ const AdminUsers = () => {
   return (
     <AdminLayout activeTab="usuarios">
       <div className="space-y-8">
+        <Toaster position="bottom-right"/>
         {/* Renderizado condicional entre Formulario y Tabla */}
         {vista === "formulario" ? (
           <UserForm
