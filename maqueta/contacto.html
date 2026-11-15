@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contacto · AgrilMarket</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="paginas.css" />
+</head>
+<body class="pagina">
+
+  <!-- ========== HEADER ========== -->
+  <header class="header">
+    <div class="topbar">
+      <span class="topbar__icon">🚚</span>
+      <p>Envíos a Cundinamarca en 24 h · Pago contra entrega disponible</p>
+    </div>
+    <nav class="nav">
+      <div class="nav__inner contenedor">
+        <input type="checkbox" id="menu-toggle" class="nav__toggle" />
+        <label for="menu-toggle" class="nav__burger" aria-label="Abrir menú">☰</label>
+        <a href="index.html" class="nav__logo">AgrilMarket</a>
+        <ul class="nav__links">
+          <li><a href="index.html#inicio">Inicio</a></li>
+          <li><a href="index.html#categorias">Categorías</a></li>
+          <li><a href="index.html#productos">Ofertas</a></li>
+          <li><a href="index.html#productos">Últimos ingresos</a></li>
+          <li><a href="contacto.html" class="activo">Contacto</a></li>
+          <li><a href="login.html">Mis pedidos</a></li>
+        </ul>
+        <div class="nav__acciones">
+          <a href="index.html#productos" class="nav__icono" aria-label="Abrir carrito">🛒<span class="nav__badge">3</span></a>
+          <details class="usuario">
+            <summary class="nav__icono" aria-label="Menú de usuario">👤</summary>
+            <div class="usuario__menu">
+              <a href="login.html" class="btn btn--borde btn--bloque">Iniciar sesión</a>
+              <a href="registro.html" class="btn btn--borde btn--bloque">Registrarse</a>
+              <p class="usuario__titulo">Administración</p>
+              <a href="admin.html" class="usuario__link">🔧 Panel Administrativo</a>
+              <a href="admin-productos.html" class="usuario__link">🔧 Administrar Productos</a>
+              <a href="admin-usuarios.html" class="usuario__link">🔧 Administrar Usuarios</a>
+            </div>
+          </details>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========== CONTACTO ========== -->
+  <main class="pagina__main contenedor">
+    <section class="contacto">
+      <div class="contacto__form">
+        <h2 class="contacto__titulo">AgrilMarket</h2>
+        <p class="contacto__desc">
+          Completa el siguiente formulario y uno de nuestros asesores se pondrá en contacto
+          contigo lo antes posible. Estaremos encantados de atenderte.
+        </p>
+
+        <form class="contacto__campos" onsubmit="return false">
+          <div class="contacto__fila">
+            <div>
+              <label for="nombres" class="etiqueta">Nombres</label>
+              <input id="nombres" type="text" class="campo campo--grande" placeholder="Nombres" />
+            </div>
+            <div>
+              <label for="apellidos" class="etiqueta">Apellidos</label>
+              <input id="apellidos" type="text" class="campo campo--grande" placeholder="Apellidos" />
+            </div>
+          </div>
+          <div>
+            <label for="correo" class="etiqueta">Correo electrónico</label>
+            <input id="correo" type="email" class="campo campo--grande" placeholder="Correo electrónico" />
+          </div>
+          <div>
+            <label for="mensaje" class="etiqueta">Mensaje</label>
+            <textarea id="mensaje" rows="5" class="campo campo--grande" placeholder="Ingresa tu mensaje"></textarea>
+          </div>
+          <label class="contacto__check">
+            <input type="checkbox" />
+            He leído y acepto las políticas de privacidad
+          </label>
+          <button type="submit" class="btn btn--primario btn--bloque">Enviar mensaje</button>
+        </form>
+      </div>
+
+      <div class="contacto__mapa">
+        <iframe
+          title="Ubicación de AgrilMarket en Villeta, Cundinamarca"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127303.4912234057!2d-74.45781615!3d5.0166667!2m3!1f0!2f768!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e40f90e9d0d3885%3A0x6b6f3a3a71b12271!2sVilleta%2C%20Cundinamarca%2C%20Colombia!5e0!3m2!1sen!2sus!4v1714156789000!5m2!1sen!2sus"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer__inner contenedor">
+      <div>
+        <p class="footer__marca">AgrilMarket</p>
+        <p class="footer__copy">© 2026 AgrilMarket. Todos los derechos reservados.</p>
+      </div>
+      <a href="https://wa.link/rnqsri" target="_blank" rel="noreferrer" class="btn btn--amarillo">💬 Escríbenos por WhatsApp</a>
+    </div>
+  </footer>
+
+</body>
+</html>

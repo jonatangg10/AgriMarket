@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mango Azúcar · AgrilMarket</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="paginas.css" />
+</head>
+<body class="pagina">
+
+  <!-- ========== HEADER ========== -->
+  <header class="header">
+    <div class="topbar">
+      <span class="topbar__icon">🚚</span>
+      <p>Envíos a Cundinamarca en 24 h · Pago contra entrega disponible</p>
+    </div>
+    <nav class="nav">
+      <div class="nav__inner contenedor">
+        <input type="checkbox" id="menu-toggle" class="nav__toggle" />
+        <label for="menu-toggle" class="nav__burger" aria-label="Abrir menú">☰</label>
+        <a href="index.html" class="nav__logo">AgrilMarket</a>
+        <ul class="nav__links">
+          <li><a href="index.html#inicio">Inicio</a></li>
+          <li><a href="index.html#categorias">Categorías</a></li>
+          <li><a href="index.html#productos">Ofertas</a></li>
+          <li><a href="index.html#productos">Últimos ingresos</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+          <li><a href="login.html">Mis pedidos</a></li>
+        </ul>
+        <div class="nav__acciones">
+          <a href="index.html#productos" class="nav__icono" aria-label="Abrir carrito">🛒<span class="nav__badge">3</span></a>
+          <details class="usuario">
+            <summary class="nav__icono" aria-label="Menú de usuario">👤</summary>
+            <div class="usuario__menu">
+              <a href="login.html" class="btn btn--borde btn--bloque">Iniciar sesión</a>
+              <a href="registro.html" class="btn btn--borde btn--bloque">Registrarse</a>
+              <p class="usuario__titulo">Administración</p>
+              <a href="admin.html" class="usuario__link">🔧 Panel Administrativo</a>
+              <a href="admin-productos.html" class="usuario__link">🔧 Administrar Productos</a>
+              <a href="admin-usuarios.html" class="usuario__link">🔧 Administrar Usuarios</a>
+            </div>
+          </details>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========== DETALLE DE PRODUCTO ========== -->
+  <main class="pagina__main contenedor">
+    <div class="migas">
+      <a href="index.html#productos">‹ Volver</a>
+      <span>/ Frutas / Mango Azúcar</span>
+    </div>
+
+    <div class="detalle">
+      <div class="detalle__media">
+        <span class="pill pill--naranja">-20%</span>
+        <img src="img/productos/Mango-Azucar.png" alt="Mango azúcar" />
+      </div>
+
+      <div class="detalle__info">
+        <h1 class="detalle__titulo">Mango Azúcar</h1>
+        <p class="detalle__vendedor">Vendido por <b>Carlos Gómez</b></p>
+
+        <div class="detalle__precio-fila">
+          <span class="detalle__precio">$1.500<small>/ kg</small></span>
+          <span class="stock stock--ok">120 unidades disponibles</span>
+        </div>
+
+        <div class="detalle__bloque">
+          <p class="detalle__subtitulo">Presentación</p>
+          <div class="unidades">
+            <button class="unidad">Libra</button>
+            <button class="unidad unidad--activa">Kilo</button>
+            <button class="unidad">Bulto</button>
+          </div>
+        </div>
+
+        <p class="detalle__desc">
+          Producto fresco cosechado por familias campesinas de Cundinamarca y entregado
+          directamente a tu mesa, sin intermediarios.
+        </p>
+
+        <div class="detalle__bloque">
+          <h2 class="detalle__h2">Características</h2>
+          <dl class="caracteristicas">
+            <div><dt>Origen</dt><dd>Cundinamarca, Colombia</dd></div>
+            <div><dt>Cosecha</dt><dd>Directa del productor</dd></div>
+            <div><dt>Conservación</dt><dd>Lugar fresco, lejos del sol</dd></div>
+            <div><dt>Empaque</dt><dd>Cadena de frío y empaque protegido</dd></div>
+          </dl>
+        </div>
+
+        <button type="button" class="btn btn--primario detalle__btn">Agregar al carrito</button>
+
+        <div class="beneficios">
+          <div class="beneficio"><span class="beneficio__ico">🚚</span><div><b>Envío en 24 h</b><small>A toda Cundinamarca</small></div></div>
+          <div class="beneficio"><span class="beneficio__ico">💵</span><div><b>Pago contra entrega</b><small>También PSE y Nequi</small></div></div>
+          <div class="beneficio"><span class="beneficio__ico">🛡️</span><div><b>Garantía de frescura</b><small>Devolución en 30 días</small></div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer__inner contenedor">
+      <div>
+        <p class="footer__marca">AgrilMarket</p>
+        <p class="footer__copy">© 2026 AgrilMarket. Todos los derechos reservados.</p>
+      </div>
+      <a href="https://wa.link/rnqsri" target="_blank" rel="noreferrer" class="btn btn--amarillo">💬 Escríbenos por WhatsApp</a>
+    </div>
+  </footer>
+
+</body>
+</html>

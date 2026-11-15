@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard · Panel AgrilMarket</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+  <!-- Sidebar (en móvil se abre con el checkbox) -->
+  <input type="checkbox" id="sb-toggle" class="sb-toggle" />
+  <label for="sb-toggle" class="sb-overlay" aria-label="Cerrar menú"></label>
+  <aside class="sidebar">
+    <div class="sidebar__top">
+      <div>
+        <h2 class="sidebar__marca">🛍️ InvenFact Pro</h2>
+        <p class="sidebar__sub">Panel Administrativo</p>
+      </div>
+      <label for="sb-toggle" class="sidebar__cerrar" aria-label="Cerrar menú">✕</label>
+    </div>
+    <nav class="sidebar__menu">
+      <a href="admin.html" class="sidebar__link sidebar__link--activo">📊 Dashboard</a>
+      <a href="admin-usuarios.html" class="sidebar__link">👥 Usuarios</a>
+      <a href="admin-productos.html" class="sidebar__link">📦 Productos</a>
+      <a href="index.html" class="sidebar__link sidebar__link--tienda">🏠 Ver tienda</a>
+    </nav>
+    <div class="sidebar__pie">
+      <div class="sidebar__usuario">
+        <h4>Ana Martínez</h4>
+        <p>Admin</p>
+      </div>
+      <a href="index.html" class="sidebar__salir">↩ Cerrar Sesión</a>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="topbar-admin">
+      <div class="topbar-admin__izq">
+        <label for="sb-toggle" class="topbar-admin__burger" aria-label="Abrir menú">☰</label>
+        <div>
+          <h1>Panel de Administración</h1>
+          <p class="topbar-admin__sub">Gestión general del sistema</p>
+        </div>
+      </div>
+      <div class="topbar-admin__der">
+        <button class="campana" aria-label="Notificaciones">🔔</button>
+        <span class="divisor"></span>
+        <div class="fecha"><small>Miércoles</small><b>4 Noviembre, 2026</b></div>
+      </div>
+    </header>
+
+    <main class="contenido">
+      <div class="cabecera">
+        <div>
+          <h2>Dashboard</h2>
+          <p>Monitoriza el rendimiento del sistema en tiempo real.</p>
+        </div>
+        <div class="cabecera__acciones">
+          <button class="abtn abtn--blanco">Filtros</button>
+          <button class="abtn abtn--verde">Generar Reporte</button>
+        </div>
+      </div>
+
+      <!-- Estadísticas -->
+      <div class="stats">
+        <div class="stat">
+          <div class="stat__top"><span class="stat__ico">$</span><span class="cambio cambio--sube">↗ +12.5%</span></div>
+          <p class="stat__label">Ventas Totales</p>
+          <h3 class="stat__valor">$45.2k</h3>
+        </div>
+        <div class="stat">
+          <div class="stat__top"><span class="stat__ico">👥</span><span class="cambio cambio--sube">↗ +18.2%</span></div>
+          <p class="stat__label">Nuevos Usuarios</p>
+          <h3 class="stat__valor">2,350</h3>
+        </div>
+        <div class="stat">
+          <div class="stat__top"><span class="stat__ico">🛍️</span><span class="cambio cambio--baja">↘ -4.1%</span></div>
+          <p class="stat__label">Órdenes Activas</p>
+          <h3 class="stat__valor">12,234</h3>
+        </div>
+        <div class="stat">
+          <div class="stat__top"><span class="stat__ico">📊</span><span class="cambio cambio--sube">↗ +2.4%</span></div>
+          <p class="stat__label">Conversión</p>
+          <h3 class="stat__valor">4.23%</h3>
+        </div>
+      </div>
+
+      <div class="grid-dash">
+        <!-- Gráfico -->
+        <div class="card grafico">
+          <h3 class="card__titulo">Actividad Semanal</h3>
+          <div class="barras">
+            <div class="barra"><div class="barra__col" style="height:45%"></div><span>Día 1</span></div>
+            <div class="barra"><div class="barra__col" style="height:60%"></div><span>Día 2</span></div>
+            <div class="barra"><div class="barra__col barra__col--activa" style="height:100%"></div><span>Día 3</span></div>
+            <div class="barra"><div class="barra__col" style="height:75%"></div><span>Día 4</span></div>
+            <div class="barra"><div class="barra__col" style="height:90%"></div><span>Día 5</span></div>
+            <div class="barra"><div class="barra__col" style="height:55%"></div><span>Día 6</span></div>
+            <div class="barra"><div class="barra__col" style="height:70%"></div><span>Día 7</span></div>
+          </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="card">
+          <div class="card__cabecera">
+            <h3 class="card__titulo">Últimos Registros</h3>
+            <a href="admin-usuarios.html" class="card__link">Ver Detalles</a>
+          </div>
+          <div class="tabla-wrap">
+            <table class="tabla">
+              <thead>
+                <tr><th>Usuario</th><th>Rol</th><th>Estado</th><th class="derecha">Fecha</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="celda-persona"><b>Ana Martínez</b><small>ana@example.com</small></div></td>
+                  <td>Admin</td>
+                  <td><span class="badge badge--verde">Activo</span></td>
+                  <td class="derecha fecha-celda">18 May, 2026</td>
+                </tr>
+                <tr>
+                  <td><div class="celda-persona"><b>Carlos Gomez</b><small>carlos@example.com</small></div></td>
+                  <td>Editor</td>
+                  <td><span class="badge badge--gris">Inactivo</span></td>
+                  <td class="derecha fecha-celda">15 May, 2026</td>
+                </tr>
+                <tr>
+                  <td><div class="celda-persona"><b>Sofía Rodríguez</b><small>sofia@example.com</small></div></td>
+                  <td>Usuario</td>
+                  <td><span class="badge badge--verde">Activo</span></td>
+                  <td class="derecha fecha-celda">12 May, 2026</td>
+                </tr>
+                <tr>
+                  <td><div class="celda-persona"><b>Alejandro Toro</b><small>alejo@example.com</small></div></td>
+                  <td>Usuario</td>
+                  <td><span class="badge badge--ambar">Pendiente</span></td>
+                  <td class="derecha fecha-celda">10 May, 2026</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

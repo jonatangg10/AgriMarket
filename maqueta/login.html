@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar sesión · AgrilMarket</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="paginas.css" />
+</head>
+<body class="pagina pagina--gris">
+
+  <!-- ========== HEADER ========== -->
+  <header class="header">
+    <div class="topbar">
+      <span class="topbar__icon">🚚</span>
+      <p>Envíos a Cundinamarca en 24 h · Pago contra entrega disponible</p>
+    </div>
+    <nav class="nav">
+      <div class="nav__inner contenedor">
+        <input type="checkbox" id="menu-toggle" class="nav__toggle" />
+        <label for="menu-toggle" class="nav__burger" aria-label="Abrir menú">☰</label>
+        <a href="index.html" class="nav__logo">AgrilMarket</a>
+        <ul class="nav__links">
+          <li><a href="index.html#inicio">Inicio</a></li>
+          <li><a href="index.html#categorias">Categorías</a></li>
+          <li><a href="index.html#productos">Ofertas</a></li>
+          <li><a href="index.html#productos">Últimos ingresos</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+          <li><a href="login.html">Mis pedidos</a></li>
+        </ul>
+        <div class="nav__acciones">
+          <a href="index.html#productos" class="nav__icono" aria-label="Abrir carrito">🛒<span class="nav__badge">3</span></a>
+          <details class="usuario">
+            <summary class="nav__icono" aria-label="Menú de usuario">👤</summary>
+            <div class="usuario__menu">
+              <a href="login.html" class="btn btn--borde btn--bloque">Iniciar sesión</a>
+              <a href="registro.html" class="btn btn--borde btn--bloque">Registrarse</a>
+              <p class="usuario__titulo">Administración</p>
+              <a href="admin.html" class="usuario__link">🔧 Panel Administrativo</a>
+              <a href="admin-productos.html" class="usuario__link">🔧 Administrar Productos</a>
+              <a href="admin-usuarios.html" class="usuario__link">🔧 Administrar Usuarios</a>
+            </div>
+          </details>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========== LOGIN ========== -->
+  <main class="pagina__main auth">
+    <div class="auth__tarjeta">
+      <div class="auth__form">
+        <h2 class="auth__titulo">Iniciar Sesión</h2>
+        <p class="auth__sub">Si ya tienes una cuenta, inicia sesión</p>
+
+        <!-- En la maqueta "Ingresar" lleva directo al panel admin -->
+        <form class="auth__campos" action="admin.html">
+          <div class="auth__campo">
+            <label for="correo">Correo Electrónico</label>
+            <input id="correo" type="email" placeholder="Ingresa tu correo electrónico" />
+          </div>
+          <div class="auth__campo">
+            <label for="password">Contraseña</label>
+            <input id="password" type="password" placeholder="Ingresa tu contraseña" />
+          </div>
+          <p class="auth__olvido"><a href="#">¿Olvidaste tu contraseña?</a></p>
+          <button type="submit" class="btn btn--primario btn--bloque">Ingresar</button>
+        </form>
+
+        <div class="auth__separador">O</div>
+
+        <button type="button" class="btn btn--google"><span class="google-g">G</span> Iniciar sesión con Google</button>
+
+        <p class="auth__pregunta">¿No tienes una cuenta?</p>
+        <a href="registro.html" class="btn btn--contorno">Registrarse</a>
+      </div>
+
+      <div class="auth__imagen">
+        <img src="img/fondos/Aguacate-Antioquia.png" alt="Aguacates recién cosechados" />
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer__inner contenedor">
+      <div>
+        <p class="footer__marca">AgrilMarket</p>
+        <p class="footer__copy">© 2026 AgrilMarket. Todos los derechos reservados.</p>
+      </div>
+      <a href="https://wa.link/rnqsri" target="_blank" rel="noreferrer" class="btn btn--amarillo">💬 Escríbenos por WhatsApp</a>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usuarios · Panel AgrilMarket</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+  <input type="checkbox" id="sb-toggle" class="sb-toggle" />
+  <label for="sb-toggle" class="sb-overlay" aria-label="Cerrar menú"></label>
+  <aside class="sidebar">
+    <div class="sidebar__top">
+      <div>
+        <h2 class="sidebar__marca">🛍️ InvenFact Pro</h2>
+        <p class="sidebar__sub">Panel Administrativo</p>
+      </div>
+      <label for="sb-toggle" class="sidebar__cerrar" aria-label="Cerrar menú">✕</label>
+    </div>
+    <nav class="sidebar__menu">
+      <a href="admin.html" class="sidebar__link">📊 Dashboard</a>
+      <a href="admin-usuarios.html" class="sidebar__link sidebar__link--activo">👥 Usuarios</a>
+      <a href="admin-productos.html" class="sidebar__link">📦 Productos</a>
+      <a href="index.html" class="sidebar__link sidebar__link--tienda">🏠 Ver tienda</a>
+    </nav>
+    <div class="sidebar__pie">
+      <div class="sidebar__usuario">
+        <h4>Ana Martínez</h4>
+        <p>Admin</p>
+      </div>
+      <a href="index.html" class="sidebar__salir">↩ Cerrar Sesión</a>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="topbar-admin">
+      <div class="topbar-admin__izq">
+        <label for="sb-toggle" class="topbar-admin__burger" aria-label="Abrir menú">☰</label>
+        <div>
+          <h1>Panel de Administración</h1>
+          <p class="topbar-admin__sub">Gestión general del sistema</p>
+        </div>
+      </div>
+      <div class="topbar-admin__der">
+        <button class="campana" aria-label="Notificaciones">🔔</button>
+        <span class="divisor"></span>
+        <div class="fecha"><small>Miércoles</small><b>4 Noviembre, 2026</b></div>
+      </div>
+    </header>
+
+    <main class="contenido">
+      <div class="cabecera">
+        <div>
+          <h2>👤 Gestión de Usuarios</h2>
+          <p>Administra los accesos y roles de la plataforma.</p>
+        </div>
+        <button class="abtn abtn--verde abtn--grande">＋ Nuevo Usuario</button>
+      </div>
+
+      <div class="card">
+        <div class="filtros-tabla">
+          <input type="text" class="input-admin" placeholder="Buscar usuario..." />
+          <select class="input-admin">
+            <option>Todos los roles</option>
+            <option>Admin</option>
+            <option>Cliente</option>
+            <option>Productor</option>
+          </select>
+        </div>
+
+        <div class="tabla-wrap">
+          <table class="tabla">
+            <thead>
+              <tr><th>ID</th><th>Nombre Completo</th><th>Email</th><th>Rol</th><th>Registro</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td><td><b>Ana Martínez</b></td><td>ana@example.com</td>
+                <td><span class="badge badge--morado">Admin</span></td><td>18/5/2026</td>
+                <td><div class="acciones"><button class="icono-btn icono-btn--editar" title="Editar">✏️</button><button class="icono-btn icono-btn--borrar" title="Eliminar">🗑️</button></div></td>
+              </tr>
+              <tr>
+                <td>2</td><td><b>Carlos Gómez</b></td><td>carlos@example.com</td>
+                <td><span class="badge badge--azul">Cliente</span></td><td>15/5/2026</td>
+                <td><div class="acciones"><button class="icono-btn icono-btn--editar" title="Editar">✏️</button><button class="icono-btn icono-btn--borrar" title="Eliminar">🗑️</button></div></td>
+              </tr>
+              <tr>
+                <td>3</td><td><b>Sofía Rodríguez</b></td><td>sofia@example.com</td>
+                <td><span class="badge badge--azul">Cliente</span></td><td>12/5/2026</td>
+                <td><div class="acciones"><button class="icono-btn icono-btn--editar" title="Editar">✏️</button><button class="icono-btn icono-btn--borrar" title="Eliminar">🗑️</button></div></td>
+              </tr>
+              <tr>
+                <td>4</td><td><b>Alejandro Toro</b></td><td>alejo@example.com</td>
+                <td><span class="badge badge--azul">Cliente</span></td><td>10/5/2026</td>
+                <td><div class="acciones"><button class="icono-btn icono-btn--editar" title="Editar">✏️</button><button class="icono-btn icono-btn--borrar" title="Eliminar">🗑️</button></div></td>
+              </tr>
+              <tr>
+                <td>5</td><td><b>Juan Pérez</b></td><td>juan@example.com</td>
+                <td><span class="badge badge--azul">Cliente</span></td><td>8/5/2026</td>
+                <td><div class="acciones"><button class="icono-btn icono-btn--editar" title="Editar">✏️</button><button class="icono-btn icono-btn--borrar" title="Eliminar">🗑️</button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="paginacion-admin">
+          <p>Mostrando <b>1</b> - <b>5</b> de <b>12</b> usuarios</p>
+          <div>
+            <button class="abtn abtn--blanco" disabled>Anterior</button>
+            <button class="abtn abtn--blanco">Siguiente</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

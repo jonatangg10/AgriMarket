@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Productos · Panel AgrilMarket</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+  <input type="checkbox" id="sb-toggle" class="sb-toggle" />
+  <label for="sb-toggle" class="sb-overlay" aria-label="Cerrar menú"></label>
+  <aside class="sidebar">
+    <div class="sidebar__top">
+      <div>
+        <h2 class="sidebar__marca">🛍️ InvenFact Pro</h2>
+        <p class="sidebar__sub">Panel Administrativo</p>
+      </div>
+      <label for="sb-toggle" class="sidebar__cerrar" aria-label="Cerrar menú">✕</label>
+    </div>
+    <nav class="sidebar__menu">
+      <a href="admin.html" class="sidebar__link">📊 Dashboard</a>
+      <a href="admin-usuarios.html" class="sidebar__link">👥 Usuarios</a>
+      <a href="admin-productos.html" class="sidebar__link sidebar__link--activo">📦 Productos</a>
+      <a href="index.html" class="sidebar__link sidebar__link--tienda">🏠 Ver tienda</a>
+    </nav>
+    <div class="sidebar__pie">
+      <div class="sidebar__usuario">
+        <h4>Ana Martínez</h4>
+        <p>Admin</p>
+      </div>
+      <a href="index.html" class="sidebar__salir">↩ Cerrar Sesión</a>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="topbar-admin">
+      <div class="topbar-admin__izq">
+        <label for="sb-toggle" class="topbar-admin__burger" aria-label="Abrir menú">☰</label>
+        <div>
+          <h1>Panel de Administración</h1>
+          <p class="topbar-admin__sub">Gestión general del sistema</p>
+        </div>
+      </div>
+      <div class="topbar-admin__der">
+        <button class="campana" aria-label="Notificaciones">🔔</button>
+        <span class="divisor"></span>
+        <div class="fecha"><small>Miércoles</small><b>4 Noviembre, 2026</b></div>
+      </div>
+    </header>
+
+    <main class="contenido">
+      <div class="cabecera">
+        <div>
+          <h2>📦 Gestión de Productos</h2>
+          <p>Agrega, edita o elimina productos directamente de la base de datos.</p>
+        </div>
+        <button class="abtn abtn--verde abtn--grande">＋ Nuevo Producto</button>
+      </div>
+
+      <div class="card">
+        <div class="filtros-tabla">
+          <input type="text" class="input-admin" placeholder="Buscar producto..." />
+          <select class="input-admin">
+            <option>Todas las categorías</option>
+            <option>Frutas</option>
+            <option>Hortalizas</option>
+            <option>Granos</option>
+            <option>Lácteos</option>
+          </select>
+        </div>
+
+        <div class="tabla-wrap">
+          <table class="tabla">
+            <thead>
+              <tr><th>ID</th><th>Producto</th><th>Precio</th><th>Stock</th><th>Categoría</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><div class="celda-producto"><img src="img/productos/Tomate-Chonto.png" alt="" /><div class="celda-persona"><b>Tomates Orgánicos</b><small>Fresco</small></div></div></td>
+                <td><b>$3.500</b></td>
+                <td><span class="badge badge--verde">100 unid.</span></td>
+                <td>Hortalizas</td>
+                <td><div class="acciones"><button class="icono-btn icono-btn--editar" title="Editar">✏️</button><button class="icono-btn icono-btn--borrar" title="Eliminar">🗑️</button></div></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><div class="celda-producto"><img src="img/productos/Lechuga-Hidroponica.png" alt="" /><div class="celda-persona"><b>Lechuga Hidropónica</b><small>Nuevo</small></div></div></td>
+                <td><b>$2.000</b></td>
+                <td><span class="badge badge--rojo">4 unid.</span></td>
+                <td>Hortalizas</td>
+                <td><div class="acciones"><button class="icono-btn icono-btn--editar" title="Editar">✏️</button><button class="icono-btn icono-btn--borrar" title="Eliminar">🗑️</button></div></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><div class="celda-producto"><img src="img/productos/Mango-Azucar.png" alt="" /><div class="celda-persona"><b>Mango Azúcar</b><small>Oferta</small></div></div></td>
+                <td><b>$1.500</b></td>
+                <td><span class="badge badge--verde">120 unid.</span></td>
+                <td>Frutas</td>
+                <td><div class="acciones"><button class="icono-btn icono-btn--editar" title="Editar">✏️</button><button class="icono-btn icono-btn--borrar" title="Eliminar">🗑️</button></div></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><div class="celda-producto"><img src="img/productos/Cafe-Especial.png" alt="" /><div class="celda-persona"><b>Café Especial</b><small>Fresco</small></div></div></td>
+                <td><b>$9.000</b></td>
+                <td><span class="badge badge--verde">40 unid.</span></td>
+                <td>Granos</td>
+                <td><div class="acciones"><button class="icono-btn icono-btn--editar" title="Editar">✏️</button><button class="icono-btn icono-btn--borrar" title="Eliminar">🗑️</button></div></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><div class="celda-producto"><img src="img/productos/Aguacate-Hass.png" alt="" /><div class="celda-persona"><b>Aguacate Hass</b><small>Nuevo</small></div></div></td>
+                <td><b>$4.200</b></td>
+                <td><span class="badge badge--verde">35 unid.</span></td>
+                <td>Frutas</td>
+                <td><div class="acciones"><button class="icono-btn icono-btn--editar" title="Editar">✏️</button><button class="icono-btn icono-btn--borrar" title="Eliminar">🗑️</button></div></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td><div class="celda-producto"><img src="img/productos/Queso-Campesino.png" alt="" /><div class="celda-persona"><b>Queso Campesino</b><small>Fresco</small></div></div></td>
+                <td><b>$7.500</b></td>
+                <td><span class="badge badge--rojo">0 unid.</span></td>
+                <td>Lácteos</td>
+                <td><div class="acciones"><button class="icono-btn icono-btn--editar" title="Editar">✏️</button><button class="icono-btn icono-btn--borrar" title="Eliminar">🗑️</button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="paginacion-admin">
+          <p>Mostrando <b>1</b> - <b>6</b> de <b>18</b> productos</p>
+          <div>
+            <button class="abtn abtn--blanco" disabled>Anterior</button>
+            <button class="abtn abtn--blanco">Siguiente</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

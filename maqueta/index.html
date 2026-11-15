@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgrilMarket · Maqueta</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="paginas.css" />
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="header">
+    <div class="topbar">
+      <span class="topbar__icon">🚚</span>
+      <p>Envíos a Cundinamarca en 24 h · Pago contra entrega disponible</p>
+    </div>
+
+    <nav class="nav">
+      <div class="nav__inner contenedor">
+        <!-- Menú móvil (checkbox hack, solo CSS) -->
+        <input type="checkbox" id="menu-toggle" class="nav__toggle" />
+        <label for="menu-toggle" class="nav__burger" aria-label="Abrir menú">☰</label>
+
+        <a href="index.html" class="nav__logo">AgrilMarket</a>
+
+        <ul class="nav__links">
+          <li><a href="index.html#inicio" class="activo">Inicio</a></li>
+          <li><a href="index.html#categorias">Categorías</a></li>
+          <li><a href="index.html#productos">Ofertas</a></li>
+          <li><a href="index.html#productos">Últimos ingresos</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+          <li><a href="login.html">Mis pedidos</a></li>
+        </ul>
+
+        <div class="nav__acciones">
+          <a href="#carrito" class="nav__icono" aria-label="Abrir carrito">
+            🛒<span class="nav__badge">3</span>
+          </a>
+          <details class="usuario">
+            <summary class="nav__icono" aria-label="Menú de usuario">👤</summary>
+            <div class="usuario__menu">
+              <a href="login.html" class="btn btn--borde btn--bloque">Iniciar sesión</a>
+              <a href="registro.html" class="btn btn--borde btn--bloque">Registrarse</a>
+              <p class="usuario__titulo">Administración</p>
+              <a href="admin.html" class="usuario__link">🔧 Panel Administrativo</a>
+              <a href="admin-productos.html" class="usuario__link">🔧 Administrar Productos</a>
+              <a href="admin-usuarios.html" class="usuario__link">🔧 Administrar Usuarios</a>
+            </div>
+          </details>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section id="inicio" class="hero">
+    <div class="hero__inner contenedor">
+      <div class="hero__texto">
+        <span class="pill pill--amarilla">Directo del productor</span>
+        <h1 class="hero__titulo">Del campo a tu mesa, sin intermediarios.</h1>
+        <p class="hero__desc">
+          Compra frutas, hortalizas y granos cosechados por familias campesinas
+          de Cundinamarca. Sabes quién lo cultivó y cuándo.
+        </p>
+
+        <form class="buscador" role="search" onsubmit="return false">
+          <input type="text" class="buscador__input" placeholder="Busca mango, papa criolla, café..." />
+          <select class="campo buscador__select">
+            <option>Todos los municipios</option>
+            <option>La Vega</option>
+            <option>Tobia</option>
+            <option>Villeta</option>
+          </select>
+          <button type="submit" class="btn btn--primario">Buscar</button>
+        </form>
+
+        <div class="hero__datos">
+          <span>+120 productores</span>
+          <span>Cosecha de hoy</span>
+          <span>Pago seguro</span>
+        </div>
+      </div>
+
+      <div class="hero__media">
+        <div class="hero__foto">
+          <img src="img/fondos/Mango-Tolima.png" alt="Mango azúcar" />
+          <div class="hero__dots">
+            <span class="dot dot--activo"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+        <div class="hero__tarjeta">
+          <div class="hero__tarjeta-hoy">Hoy</div>
+          <div>
+            <p class="hero__tarjeta-titulo">Mango azúcar</p>
+            <p class="hero__tarjeta-sub">Cosechado hace 6 horas · Tobia</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CATEGORÍAS ========== -->
+  <section id="categorias" class="seccion contenedor">
+    <h2 class="titulo-seccion">Explora por categoría</h2>
+    <div class="categorias">
+      <button class="categoria categoria--activa"><span class="categoria__ico">T</span><span>Todos</span></button>
+      <button class="categoria"><span class="categoria__ico">F</span><span>Frutas</span></button>
+      <button class="categoria"><span class="categoria__ico">H</span><span>Hortalizas</span></button>
+      <button class="categoria"><span class="categoria__ico">G</span><span>Granos</span></button>
+      <button class="categoria"><span class="categoria__ico">L</span><span>Lácteos</span></button>
+      <button class="categoria"><span class="categoria__ico">T</span><span>Tubérculos</span></button>
+    </div>
+  </section>
+
+  <!-- ========== PRODUCTOS ========== -->
+  <section id="productos" class="seccion contenedor">
+    <div class="productos__cabecera">
+      <h2 class="titulo-seccion">Productos de temporada</h2>
+      <label for="filtros-toggle" class="btn btn--borde productos__btn-filtros">⚙ Filtros</label>
+    </div>
+
+    <input type="checkbox" id="filtros-toggle" class="filtros__toggle" />
+    <div class="productos__layout">
+      <!-- Panel de filtros -->
+      <aside class="filtros">
+        <div class="filtros__cabecera">
+          <b>Filtros</b>
+          <a href="#" class="link">Limpiar</a>
+        </div>
+
+        <label class="filtros__grupo">
+          Buscar
+          <input type="text" class="campo" placeholder="Buscar producto..." />
+        </label>
+
+        <fieldset class="filtros__grupo">
+          <legend>Municipio</legend>
+          <label class="check"><input type="checkbox" checked /> <span>La Vega</span><small>3</small></label>
+          <label class="check"><input type="checkbox" /> <span>Tobia</span><small>2</small></label>
+          <label class="check"><input type="checkbox" /> <span>Villeta</span><small>1</small></label>
+        </fieldset>
+
+        <fieldset class="filtros__grupo">
+          <legend>Cultivo</legend>
+          <label class="check"><input type="checkbox" /> <span>Orgánico</span></label>
+          <label class="check"><input type="checkbox" /> <span>Cosechado hoy</span></label>
+          <label class="check"><input type="checkbox" /> <span>Compra por bulto</span></label>
+        </fieldset>
+
+        <label class="check check--bold"><input type="checkbox" /> <span>Solo con unidades disponibles</span></label>
+
+        <label class="filtros__grupo">
+          <span class="filtros__fila">Precio máximo <span class="texto-suave">$10.000</span></span>
+          <input type="range" min="500" max="10000" step="500" value="10000" />
+        </label>
+
+        <label class="filtros__grupo">
+          Ordenar por
+          <select class="campo">
+            <option>Más recientes</option>
+            <option>Menor precio</option>
+            <option>Mayor precio</option>
+          </select>
+        </label>
+      </aside>
+
+      <!-- Listado -->
+      <div>
+        <div class="grid-productos">
+
+          <article class="producto">
+            <div class="producto__media">
+              <span class="pill pill--amarilla producto__etiqueta">Fresco</span>
+              <a href="producto.html"><img src="img/productos/Tomate-Chonto.png" alt="Tomates orgánicos" /></a>
+            </div>
+            <div class="producto__info">
+              <h3><a href="producto.html">Tomates Orgánicos</a></h3>
+              <p>Vendido por Juan Pérez · La Vega</p>
+            </div>
+            <div class="producto__controles">
+              <div class="unidades">
+                <button class="unidad">Libra</button>
+                <button class="unidad unidad--activa">Kilo</button>
+                <button class="unidad">Bulto</button>
+              </div>
+              <div class="producto__precio-fila">
+                <span class="producto__precio">$3.500<small>/ kg</small></span>
+                <span class="stock stock--ok">100 disp.</span>
+              </div>
+              <button class="btn btn--primario btn--bloque">Añadir al carrito</button>
+            </div>
+          </article>
+
+          <article class="producto">
+            <div class="producto__media">
+              <span class="pill pill--amarilla producto__etiqueta">Nuevo</span>
+              <a href="producto.html"><img src="img/productos/Lechuga-Hidroponica.png" alt="Lechuga hidropónica" /></a>
+            </div>
+            <div class="producto__info">
+              <h3><a href="producto.html">Lechuga Hidropónica</a></h3>
+              <p>Vendido por María López · Tobia</p>
+            </div>
+            <div class="producto__controles">
+              <div class="unidades">
+                <button class="unidad">Libra</button>
+                <button class="unidad unidad--activa">Kilo</button>
+                <button class="unidad">Bulto</button>
+              </div>
+              <div class="producto__precio-fila">
+                <span class="producto__precio">$2.000<small>/ kg</small></span>
+                <span class="stock stock--pocas">Quedan 4</span>
+              </div>
+              <button class="btn btn--primario btn--bloque">Añadir al carrito</button>
+            </div>
+          </article>
+
+          <article class="producto">
+            <div class="producto__media">
+              <span class="pill pill--naranja producto__etiqueta">-20%</span>
+              <a href="producto.html"><img src="img/productos/Mango-Azucar.png" alt="Mango azúcar" /></a>
+            </div>
+            <div class="producto__info">
+              <h3><a href="producto.html">Mango Azúcar</a></h3>
+              <p>Vendido por Carlos Gómez · Villeta</p>
+            </div>
+            <div class="producto__controles">
+              <div class="unidades">
+                <button class="unidad">Libra</button>
+                <button class="unidad unidad--activa">Kilo</button>
+                <button class="unidad">Bulto</button>
+              </div>
+              <div class="producto__precio-fila">
+                <span class="producto__precio">$1.500<small>/ kg</small></span>
+                <span class="stock stock--ok">120 disp.</span>
+              </div>
+              <button class="btn btn--primario btn--bloque">Añadir al carrito</button>
+            </div>
+          </article>
+
+          <article class="producto">
+            <div class="producto__media">
+              <a href="producto.html"><img src="img/productos/Cafe-Especial.png" alt="Café especial" /></a>
+            </div>
+            <div class="producto__info">
+              <h3><a href="producto.html">Café Especial</a></h3>
+              <p>Vendido por Ana Rodríguez · La Vega</p>
+            </div>
+            <div class="producto__controles">
+              <div class="unidades">
+                <button class="unidad">Libra</button>
+                <button class="unidad unidad--activa">Kilo</button>
+                <button class="unidad">Bulto</button>
+              </div>
+              <div class="producto__precio-fila">
+                <span class="producto__precio">$9.000<small>/ kg</small></span>
+                <span class="stock stock--ok">40 disp.</span>
+              </div>
+              <button class="btn btn--primario btn--bloque">Añadir al carrito</button>
+            </div>
+          </article>
+
+          <article class="producto">
+            <div class="producto__media">
+              <a href="producto.html"><img src="img/productos/Papa-Criolla.png" alt="Papa criolla" /></a>
+            </div>
+            <div class="producto__info">
+              <h3><a href="producto.html">Papa Criolla</a></h3>
+              <p>Vendido por Pedro Sánchez · Guaduas</p>
+            </div>
+            <div class="producto__controles">
+              <div class="unidades">
+                <button class="unidad">Libra</button>
+                <button class="unidad unidad--activa">Kilo</button>
+                <button class="unidad">Bulto</button>
+              </div>
+              <div class="producto__precio-fila">
+                <span class="producto__precio">$2.800<small>/ kg</small></span>
+                <span class="stock stock--ok">60 disp.</span>
+              </div>
+              <button class="btn btn--primario btn--bloque">Añadir al carrito</button>
+            </div>
+          </article>
+
+          <article class="producto">
+            <div class="producto__media">
+              <a href="producto.html"><img src="img/productos/Queso-Campesino.png" alt="Queso campesino" /></a>
+              <div class="producto__agotado"><span>AGOTADO</span></div>
+            </div>
+            <div class="producto__info">
+              <h3><a href="producto.html">Queso Campesino</a></h3>
+              <p>Vendido por Laura Torres · Supatá</p>
+            </div>
+            <div class="producto__controles">
+              <div class="unidades">
+                <button class="unidad">Libra</button>
+                <button class="unidad unidad--activa">Kilo</button>
+                <button class="unidad">Bulto</button>
+              </div>
+              <div class="producto__precio-fila">
+                <span class="producto__precio">$7.500<small>/ kg</small></span>
+                <span class="stock stock--agotado">Agotado</span>
+              </div>
+              <button class="btn btn--deshabilitado btn--bloque" disabled>No disponible</button>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Paginación -->
+        <div class="paginacion">
+          <p>Página <b>1</b> de <b>3</b></p>
+          <div class="paginacion__btns">
+            <button class="btn btn--borde" disabled>‹ Anterior</button>
+            <button class="btn btn--borde">Siguiente ›</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PRODUCTORES ========== -->
+  <section class="productores">
+    <div class="productores__pista">
+      <figure class="productor"><img src="img/vendedores/Juan-Perez.png" alt="Juan Pérez" /><figcaption><b>Juan Pérez</b><small>Villeta, Cundinamarca</small></figcaption></figure>
+      <figure class="productor"><img src="img/vendedores/Maria-Lopez.png" alt="María López" /><figcaption><b>María López</b><small>Tobia, Cundinamarca</small></figcaption></figure>
+      <figure class="productor"><img src="img/vendedores/Carlos-Gomez.png" alt="Carlos Gómez" /><figcaption><b>Carlos Gómez</b><small>Nimaima, Cundinamarca</small></figcaption></figure>
+      <figure class="productor"><img src="img/vendedores/Ana-Rodriguez.png" alt="Ana Rodríguez" /><figcaption><b>Ana Rodríguez</b><small>La Vega, Cundinamarca</small></figcaption></figure>
+      <figure class="productor"><img src="img/vendedores/Pedro-Sanchez.png" alt="Pedro Sánchez" /><figcaption><b>Pedro Sánchez</b><small>Guaduas, Cundinamarca</small></figcaption></figure>
+      <figure class="productor"><img src="img/vendedores/Laura-Torres.png" alt="Laura Torres" /><figcaption><b>Laura Torres</b><small>Supatá, Cundinamarca</small></figcaption></figure>
+      <figure class="productor"><img src="img/vendedores/Katerine-Barrera.png" alt="Katerine Barrera" /><figcaption><b>Katerine Barrera</b><small>Sasaima, Cundinamarca</small></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ========== ASÍ FUNCIONA ========== -->
+  <section class="seccion contenedor">
+    <div class="como">
+      <h2 class="titulo-seccion">Así funciona</h2>
+      <div class="como__pasos">
+        <div><span>01</span><h3>Eliges</h3><p>Filtra por municipio, temporada o productor.</p></div>
+        <div><span>02</span><h3>El productor cosecha</h3><p>Recibe tu pedido y cosecha solo lo vendido.</p></div>
+        <div><span>03</span><h3>Empaquetamos</h3><p>Cadena de frío y empaque que protege la frescura.</p></div>
+        <div><span>04</span><h3>Lo recibes</h3><p>Paga con PSE, Nequi o contra entrega.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer__inner contenedor">
+      <div>
+        <p class="footer__marca">AgrilMarket</p>
+        <p class="footer__copy">© 2026 AgrilMarket. Todos los derechos reservados.</p>
+      </div>
+      <a href="https://wa.link/rnqsri" target="_blank" rel="noreferrer" class="btn btn--amarillo">💬 Escríbenos por WhatsApp</a>
+    </div>
+  </footer>
+
+</body>
+</html>
