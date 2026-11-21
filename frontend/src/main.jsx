@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
+import BotonSubir from "./components/BotonSubir";
 import "./index.css";
 import { CarritoProvider } from "./context/CarritoContext";
 import { AuthProvider } from "./context/AuthContext";
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <ProductProvider>
           <BrowserRouter>
             <AppRoutes />
+            <BotonSubir />
           </BrowserRouter>
           </ProductProvider>
         </CarritoProvider>

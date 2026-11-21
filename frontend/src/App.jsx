@@ -21,6 +21,7 @@ const CULTIVOS = ["Orgánico", "Cosechado hoy", "Compra por bulto"];
 function App() {
   const {
     productos,
+    carrito,
     categoriaSeleccionada,
     setCategoriaSeleccionada,
     carritoVisible,
@@ -67,7 +68,9 @@ function App() {
 
       const productosListos = (res.productos || []).filter((p) => Number(p.estado_id) === 1).map(p => ({//mas facil quitar los inactivos en vista que en consulta
         ...p,
-        imagen: obtenerUrlImagen(p.imagen)
+        imagen: obtenerUrlImagen(p.imagen),
+        // Descuenta lo que ya está en el carrito (también el carrito guardado de una visita anterior)
+        stock: Math.max(0, p.stock - (carrito.find((c) => c.id === p.id)?.cantidad || 0)),
       }));
 
       setProductosPaginados(productosListos);

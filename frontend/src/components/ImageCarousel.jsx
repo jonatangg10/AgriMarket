@@ -1,5 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { CarritoContext } from "../context/CarritoContext";
 
 // Datos fijos por ahora (luego pueden venir de la BD)
 const slides = [
@@ -38,6 +39,13 @@ function ImageCarousel({
   onBuscar = () => {},
 }) {
   const [actual, setActual] = useState(0);
+  const { productos = [] } = useContext(CarritoContext) || {};
+
+  // Dato real: productores distintos con al menos un producto activo publicado
+  const totalProductores = useMemo(
+    () => new Set(productos.filter((p) => Number(p.estado_id) === 1).map((p) => p.usuario_id)).size,
+    [productos]
+  );
 
   // Rotación automática cada 5 s
   useEffect(() => {
@@ -148,7 +156,11 @@ function ImageCarousel({
           </form>
 
           <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[13px] font-bold text-[#17261D]">
-            <span>+120 productores</span>
+            {totalProductores > 0 && (
+              <span>
+                {totalProductores} {totalProductores === 1 ? "productor local" : "productores locales"}
+              </span>
+            )}
             <span>Cosecha de hoy</span>
             <span>Pago seguro</span>
           </div>

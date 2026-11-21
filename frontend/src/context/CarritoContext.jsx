@@ -3,10 +3,24 @@ import { toast } from "react-hot-toast";
 
 export const CarritoContext = createContext();
 
+// El carrito se guarda en el navegador para que no se pierda al refrescar
+const CLAVE_CARRITO = "agrimarket_carrito_v1";
+
+const leerCarritoGuardado = () => {
+  try {
+    const guardado = JSON.parse(localStorage.getItem(CLAVE_CARRITO) || "[]");
+    return Array.isArray(guardado)
+      ? guardado.filter((item) => item && item.id != null && Number(item.cantidad) > 0)
+      : [];
+  } catch {
+    return [];
+  }
+};
+
 export const CarritoProvider = ({ children }) => {
   const [productos, setProductos] = useState([]);
   const [estados, setEstados] = useState([]);
-  const [carrito, setCarrito] = useState([]);
+  const [carrito, setCarrito] = useState(leerCarritoGuardado);
   const [carritoVisible, setCarritoVisible] = useState(false);
   const [comprarVisible, setComprarVisible] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -38,6 +52,53 @@ export const CarritoProvider = ({ children }) => {
 
     fetchProductos();
   }, []);
+
+  // 💾 Guardar el carrito en el navegador cada vez que cambia (también cuando se vacía tras comprar)
+  useEffect(() => {
+    try {
+      localStorage.setItem(CLAVE_CARRITO, JSON.stringify(carrito));
+    } catch {
+      /* sin almacenamiento disponible: el carrito solo vive en esta pestaña */
+    }
+  }, [carrito]);
+
+  // 🔁 Al cargar los productos, actualiza el carrito guardado con los datos actuales:
+  // precio, stock y estado pueden haber cambiado desde que se agregó.
+  const [carritoSincronizado, setCarritoSincronizado] = useState(false);
+  useEffect(() => {
+    if (carritoSincronizado || productos.length === 0) return;
+    setCarritoSincronizado(true);
+
+    let ajustados = 0;
+    setCarrito((prev) =>
+      prev
+        .map((item) => {
+          const actual = productos.find((p) => p.id === item.id);
+          // Ya no existe, está inactivo o agotado: se quita
+          if (!actual || Number(actual.estado_id) !== 1 || actual.stock <= 0) {
+            ajustados++;
+            return null;
+          }
+          const cantidad = Math.min(item.cantidad, actual.stock);
+          if (cantidad !== item.cantidad || actual.precio !== item.precio) ajustados++;
+          return {
+            ...item,
+            nombre: actual.nombre,
+            precio: actual.precio,
+            stock: actual.stock,
+            etiqueta: actual.etiqueta,
+            unidad: actual.unidad,
+            estado_id: actual.estado_id,
+            cantidad,
+          };
+        })
+        .filter(Boolean)
+    );
+
+    if (ajustados > 0) {
+      toast("Actualizamos tu carrito con los precios y unidades disponibles hoy");
+    }
+  }, [productos, carritoSincronizado]);
 
   // 🔄 Cargar estados
   useEffect(() => {
