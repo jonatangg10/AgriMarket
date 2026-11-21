@@ -9,6 +9,8 @@ import Registrarse from "../pages/Registrarse";
 import ContactoPage from "../pages/Contact";
 import PrivateRoute from "./PrivateRoute";
 import ProductorSolicitudes from "../pages/ProductorSolicitudes";
+import Ofertas from "../pages/Ofertas";
+import UltimosIngresos from "../pages/UltimosIngresos";
 
 const AppRoutes = () => {
   return (
@@ -18,6 +20,8 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/registrarse" element={<Registrarse />} />
       <Route path="/contacto" element={<ContactoPage  />} />
+      <Route path="/ofertas" element={<Ofertas />} />
+      <Route path="/ultimos-ingresos" element={<UltimosIngresos />} />
 
       {/* Rutas Protegidas (Solo Admin) */}
       <Route

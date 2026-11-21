@@ -11,7 +11,7 @@ import ImageCarousel from './components/ImageCarousel';
 import { CarritoContext } from "./context/CarritoContext";
 import Carrito from './components/Carrito';
 import Comprar from './components/Comprar';
-import { ChevronLeftIcon, ChevronRightIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, ChevronRightIcon, AdjustmentsHorizontalIcon, ShoppingCartIcon, CreditCardIcon } from "@heroicons/react/24/outline";
 
 // Datos fijos por ahora (aún no existen en la BD)
 const CULTIVOS = ["Orgánico", "Cosechado hoy", "Compra por bulto"];
@@ -449,10 +449,10 @@ function App() {
         </div>
       </section>
 
-      <Modal isOpen={carritoVisible} onClose={() => setCarritoVisible(false)} title="🛒 Tu Carrito">
+      <Modal isOpen={carritoVisible} onClose={() => setCarritoVisible(false)} title="Tu carrito" icon={ShoppingCartIcon}>
         <Carrito Agregar={restarStocklocal} Eliminar={sumarStocklocal} />
       </Modal>
-      <Modal isOpen={comprarVisible} onClose={() => setComprarVisible(false)} title="✅ Finaliza tu compra">
+      <Modal isOpen={comprarVisible} onClose={() => setComprarVisible(false)} title="Finaliza tu compra" icon={CreditCardIcon}>
         <Comprar />
       </Modal>
 

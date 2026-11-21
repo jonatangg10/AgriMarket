@@ -1,6 +1,18 @@
 import { useState, useEffect } from "react";
 import { ArrowLeftIcon, UserPlusIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 
+const inputClase =
+    "w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-[#14432F] focus:ring-4 focus:ring-[#14432F]/10 transition-all disabled:cursor-not-allowed disabled:opacity-60";
+
+const Campo = ({ etiqueta, htmlFor, children }) => (
+    <div>
+        <label htmlFor={htmlFor} className="block text-xs font-bold uppercase text-slate-500 mb-2">
+            {etiqueta}
+        </label>
+        {children}
+    </div>
+);
+
 const UserForm = ({ usuario, onSave, onCancel }) => {
     const isEditing = Boolean(usuario?.id);
 
@@ -47,9 +59,10 @@ const UserForm = ({ usuario, onSave, onCancel }) => {
     };
 
     return (
-        <div className="bg-white border border-slate-200 rounded-3xl shadow-sm p-8 max-w-3xl mx-auto">
+        <div className="bg-white border border-slate-200 rounded-3xl shadow-sm p-5 sm:p-8 w-full">
             {/* Botón Volver */}
             <button
+                type="button"
                 onClick={onCancel}
                 className="flex items-center gap-2 text-slate-500 hover:text-slate-800 text-sm font-semibold mb-6 transition-colors"
             >
@@ -70,114 +83,99 @@ const UserForm = ({ usuario, onSave, onCancel }) => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+                {/* En PC de a 2 columnas: Nombres | Apellidos · Rol | Documento · Correo | Contraseña · Género */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Nombres */}
-                    <div>
-                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">
-                            Nombres
-                        </label>
+                    <Campo etiqueta="Nombres" htmlFor="nombres">
                         <input
+                            id="nombres"
                             type="text"
                             name="nombres"
                             required
                             value={formData.nombres}
                             onChange={handleChange}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                            className={inputClase}
                         />
-                    </div>
+                    </Campo>
 
-                    {/* Apellidos */}
-                    <div>
-                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">
-                            Apellidos
-                        </label>
+                    <Campo etiqueta="Apellidos" htmlFor="apellidos">
                         <input
+                            id="apellidos"
                             type="text"
                             name="apellidos"
                             required
                             value={formData.apellidos}
                             onChange={handleChange}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                            className={inputClase}
                         />
-                    </div>
+                    </Campo>
 
-                    {/* Documento */}
-                    <div>
-                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">
-                            N° Documento
-                        </label>
+                    <Campo etiqueta="Rol" htmlFor="rol_id">
+                        <select
+                            id="rol_id"
+                            name="rol_id"
+                            value={formData.rol_id}
+                            onChange={handleChange}
+                            className={inputClase}
+                        >
+                            <option value={1}>Administrador</option>
+                            <option value={2}>Cliente</option>
+                            <option value={3}>Vendedor / Agricultor</option>
+                        </select>
+                    </Campo>
+
+                    <Campo etiqueta="N° Documento" htmlFor="num_documento">
                         <input
+                            id="num_documento"
                             type="text"
+                            inputMode="numeric"
                             name="num_documento"
+                            required={!isEditing}
                             disabled={isEditing}
                             value={formData.num_documento}
                             onChange={handleChange}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                            className={inputClase}
                         />
-                    </div>
+                    </Campo>
 
-                    {/* Email */}
-                    <div>
-                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">
-                            Correo Electrónico
-                        </label>
+                    <Campo etiqueta="Correo Electrónico" htmlFor="correo">
                         <input
+                            id="correo"
                             type="email"
                             name="correo"
                             required
                             value={formData.correo}
                             onChange={handleChange}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                            className={inputClase}
                         />
-                    </div>
+                    </Campo>
 
-                    {/* Contraseña */}
-                    <div>
-                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">
-                            Contraseña {isEditing && "(dejar en blanco para no cambiar)"}
-                        </label>
+                    <Campo
+                        etiqueta={`Contraseña${isEditing ? " (dejar en blanco para no cambiar)" : ""}`}
+                        htmlFor="password"
+                    >
                         <input
+                            id="password"
                             type="password"
                             name="password"
                             required={!isEditing}
                             value={formData.password}
                             onChange={handleChange}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                            className={inputClase}
                         />
-                    </div>
+                    </Campo>
 
-                    {/* Género */}
-                    <div>
-                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">
-                            Género
-                        </label>
+                    <Campo etiqueta="Género" htmlFor="genero_id">
                         <select
+                            id="genero_id"
                             name="genero_id"
                             value={formData.genero_id}
                             onChange={handleChange}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                            className={inputClase}
                         >
                             <option value={1}>Masculino</option>
                             <option value={2}>Femenino</option>
-                            <option value={3}>Otro</option>
                         </select>
-                    </div>
-
-                    {/* Rol */}
-                    <div>
-                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">
-                            Rol
-                        </label>
-                        <select
-                            name="rol_id"
-                            value={formData.rol_id}
-                            onChange={handleChange}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
-                        >
-                            <option value={1}>Administrador</option>
-                            <option value={2}>Usuario Cliente</option>
-                        </select>
-                    </div>
+                    </Campo>
                 </div>
 
                 {/* Acciones */}
@@ -191,7 +189,7 @@ const UserForm = ({ usuario, onSave, onCancel }) => {
                     </button>
                     <button
                         type="submit"
-                        className="px-6 py-3 bg-[#14432F] hover:bg-blue-500 text-white rounded-2xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20"
+                        className="px-6 py-3 bg-[#14432F] hover:bg-[#0E3323] text-white rounded-2xl text-sm font-bold transition-all shadow-lg shadow-green-900/20"
                     >
                         {isEditing ? "Guardar Cambios" : "Crear Usuario"}
                     </button>

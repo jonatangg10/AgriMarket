@@ -96,7 +96,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
     };
 
     return (
-        <div className="bg-white border border-slate-200 rounded-3xl shadow-sm p-8 max-w-3xl mx-auto">
+        <div className="bg-white border border-slate-200 rounded-3xl shadow-sm p-5 sm:p-8 w-full">
             <button
                 type="button"
                 onClick={onCancel}
@@ -204,7 +204,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                             required
                             value={formData.etiqueta}
                             onChange={handleChange}
-                            placeholder="Ej: Fresco, Oferta, Nuevo"
+                            placeholder="Ej: Fresco, Nuevo, Oferta o -20% (descuento)"
                             className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
                         />
                     </div>
@@ -295,7 +295,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                                     setPreview(URL.createObjectURL(file));
                                 }
                             }}
-                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-all"
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-[#14432F] hover:file:bg-emerald-100 transition-all"
                         />
                         {/* esto namas pa preview */}
                         {preview && (
@@ -317,7 +317,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                     </button>
                     <button
                         type="submit"
-                        className="px-6 py-3 bg-[#14432F] hover:bg-blue-500 text-white rounded-2xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20"
+                        className="px-6 py-3 bg-[#14432F] hover:bg-[#0E3323] text-white rounded-2xl text-sm font-bold transition-all shadow-lg shadow-green-900/20"
                     >
                         {isEditing ? "Guardar Cambios" : "Crear Producto"}
                     </button>

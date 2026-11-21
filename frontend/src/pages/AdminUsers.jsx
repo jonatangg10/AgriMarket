@@ -5,10 +5,9 @@ import { toast ,Toaster} from 'react-hot-toast';
 import { UserContext } from "../context/UserContext";
 import UserForm from "../components/UserForm";
 import SortableHeader from "../components/SortableHeader";
+import AccionesFila from "../components/AccionesFila";
 
 import {
-  PencilIcon,
-  TrashIcon,
   PlusIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
@@ -171,23 +170,11 @@ const AdminUsers = () => {
         header: "Acciones",
 
         cell: ({ row }) => (
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => handleEditar(row.original)}
-              className="text-[#14432F] hover:text-blue-800 transition-colors"
-              title="Editar"
-            >
-              <PencilIcon className="h-5 w-5" />
-            </button>
-
-            <button
-              onClick={() => handleEliminar(row.original.id)}
-              className="text-red-600 hover:text-red-800 transition-colors"
-              title="Eliminar"
-            >
-              <TrashIcon className="h-5 w-5" />
-            </button>
-          </div>
+          <AccionesFila
+            nombre={`${row.original.nombres} ${row.original.apellidos}`}
+            onEditar={() => handleEditar(row.original)}
+            onEliminar={() => handleEliminar(row.original.id)}
+          />
         ),
       },
     ],
@@ -248,7 +235,7 @@ const AdminUsers = () => {
 
               <button
                 onClick={handleCrearNuevo}
-                className="flex items-center gap-2 px-5 py-3 bg-[#14432F] hover:bg-blue-500 text-white rounded-2xl text-sm font-bold transition-all shadow-lg shadow-blue-600/20"
+                className="flex items-center gap-2 px-5 py-3 bg-[#14432F] hover:bg-[#0E3323] text-white rounded-2xl text-sm font-bold transition-all shadow-lg shadow-green-900/20"
               >
                 <PlusIcon className="h-5 w-5" />
                 Nuevo Usuario

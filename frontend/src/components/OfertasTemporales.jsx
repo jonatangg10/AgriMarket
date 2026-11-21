@@ -1,19 +1,19 @@
 import React, { useContext } from 'react';
 import { CarritoContext } from '../context/CarritoContext';
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { esOferta, obtenerDescuento, precioAntes, formatoPrecio } from "../utils/ofertas";
 
 const OfertasTemporales = () => {
   const { productos, agregarAlCarrito } = useContext(CarritoContext);
 
-  const productosOferta = productos.filter(prod =>
-    prod.etiqueta && (prod.etiqueta.includes('%') || prod.etiqueta === 'Oferta')
+  // parseInt("-20%") daba -20 y calculaba mal el precio anterior
+  const productosOferta = productos.filter(
+    (prod) => esOferta(prod) && Number(prod.estado_id) === 1 && prod.stock > 0
   );
 
-  productosOferta.sort((a, b) => {
-    const descA = parseInt(a.etiqueta) || 0;
-    const descB = parseInt(b.etiqueta) || 0;
-    return descB - descA;
-  });
+  productosOferta.sort(
+    (a, b) => (obtenerDescuento(b.etiqueta) || 0) - (obtenerDescuento(a.etiqueta) || 0)
+  );
 
   const ofertasDestacadas = productosOferta.slice(0, 3);
 
@@ -50,10 +50,12 @@ const OfertasTemporales = () => {
               <div className="p-4 flex flex-col h-[180px]">
                 <h3 className="text-lg font-semibold mb-2">{producto.nombre}</h3>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-gray-400 line-through text-sm">
-                    ${(producto.precio / (1 - (parseInt(producto.etiqueta) || 0) / 100)).toFixed(2)}
-                  </span>
-                  <span className="text-red-600 font-bold text-lg">${producto.precio.toFixed(2)}</span>
+                  {precioAntes(producto) && (
+                    <span className="text-gray-400 line-through text-sm">
+                      {formatoPrecio(precioAntes(producto))}
+                    </span>
+                  )}
+                  <span className="text-red-600 font-bold text-lg">{formatoPrecio(producto.precio)}</span>
                 </div>
                 <button
                   onClick={() => agregarAlCarrito(producto)}

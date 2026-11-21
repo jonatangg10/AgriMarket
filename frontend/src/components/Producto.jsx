@@ -1,5 +1,6 @@
 import React, { memo, useState } from "react";
 import { Link } from "react-router-dom";
+import { esOferta, precioAntes, formatoPrecio } from "../utils/ofertas";
 
 // Datos fijos por ahora: la unidad no cambia el precio ni lo que se agrega al carrito
 const UNIDADES = [
@@ -35,8 +36,9 @@ const Producto = ({ producto, agregarAlCarrito }) => {
     ? `Quedan ${producto.stock}`
     : `${producto.stock} disp.`;
 
-  // Etiquetas con "-" (ej. "-20%") se tratan como oferta
-  const etiquetaColor = producto.etiqueta?.includes("-")
+  // Ofertas ("-20%" u "Oferta") en color salmón, el resto en amarillo
+  const antes = precioAntes(producto);
+  const etiquetaColor = esOferta(producto)
     ? "bg-[#FBD9C9] text-[#6B2A0E]"
     : "bg-[#F6D77A] text-[#4A3500]";
 
@@ -111,10 +113,17 @@ const Producto = ({ producto, agregarAlCarrito }) => {
         </div>
 
         <div className="flex items-baseline justify-between gap-2">
-          <span className="text-2xl font-extrabold text-[#17261D]">
-            ${producto.precio.toLocaleString("es-CO")}
-            <span className="ml-1 text-xs font-medium text-[#4F6355]">
-              / {sufijoUnidad}
+          <span className="flex flex-col">
+            {antes && (
+              <span className="text-xs font-medium text-[#4F6355] line-through">
+                {formatoPrecio(antes)}
+              </span>
+            )}
+            <span className="text-2xl font-extrabold text-[#17261D]">
+              {formatoPrecio(producto.precio)}
+              <span className="ml-1 text-xs font-medium text-[#4F6355]">
+                / {sufijoUnidad}
+              </span>
             </span>
           </span>
 

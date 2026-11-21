@@ -7,31 +7,31 @@ const ROLES = {
 /**
  * Tarjeta del usuario logueado (encima de "Cerrar Sesión").
  * Muestra iniciales, nombre, rol legible y correo.
+ * compacto: en escritorio solo se ve el avatar (menú lateral minimizado).
  */
-const UserCard = ({ usuario }) => {
+const UserCard = ({ usuario, compacto = false }) => {
   const nombre = usuario?.nombres?.split(" ")[0] || "";
   const apellido = usuario?.apellidos?.split(" ")[0] || "";
 
   // Evita mostrar "admin admin" cuando nombre y apellido son iguales
-  const nombreCompleto =
-    nombre.toLowerCase() === apellido.toLowerCase()
-      ? nombre
-      : `${nombre} ${apellido}`.trim();
-
-  const iniciales =
-    nombre.toLowerCase() === apellido.toLowerCase()
-      ? nombre.slice(0, 2)
-      : `${nombre.charAt(0)}${apellido.charAt(0)}`;
+  const mismoNombre = nombre.toLowerCase() === apellido.toLowerCase();
+  const nombreCompleto = mismoNombre ? nombre : `${nombre} ${apellido}`.trim();
+  const iniciales = mismoNombre ? nombre.slice(0, 2) : `${nombre.charAt(0)}${apellido.charAt(0)}`;
 
   const rol = ROLES[Number(usuario?.rol)] || ROLES[2];
 
   return (
-    <div className="bg-slate-100 rounded-2xl p-3 flex items-center gap-3">
+    <div
+      className={`bg-slate-100 rounded-2xl p-3 flex items-center gap-3 ${
+        compacto ? "md:justify-center md:p-2" : ""
+      }`}
+      title={compacto ? `${nombreCompleto} · ${rol.label}` : undefined}
+    >
       <div className="h-10 w-10 shrink-0 rounded-full bg-[#14432F] text-white flex items-center justify-center text-sm font-black uppercase">
         {iniciales || "?"}
       </div>
 
-      <div className="min-w-0">
+      <div className={`min-w-0 ${compacto ? "md:hidden" : ""}`}>
         <h4 className="text-sm font-bold text-slate-800 truncate capitalize">
           {nombreCompleto || "Usuario"}
         </h4>

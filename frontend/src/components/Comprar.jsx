@@ -136,7 +136,7 @@ const FormComprar = () => {
 
 
   const inputClass =
-    "w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 shadow-sm outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-100";
+    "w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 shadow-sm outline-none transition focus:border-[#14432F] focus:ring-2 focus:ring-[#CFE7D6]";
 
   const labelClass =
     "mb-1.5 block text-sm font-medium text-gray-700";
@@ -192,7 +192,7 @@ const FormComprar = () => {
 
               <div className="flex justify-between pt-4 text-lg font-bold text-gray-900">
                 <span>Total a Pagar:</span>
-                <span className="text-green-600">${totalCarrito.toLocaleString()}</span>
+                <span className="text-[#14432F]">${totalCarrito.toLocaleString()}</span>
               </div>
             </div>
           )}
@@ -601,7 +601,7 @@ const FormComprar = () => {
 
             <button
               type="submit"
-              className="w-full rounded-lg bg-green-600 px-8 py-3 font-semibold text-white shadow-sm transition hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:w-auto"
+              className="min-h-11 w-full rounded-xl bg-[#14432F] px-8 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-[#0E3323] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#14432F]/40 focus:ring-offset-2 sm:w-auto"
             >
               {submitting ? "Procesando..." : "Generar factura"}
             </button>

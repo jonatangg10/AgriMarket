@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
-import { ChevronLeftIcon, TruckIcon, ShieldCheckIcon, BanknotesIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, TruckIcon, ShieldCheckIcon, BanknotesIcon, ShoppingCartIcon, CreditCardIcon } from "@heroicons/react/24/outline";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { CarritoContext } from "../context/CarritoContext";
@@ -8,6 +8,7 @@ import Modal from "./Modal";
 import Carrito from "./Carrito";
 import Comprar from "./Comprar";
 import { Toaster } from "react-hot-toast";
+import { esOferta, precioAntes, formatoPrecio } from "../utils/ofertas";
 
 // Datos fijos por ahora (aún no existen en la BD)
 const UNIDADES = [
@@ -125,7 +126,7 @@ const DetalleProducto = () => {
             {producto.etiqueta && (
               <span
                 className={`absolute left-4 top-4 z-10 rounded-full px-3 py-1 text-xs font-bold ${
-                  producto.etiqueta.includes("-")
+                  esOferta(producto)
                     ? "bg-[#FBD9C9] text-[#6B2A0E]"
                     : "bg-[#F6D77A] text-[#4A3500]"
                 }`}
@@ -153,8 +154,13 @@ const DetalleProducto = () => {
             )}
 
             <div className="mt-5 flex flex-wrap items-baseline gap-3">
+              {precioAntes(producto) && (
+                <span className="text-lg font-medium text-[#4F6355] line-through">
+                  {formatoPrecio(precioAntes(producto))}
+                </span>
+              )}
               <span className="text-4xl font-extrabold text-[#17261D]">
-                ${producto.precio.toLocaleString("es-CO")}
+                {formatoPrecio(producto.precio)}
                 <span className="ml-1 text-sm font-medium text-[#4F6355]">/ {sufijoUnidad}</span>
               </span>
               <span className={`rounded-full px-3 py-1 text-xs font-bold ${stockBadge}`}>
@@ -234,10 +240,10 @@ const DetalleProducto = () => {
         </div>
       </main>
 
-      <Modal isOpen={carritoVisible} onClose={() => setCarritoVisible(false)} title="🛒 Tu Carrito">
+      <Modal isOpen={carritoVisible} onClose={() => setCarritoVisible(false)} title="Tu carrito" icon={ShoppingCartIcon}>
         <Carrito />
       </Modal>
-      <Modal isOpen={comprarVisible} onClose={() => setComprarVisible(false)} title="✅ Finaliza tu compra">
+      <Modal isOpen={comprarVisible} onClose={() => setComprarVisible(false)} title="Finaliza tu compra" icon={CreditCardIcon}>
         <Comprar />
       </Modal>
       <Toaster position="bottom-right" />

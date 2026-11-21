@@ -73,7 +73,6 @@ module.exports = (db, bcrypt) => {
         apellidos,
         num_documento,
         correo,
-        password,
         genero_id,
         rol_id,
         fecha_creacion

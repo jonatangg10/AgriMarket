@@ -191,8 +191,9 @@ function Navbar() {
 
             <Link
               to="/"
-              className="text-xl font-extrabold text-[#14432F] tracking-tight"
+              className="flex items-center gap-2 text-xl font-extrabold text-[#14432F] tracking-tight"
             >
+              <img src="/favicon.svg" alt="" className="h-8 w-8" />
               AgrilMarket
             </Link>
           </div>

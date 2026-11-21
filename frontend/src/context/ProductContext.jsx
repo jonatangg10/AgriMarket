@@ -7,7 +7,7 @@ export const ProductProvider = ({ children }) => {
     const [loadingProducts, setLoadingProducts] = useState(false);
 
     // Categorías de ejemplo para el filtro, luego puedes hacerlas dinámicas
-    const categorias = ["Frutas", "Hortalizas", "Tubérculos"];
+    const categorias = ["Frutas", "Hortalizas", "Tubérculos", "Granos", "Lácteos y huevos", "Despensa"];
 
     const obtenerProductosPaginados = async ({
         page,
