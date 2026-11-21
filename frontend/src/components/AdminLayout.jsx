@@ -13,6 +13,7 @@ import {
 import { MdOutlineBarChart } from "react-icons/md";
 
 import { useAuth } from "../context/AuthContext";
+import UserCard from "./UserCard";
 
 const AdminLayout = ({ children, activeTab }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -179,17 +180,7 @@ const AdminLayout = ({ children, activeTab }) => {
 
         {/* User */}
         <div className="p-4 border-t border-slate-100 space-y-4">
-          <div className="bg-slate-100 rounded-2xl p-4">
-            <h4 className="text-sm font-bold text-slate-800">
-              {`${usuario?.nombres?.split(" ")[0] || ""} ${
-                usuario?.apellidos?.split(" ")[0] || ""
-              }`}
-            </h4>
-
-            <p className="text-[11px] uppercase font-semibold text-slate-500 mt-1">
-              {usuario?.rol}
-            </p>
-          </div>
+          <UserCard usuario={usuario} />
 
           <button
             onClick={handleLogout}

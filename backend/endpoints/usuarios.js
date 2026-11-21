@@ -303,6 +303,84 @@ module.exports = (db, bcrypt) => {
   });
 
 
+  // Registro público (página "Registrarse")
+  // A diferencia de POST /usuarios (panel admin), aquí NUNCA se permite crear
+  // administradores: solo Comprador (2) o Agricultor/Vendedor (3).
+  const ROLES_PUBLICOS = [2, 3];
+  const GENEROS_VALIDOS = [1, 2];
+
+  router.post('/registro', async (req, res) => {
+    const nombres = String(req.body.nombres || '').trim();
+    const apellidos = String(req.body.apellidos || '').trim();
+    const num_documento = String(req.body.num_documento || '').trim();
+    const correo = String(req.body.correo || '').trim().toLowerCase();
+    const password = String(req.body.password || '');
+    const genero_id = Number(req.body.genero_id);
+    const rolSolicitado = Number(req.body.rol_id);
+
+    // Cualquier rol distinto a 2 o 3 (incluido admin = 1) se convierte en Comprador
+    const rol_id = ROLES_PUBLICOS.includes(rolSolicitado) ? rolSolicitado : 2;
+
+    if (!nombres || !apellidos || !num_documento || !correo || !password) {
+      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+    }
+    if (!/^\d{6,12}$/.test(num_documento)) {
+      return res.status(400).json({ error: 'El documento debe tener entre 6 y 12 dígitos' });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+      return res.status(400).json({ error: 'Correo no válido' });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ error: 'La contraseña debe tener mínimo 6 caracteres' });
+    }
+    if (!GENEROS_VALIDOS.includes(genero_id)) {
+      return res.status(400).json({ error: 'Género no válido' });
+    }
+
+    // Revisar duplicados para dar un mensaje claro
+    db.get(
+      'SELECT correo, num_documento FROM usuarios WHERE correo = ? OR num_documento = ?',
+      [correo, num_documento],
+      async (err, existente) => {
+        if (err) {
+          console.error('Error verificando duplicados:', err);
+          return res.status(500).json({ error: 'Error en el servidor' });
+        }
+        if (existente) {
+          const msg = existente.correo === correo
+            ? 'Este correo ya está registrado'
+            : 'Este número de documento ya está registrado';
+          return res.status(409).json({ error: msg });
+        }
+
+        try {
+          const hashedPassword = await bcrypt.hash(password, 10);
+
+          db.run(
+            `INSERT INTO usuarios (nombres, apellidos, num_documento, correo, password, genero_id, rol_id)
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [nombres, apellidos, num_documento, correo, hashedPassword, genero_id, rol_id],
+            function (err) {
+              if (err) {
+                console.error('Error al registrar usuario:', err);
+                return res.status(500).json({ error: 'El correo o documento ya se encuentra registrado' });
+              }
+
+              res.status(201).json({
+                success: true,
+                message: 'Cuenta creada con éxito',
+                id: this.lastID
+              });
+            }
+          );
+        } catch (error) {
+          console.error('Error hasheando contraseña:', error);
+          return res.status(500).json({ error: 'Error interno del servidor' });
+        }
+      }
+    );
+  });
+
   // Endpoint crear / edutar usuario
 
   router.post('/usuarios', async (req, res) => {

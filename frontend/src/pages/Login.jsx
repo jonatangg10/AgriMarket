@@ -124,7 +124,7 @@ const Login = () => {
             ¿No tienes una cuenta?
           </p>
           <button
-            onClick={() => navigate("/register")}
+            onClick={() => navigate("/registrarse")}
             className="mt-2 border border-[#14432F] text-[#14432F] w-full py-2 rounded-lg hover:bg-[#14432F] hover:text-white transition"
           >
             Registrarse
