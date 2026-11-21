@@ -21,6 +21,10 @@ const upload = multer({ storage: storage });
 
 
 
+// Mantener sincronizado con frontend/src/utils/unidades.js
+const UNIDADES_VALIDAS = ['kg', 'lb', 'unidad', 'docena', 'litro', 'frasco', 'paquete', 'atado', 'canastilla', 'bulto'];
+const normalizarUnidad = (u) => (UNIDADES_VALIDAS.includes(String(u || '').trim()) ? String(u).trim() : 'kg');
+
 module.exports = (db) => {
   const router = express.Router();
 
@@ -37,7 +41,8 @@ module.exports = (db) => {
         stock,
         etiqueta,
         categoria,
-        municipio_code
+        municipio_code,
+        unidad
       FROM productos`,
       (err, rows) => {
         if (err) {
@@ -94,6 +99,7 @@ module.exports = (db) => {
         p.stock,
         p.etiqueta,
         p.categoria,
+        p.unidad,
         p.usuario_id,
         p.estado_id,
         e.nombre AS estado,
@@ -287,7 +293,7 @@ module.exports = (db) => {
 
   // CREAR PRODUCTO
   router.post('/', upload.single('imagen'), (req, res) => {
-    const { nombre, usuario_id, estado_id, precio, stock, etiqueta, categoria, municipio_code } = req.body;
+    const { nombre, usuario_id, estado_id, precio, stock, etiqueta, categoria, municipio_code, unidad } = req.body;
     
     // Si multer subió un archivo, guardamos la ruta. Si no, vacío.
     const imagenUrl = req.file ? `/uploads/${req.file.filename}` : '';
@@ -296,7 +302,9 @@ module.exports = (db) => {
     const precioNum = parseFloat(precio);
     const estadoIdNum = parseInt(estado_id, 10);
     const usuarioIdNum = parseInt(usuario_id, 10);
-    const municipioCodeNum = parseInt(municipio_code, 10);
+    // El código de municipio es texto ("05313"): parseInt le quitaba el 0 inicial
+    const municipioCode = String(municipio_code || '').trim();
+    const unidadFinal = normalizarUnidad(unidad);
 
     // Si el stock viene vacío o indefinido, usamos 10 por defecto
     const stockNum = stock ? parseInt(stock, 10) : 10;
@@ -307,14 +315,14 @@ module.exports = (db) => {
     }
 
     const sql = `
-      INSERT INTO productos (nombre, usuario_id, estado_id, precio, imagen, stock, etiqueta, categoria, municipio_code)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO productos (nombre, usuario_id, estado_id, precio, imagen, stock, etiqueta, categoria, municipio_code, unidad)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     
     // Pasamos las variables numéricas ya parseadas a los parámetros de SQLite
     const params = [
       nombre, usuarioIdNum, estadoIdNum, precioNum, imagenUrl, 
-      stockNum, etiqueta, categoria, municipioCodeNum
+      stockNum, etiqueta, categoria, municipioCode, unidadFinal
     ];
 
     db.run(sql, params, function (err) {
@@ -326,14 +334,15 @@ module.exports = (db) => {
   // EDITAR PRODUCTO
   router.put('/:id', upload.single('imagen'), (req, res) => {
     const { id } = req.params;
-    const { nombre, usuario_id, estado_id, precio, stock, etiqueta, categoria, imagenExistente,municipio_code } = req.body;
+    const { nombre, usuario_id, estado_id, precio, stock, etiqueta, categoria, imagenExistente, municipio_code, unidad } = req.body;
 
     // Convertimos los valores
     const precioNum = parseFloat(precio);
     const estadoIdNum = parseInt(estado_id, 10);
     const usuarioIdNum = parseInt(usuario_id, 10);
     const stockNum = stock ? parseInt(stock, 10) : 10;
-    const municipioCodeNum = parseInt(municipio_code, 10);
+    const municipioCode = String(municipio_code || '').trim();
+    const unidadFinal = normalizarUnidad(unidad);
 
     if (!nombre || isNaN(usuarioIdNum) || isNaN(estadoIdNum) || isNaN(precioNum) || !etiqueta || !categoria) {
       return res.status(400).json({ error: 'Faltan campos obligatorios para actualizar' });
@@ -343,14 +352,14 @@ module.exports = (db) => {
 
     const sql = `
       UPDATE productos 
-      SET nombre = ?, usuario_id = ?, estado_id = ?, precio = ?, imagen = ?, stock = ?, etiqueta = ?, categoria = ?, municipio_code = ?
+      SET nombre = ?, usuario_id = ?, estado_id = ?, precio = ?, imagen = ?, stock = ?, etiqueta = ?, categoria = ?, municipio_code = ?, unidad = ?
       WHERE id = ?
     `;
 
     // Pasamos las variables numéricas 
     const params = [
       nombre, usuarioIdNum, estadoIdNum, precioNum, imagenFinal, 
-      stockNum, etiqueta, categoria, municipioCodeNum, parseInt(id, 10)
+      stockNum, etiqueta, categoria, municipioCode, unidadFinal, parseInt(id, 10)
     ];
 
     db.run(sql, params, function (err) {

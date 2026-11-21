@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import ProductorLayout from "../components/ProductorLayout";
 import SortableHeader from "../components/SortableHeader";
 import AccionesFila from "../components/AccionesFila";
+import { sufijoUnidad } from "../utils/unidades";
 
 import {
   PlusIcon,
@@ -160,8 +161,11 @@ const AdminProductos = () => {
         accessorKey: "precio",
         header: "Precio",
         cell: (info) => (
-          <span className="font-bold text-slate-700">
-            ${Number(info.getValue()).toLocaleString()}
+          <span className="whitespace-nowrap font-bold text-slate-700">
+            ${Number(info.getValue()).toLocaleString("es-CO")}
+            <span className="ml-1 text-xs font-medium text-slate-400">
+              / {sufijoUnidad(info.row.original)}
+            </span>
           </span>
         ),
       },

@@ -9,13 +9,7 @@ import Carrito from "./Carrito";
 import Comprar from "./Comprar";
 import { Toaster } from "react-hot-toast";
 import { esOferta, precioAntes, formatoPrecio } from "../utils/ofertas";
-
-// Datos fijos por ahora (aún no existen en la BD)
-const UNIDADES = [
-  { nombre: "Libra", sufijo: "lb" },
-  { nombre: "Kilo", sufijo: "kg" },
-  { nombre: "Bulto", sufijo: "bulto" },
-];
+import { obtenerUnidad } from "../utils/unidades";
 
 const CARACTERISTICAS = [
   { etiqueta: "Origen", valor: "Cundinamarca, Colombia" },
@@ -34,7 +28,6 @@ const DetalleProducto = () => {
   const { id } = useParams();
   const [producto, setProducto] = useState(null);
   const [cargando, setCargando] = useState(true);
-  const [unidad, setUnidad] = useState("Kilo");
 
   const { carritoVisible, setCarritoVisible, agregarAlCarrito, setComprarVisible, comprarVisible } =
     useContext(CarritoContext);
@@ -76,7 +69,9 @@ const DetalleProducto = () => {
     );
   }
 
-  const sufijoUnidad = UNIDADES.find((u) => u.nombre === unidad)?.sufijo;
+  // Unidad de venta definida al cargar el producto
+  const unidad = obtenerUnidad(producto.unidad);
+  const sufijoUnidad = unidad.sufijo;
 
   const agotado = producto.stock <= 0;
   const pocasUnidades = producto.stock > 0 && producto.stock <= 5;
@@ -90,8 +85,8 @@ const DetalleProducto = () => {
   const stockTexto = agotado
     ? "Agotado"
     : pocasUnidades
-    ? `Quedan ${producto.stock} unidades`
-    : `${producto.stock} unidades disponibles`;
+    ? `Quedan ${producto.stock} ${producto.stock === 1 ? unidad.nombre.toLowerCase() : unidad.plural}`
+    : `${producto.stock} ${unidad.plural} disponibles`;
 
   const vendedor = [
     producto.vendedor_nombres?.split(" ")[0],
@@ -168,27 +163,11 @@ const DetalleProducto = () => {
               </span>
             </div>
 
-            {/* Selector de unidad (visual por ahora) */}
-            <div className="mt-5">
-              <p className="mb-2 text-sm font-bold text-[#17261D]">Presentación</p>
-              <div className="flex flex-wrap gap-2">
-                {UNIDADES.map((u) => (
-                  <button
-                    key={u.nombre}
-                    type="button"
-                    aria-pressed={unidad === u.nombre}
-                    onClick={() => setUnidad(u.nombre)}
-                    className={`min-h-10 rounded-full border px-4 text-sm font-medium transition-colors ${
-                      unidad === u.nombre
-                        ? "border-[#14432F] bg-[#14432F] text-white"
-                        : "border-[#C9D6C0] bg-white text-[#17261D] hover:bg-[#EAF0E2]"
-                    }`}
-                  >
-                    {u.nombre}
-                  </button>
-                ))}
-              </div>
-            </div>
+            {/* Unidad de venta (definida por el productor) */}
+            <p className="mt-5 inline-flex w-fit items-center gap-2 rounded-xl bg-[#EAF0E2] px-4 py-2 text-sm text-[#17261D]">
+              <span className="text-[#4F6355]">Se vende por</span>
+              <span className="font-bold">{unidad.nombre.toLowerCase()}</span>
+            </p>
 
             <p className="mt-5 leading-relaxed text-[#4F6355]">
               Producto fresco cosechado por familias campesinas de Cundinamarca y entregado

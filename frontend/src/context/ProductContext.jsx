@@ -95,6 +95,7 @@ export const ProductProvider = ({ children }) => {
             formData.append('estado_id', producto.estado_id);
             formData.append('usuario_id', producto.usuario_id);
             formData.append('municipio_code', producto.municipio_code);
+            formData.append('unidad', producto.unidad || 'kg');
 
             // 3. Agregamos la imagen SOLO si el usuario seleccionó una
             if (producto.imagen) {

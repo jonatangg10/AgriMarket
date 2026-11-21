@@ -2,6 +2,7 @@ import { useState, useEffect, useContext, useMemo } from "react";
 import { ArrowLeftIcon, CubeIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { UserContext } from "../context/UserContext";
 import { useAuth } from "../context/AuthContext";
+import { UNIDADES, UNIDAD_POR_DEFECTO } from "../utils/unidades";
 
 const ProductForm = ({ producto, onSave, onCancel }) => {
     const isEditing = Boolean(producto?.id);
@@ -29,6 +30,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
         usuario_id: esVendedor ? usuario.id : "",
         municipio_code: "",
         departamento_code: "",
+        unidad: UNIDAD_POR_DEFECTO,
     });
 
     const municipiosFiltrados = useMemo(() => {
@@ -68,6 +70,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                 usuario_id: producto.usuario_id || "",
                 municipio_code: producto.municipio_code || "",
                 departamento_code: producto.municipio_departamento_code || "", 
+                unidad: producto.unidad || UNIDAD_POR_DEFECTO,
                 imagenExistente: producto.imagen || "", // Guardamos la url vieja por si no sube foto nueva
             });
         }
@@ -169,7 +172,7 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                     )}
 
                     <div>
-                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Precio</label>
+                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Precio por unidad de venta</label>
                         <input
                             type="number"
                             name="precio"
@@ -183,7 +186,27 @@ const ProductForm = ({ producto, onSave, onCancel }) => {
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Stock Disponible</label>
+                        <label htmlFor="unidad" className="block text-xs font-bold uppercase text-slate-500 mb-2">Unidad de venta</label>
+                        <select
+                            id="unidad"
+                            name="unidad"
+                            value={formData.unidad}
+                            onChange={handleChange}
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                        >
+                            {UNIDADES.map((u) => (
+                                <option key={u.valor} value={u.valor}>
+                                    {u.nombre}
+                                </option>
+                            ))}
+                        </select>
+                        <p className="mt-1.5 text-xs text-slate-400">
+                            El precio se mostrará como "$ / {UNIDADES.find((u) => u.valor === formData.unidad)?.sufijo}".
+                        </p>
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-bold uppercase text-slate-500 mb-2">Stock disponible (en {UNIDADES.find((u) => u.valor === formData.unidad)?.plural})</label>
                         <input
                             type="number"
                             name="stock"

@@ -1,17 +1,9 @@
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import { Link } from "react-router-dom";
 import { esOferta, precioAntes, formatoPrecio } from "../utils/ofertas";
-
-// Datos fijos por ahora: la unidad no cambia el precio ni lo que se agrega al carrito
-const UNIDADES = [
-  { nombre: "Libra", sufijo: "lb" },
-  { nombre: "Kilo", sufijo: "kg" },
-  { nombre: "Bulto", sufijo: "bulto" },
-];
+import { obtenerUnidad } from "../utils/unidades";
 
 const Producto = ({ producto, agregarAlCarrito }) => {
-  const [unidad, setUnidad] = useState("Kilo");
-
   const handleAgregar = (e) => {
     e.preventDefault();
     if (producto.stock > 0) {
@@ -19,7 +11,9 @@ const Producto = ({ producto, agregarAlCarrito }) => {
     }
   };
 
-  const sufijoUnidad = UNIDADES.find((u) => u.nombre === unidad)?.sufijo;
+  // Unidad de venta definida al cargar el producto (kg, litro, docena...)
+  const unidad = obtenerUnidad(producto.unidad);
+  const sufijoUnidad = unidad.sufijo;
 
   const agotado = producto.stock <= 0;
   const pocasUnidades = producto.stock > 0 && producto.stock <= 5;
@@ -93,25 +87,6 @@ const Producto = ({ producto, agregarAlCarrito }) => {
 
       {/* Controles: fuera del Link para no navegar al tocarlos */}
       <div className="mt-auto flex flex-col gap-3 p-4 pt-3">
-        {/* Selector de unidad (visual por ahora) */}
-        <div className="flex flex-wrap gap-1.5">
-          {UNIDADES.map((u) => (
-            <button
-              key={u.nombre}
-              type="button"
-              aria-pressed={unidad === u.nombre}
-              onClick={() => setUnidad(u.nombre)}
-              className={`min-h-8 rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
-                unidad === u.nombre
-                  ? "border-[#14432F] bg-[#14432F] text-white"
-                  : "border-[#C9D6C0] bg-white text-[#17261D] hover:bg-[#EAF0E2]"
-              }`}
-            >
-              {u.nombre}
-            </button>
-          ))}
-        </div>
-
         <div className="flex items-baseline justify-between gap-2">
           <span className="flex flex-col">
             {antes && (

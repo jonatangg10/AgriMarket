@@ -11,16 +11,16 @@ import ImageCarousel from './components/ImageCarousel';
 import { CarritoContext } from "./context/CarritoContext";
 import Carrito from './components/Carrito';
 import Comprar from './components/Comprar';
+import CategoriasDestacadas from './components/CategoriasDestacadas';
 import { ChevronLeftIcon, ChevronRightIcon, AdjustmentsHorizontalIcon, ShoppingCartIcon, CreditCardIcon } from "@heroicons/react/24/outline";
 
 // Datos fijos por ahora (aún no existen en la BD)
 const CULTIVOS = ["Orgánico", "Cosechado hoy", "Compra por bulto"];
 
-const capitalizar = (texto) => texto.charAt(0).toUpperCase() + texto.slice(1);
 
 function App() {
   const {
-    categorias,
+    productos,
     categoriaSeleccionada,
     setCategoriaSeleccionada,
     carritoVisible,
@@ -191,7 +191,6 @@ function App() {
     irAProductos();
   };
 
-  const categoriasTiles = ["todos", ...categorias.filter((c) => c.toLowerCase() !== "todos")];
 
   const checkboxClass = "h-4 w-4 rounded border-[#C9D6C0] accent-[#14432F]";
   const paginaBtnClass =
@@ -217,39 +216,11 @@ function App() {
       <Toaster position="bottom-right" />
 
       {/* EXPLORA POR CATEGORÍA */}
-      <section id="categorias" className="mx-auto max-w-6xl px-4 pt-14">
-        <h2 className="mb-5 text-2xl font-extrabold tracking-tight text-[#17261D] sm:text-3xl">
-          Explora por categoría
-        </h2>
-
-        <div className="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-6">
-          {categoriasTiles.map((cat) => {
-            const activa = categoriaSeleccionada === cat;
-            return (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => seleccionarCategoria(cat)}
-                aria-pressed={activa}
-                className={`flex flex-col gap-2.5 rounded-2xl border bg-white p-4 text-left transition-all hover:shadow-sm ${
-                  activa ? "border-[#14432F] ring-2 ring-[#CFE7D6]" : "border-[#E1E8DA]"
-                }`}
-              >
-                <div
-                  className={`flex h-14 items-center justify-center rounded-xl text-xl font-extrabold ${
-                    activa ? "bg-[#14432F] text-white" : "bg-[#DCE6D3] text-[#14432F]"
-                  }`}
-                >
-                  {cat.charAt(0).toUpperCase()}
-                </div>
-                <span className="text-[15px] font-bold text-[#17261D]">
-                  {cat === "todos" ? "Todos" : capitalizar(cat)}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </section>
+      <CategoriasDestacadas
+        productos={productos}
+        seleccionada={categoriaSeleccionada}
+        onSeleccionar={seleccionarCategoria}
+      />
 
       {/* PRODUCTOS DE TEMPORADA */}
       <section id="productos" className="mx-auto max-w-6xl scroll-mt-[116px] px-4 pt-14 pb-4">

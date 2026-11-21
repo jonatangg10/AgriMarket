@@ -11,6 +11,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { CarritoContext } from "../context/CarritoContext";
 import { precioAntes, formatoPrecio } from "../utils/ofertas";
+import { sufijoUnidad } from "../utils/unidades";
 
 const obtenerUrlImagen = (ruta) => {
   if (!ruta) return "/images/placeholder.jpg";
@@ -110,7 +111,7 @@ const Carrito = ({ Eliminar, Agregar }) => {
 
                 <p className="mt-1 text-sm text-[#4F6355]">
                   {antes && <span className="mr-1.5 line-through">{formatoPrecio(antes)}</span>}
-                  <span className="font-medium text-[#17261D]">{formatoPrecio(item.precio)}</span> c/u
+                  <span className="font-medium text-[#17261D]">{formatoPrecio(item.precio)}</span> / {sufijoUnidad(item)}
                 </p>
 
                 <div className="mt-auto flex items-end justify-between gap-3 pt-3">
