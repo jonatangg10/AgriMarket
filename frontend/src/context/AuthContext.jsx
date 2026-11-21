@@ -1,27 +1,25 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [usuario, setUsuario] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
+// Lee la sesión guardada de forma síncrona para que esté disponible
+// desde el primer render (evita que PrivateRoute redirija a /login al refrescar).
+const getStoredUser = () => {
+  try {
     const storedUser = localStorage.getItem("usuario");
-
-    if (storedUser && storedUser !== "undefined") {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUsuario(parsedUser);
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error("Error al parsear usuario:", error);
-        localStorage.removeItem("usuario");
-      }
-    } else {
-      localStorage.removeItem("usuario");
+    if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
+      return JSON.parse(storedUser);
     }
-  }, []);
+  } catch (error) {
+    console.error("Error al parsear usuario:", error);
+  }
+  localStorage.removeItem("usuario");
+  return null;
+};
+
+export const AuthProvider = ({ children }) => {
+  const [usuario, setUsuario] = useState(getStoredUser);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => usuario !== null);
 
   const login = (userData) => {
     setUsuario(userData);

@@ -100,8 +100,24 @@ module.exports = (db, bcrypt) => {
     const {
       page = 1,
       pageSize = 10,
-      search = ''
+      search = '',
+      rol_id = '',
+      fecha_desde = '',
+      fecha_hasta = '',
+      sort_by = 'nombres',
+      sort_dir = 'asc'
     } = req.query;
+
+    // Lista blanca de columnas ordenables (evita inyección SQL en ORDER BY)
+    const columnasOrden = {
+      id: 'id',
+      nombres: 'nombres',
+      correo: 'correo',
+      rol_id: 'rol_id',
+      fecha_creacion: 'fecha_creacion'
+    };
+    const columnaOrden = columnasOrden[sort_by] || 'nombres';
+    const direccionOrden = String(sort_dir).toLowerCase() === 'desc' ? 'DESC' : 'ASC';
 
     const pageInt = Math.max(1, parseInt(page));
     const pageSizeInt = Math.min(50, Math.max(1, parseInt(pageSize)));
@@ -109,6 +125,22 @@ module.exports = (db, bcrypt) => {
 
     let sqlBase = `FROM usuarios WHERE 1=1`;
     const params = [];
+
+    if (rol_id) {
+      sqlBase += ` AND rol_id = ?`;
+      params.push(rol_id);
+    }
+
+    // Fechas en formato YYYY-MM-DD (input type="date")
+    if (fecha_desde) {
+      sqlBase += ` AND date(fecha_creacion) >= date(?)`;
+      params.push(fecha_desde);
+    }
+
+    if (fecha_hasta) {
+      sqlBase += ` AND date(fecha_creacion) <= date(?)`;
+      params.push(fecha_hasta);
+    }
 
     if (search) {
       sqlBase += `
@@ -142,7 +174,7 @@ module.exports = (db, bcrypt) => {
         fecha_creacion,
         num_documento
       ${sqlBase}
-      ORDER BY nombres ASC
+      ORDER BY ${columnaOrden} ${direccionOrden}, id ASC
       LIMIT ? OFFSET ?
     `;
 

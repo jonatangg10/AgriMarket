@@ -6,11 +6,21 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [loadingUsers, setLoadingUsers] = useState(false);
 
-  const obtenerUsuariosPaginados = async ({ page, pageSize, search = "" }) => {
+  const obtenerUsuariosPaginados = async ({ page, pageSize, search = "", rol_id = "", fecha_desde = "", fecha_hasta = "", sort_by = "", sort_dir = "" }) => {
     try {
       setLoadingUsers(true);
+      const queryParams = new URLSearchParams({
+        page,
+        pageSize,
+        search,
+        rol_id,
+        fecha_desde,
+        fecha_hasta,
+        sort_by,
+        sort_dir,
+      });
       const response = await fetch(
-        `https://agrimarket-yfbo.onrender.com/api/usuarios/paginados?page=${page}&pageSize=${pageSize}&search=${encodeURIComponent(search)}`
+        `https://agrimarket-yfbo.onrender.com/api/usuarios/paginados?${queryParams.toString()}`
       );
 
       if (!response.ok) throw new Error("Error al obtener usuarios");

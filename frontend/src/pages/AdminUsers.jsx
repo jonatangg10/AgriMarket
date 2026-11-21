@@ -4,6 +4,7 @@ import AdminLayout from "../components/AdminLayout";
 import { toast ,Toaster} from 'react-hot-toast';
 import { UserContext } from "../context/UserContext";
 import UserForm from "../components/UserForm";
+import SortableHeader from "../components/SortableHeader";
 
 import {
   PencilIcon,
@@ -30,6 +31,23 @@ const AdminUsers = () => {
 
   const [globalFilter, setGlobalFilter] = useState("");
 
+  const filtrosIniciales = { rol_id: "", fecha_desde: "", fecha_hasta: "" };
+  const [filtros, setFiltros] = useState(filtrosIniciales);
+
+  const cambiarFiltro = (campo, valor) => {
+    setFiltros((prev) => ({ ...prev, [campo]: valor }));
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  };
+
+  const hayFiltros =
+    globalFilter !== "" || Object.values(filtros).some((v) => v !== "");
+
+  const limpiarFiltros = () => {
+    setGlobalFilter("");
+    setFiltros(filtrosIniciales);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  };
+
   const [usuarioEditando, setUsuarioEditando] = useState(null);
 
   const [usuariosPaginados, setUsuariosPaginados] = useState([]);
@@ -41,11 +59,22 @@ const AdminUsers = () => {
     pageSize: 10,
   });
 
+  const [sorting, setSorting] = useState([]);
+
+  // Al cambiar el orden volvemos a la primera página
+  const handleSortingChange = (updater) => {
+    setSorting(updater);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  };
+
   const cargarUsuarios = async () => {
     const { usuarios, total } = await obtenerUsuariosPaginados({
       page: pagination.pageIndex + 1,
       pageSize: pagination.pageSize,
       search: globalFilter,
+      ...filtros,
+      sort_by: sorting[0]?.id || "",
+      sort_dir: sorting[0] ? (sorting[0].desc ? "desc" : "asc") : "",
     });
 
     setUsuariosPaginados(usuarios);
@@ -56,7 +85,7 @@ const AdminUsers = () => {
     if (vista === "tabla") {
       cargarUsuarios();
     }
-  }, [pagination, globalFilter, vista]);
+  }, [pagination, globalFilter, filtros, sorting, vista]);
 
   const handleCrearNuevo = () => {
     setUsuarioEditando(null);
@@ -112,16 +141,18 @@ const AdminUsers = () => {
         accessorKey: "rol_id", // <-- Cambiado a rol_id
         header: "Rol",
         cell: ({ getValue, row }) => {
-          const val = getValue() || row.original.rol;
-          const isAdmin = val === 1 || val === "admin";
+          const val = Number(getValue() || row.original.rol);
+          const roles = {
+            1: { label: "Admin", clase: "bg-purple-100 text-purple-700" },
+            2: { label: "Cliente", clase: "bg-blue-100 text-blue-700" },
+            3: { label: "Vendedor", clase: "bg-amber-100 text-amber-700" },
+          };
+          const rol = roles[val] || roles[2];
           return (
             <span
-              className={`px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${isAdmin
-                  ? "bg-purple-100 text-purple-700"
-                  : "bg-blue-100 text-blue-700"
-                }`}
+              className={`px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${rol.clase}`}
             >
-              {isAdmin ? "Admin" : "Cliente"}
+              {rol.label}
             </span>
           );
         },
@@ -170,13 +201,22 @@ const AdminUsers = () => {
 
     state: {
       pagination,
+      sorting,
     },
 
     onPaginationChange: setPagination,
 
+    onSortingChange: handleSortingChange,
+
     getCoreRowModel: getCoreRowModel(),
 
     manualPagination: true,
+
+    manualSorting: true,
+
+    enableMultiSort: false,
+
+    sortDescFirst: false,
 
     pageCount: Math.ceil(totalUsuarios / pagination.pageSize),
   });
@@ -217,23 +257,83 @@ const AdminUsers = () => {
 
             {/* Contenedor de la Tabla */}
             <div className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-slate-100">
-                <input
-                  type="text"
-                  placeholder="Buscar por nombre o correo..."
-                  value={globalFilter}
-                  onChange={(e) => {
-                    setGlobalFilter(e.target.value);
-                    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-                  }}
-                  className="w-full md:w-96 bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
-                />
+              <div className="p-6 border-b border-slate-100 flex flex-col lg:flex-row lg:flex-wrap lg:items-end gap-4">
+                <div className="flex flex-col gap-1 w-full lg:w-80">
+                  <label className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                    Buscar
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Nombre o correo..."
+                    value={globalFilter}
+                    onChange={(e) => {
+                      setGlobalFilter(e.target.value);
+                      setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+                    }}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1 w-full lg:w-48">
+                  <label className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                    Rol
+                  </label>
+                  <select
+                    value={filtros.rol_id}
+                    onChange={(e) => cambiarFiltro("rol_id", e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                  >
+                    <option value="">Todos los roles</option>
+                    <option value="1">Admin</option>
+                    <option value="2">Cliente</option>
+                    <option value="3">Vendedor</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-1 w-full lg:w-44">
+                  <label className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                    Registro desde
+                  </label>
+                  <input
+                    type="date"
+                    value={filtros.fecha_desde}
+                    max={filtros.fecha_hasta || undefined}
+                    onChange={(e) => cambiarFiltro("fecha_desde", e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1 w-full lg:w-44">
+                  <label className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                    Registro hasta
+                  </label>
+                  <input
+                    type="date"
+                    value={filtros.fecha_hasta}
+                    min={filtros.fecha_desde || undefined}
+                    onChange={(e) => cambiarFiltro("fecha_hasta", e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 transition-all"
+                  />
+                </div>
+
+                {hayFiltros && (
+                  <button
+                    onClick={limpiarFiltros}
+                    className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all"
+                  >
+                    Limpiar filtros
+                  </button>
+                )}
               </div>
 
               <div className="overflow-x-auto">
                 {loadingUsers ? (
                   <div className="py-16 text-center text-slate-500 font-medium">
                     Cargando usuarios...
+                  </div>
+                ) : usuariosPaginados.length === 0 ? (
+                  <div className="py-16 text-center text-slate-500 font-medium">
+                    No se encontraron usuarios con esos filtros.
                   </div>
                 ) : (
                   <table className="w-full text-left">
@@ -248,10 +348,7 @@ const AdminUsers = () => {
                               key={header.id}
                               className="px-6 py-4 text-[11px] font-extrabold uppercase tracking-wider text-slate-400"
                             >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
+                              <SortableHeader header={header} />
                             </th>
                           ))}
                         </tr>

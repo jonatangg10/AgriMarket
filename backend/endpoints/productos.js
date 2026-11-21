@@ -60,8 +60,26 @@ module.exports = (db) => {
       pageSize = 10,
       search = '',
       categoria = '',
-      usuario_id = ''
+      usuario_id = '',
+      estado_id = '',
+      stock = '',
+      precio_min = '',
+      precio_max = '',
+      sort_by = 'nombre',
+      sort_dir = 'asc'
     } = req.query;
+
+    // Lista blanca de columnas ordenables (evita inyección SQL en ORDER BY)
+    const columnasOrden = {
+      id: 'p.id',
+      nombre: 'p.nombre',
+      precio: 'p.precio',
+      stock: 'p.stock',
+      categoria: 'p.categoria',
+      estado_id: 'p.estado_id'
+    };
+    const columnaOrden = columnasOrden[sort_by] || 'p.nombre';
+    const direccionOrden = String(sort_dir).toLowerCase() === 'desc' ? 'DESC' : 'ASC';
 
     const pageInt = Math.max(1, parseInt(page));
     const pageSizeInt = Math.min(50, Math.max(1, parseInt(pageSize)));
@@ -90,7 +108,7 @@ module.exports = (db) => {
       JOIN estado e ON p.estado_id = e.id
       JOIN usuarios u ON p.usuario_id = u.id
       JOIN municipios m ON p.municipio_code = m.code
-      WHERE p.estado_id = 1 OR p.estado_id = 2
+      WHERE (p.estado_id = 1 OR p.estado_id = 2)
     `;
 
     const params = [];
@@ -110,7 +128,31 @@ module.exports = (db) => {
       params.push(usuario_id);
     }
 
-    const sqlPaginada = `${sql} ORDER BY p.nombre LIMIT ? OFFSET ?`;
+    if (estado_id) {
+      sql += ' AND p.estado_id = ?';
+      params.push(estado_id);
+    }
+
+    // stock: agotado (0), bajo (1-4), disponible (5+)
+    if (stock === 'agotado') {
+      sql += ' AND p.stock <= 0';
+    } else if (stock === 'bajo') {
+      sql += ' AND p.stock > 0 AND p.stock < 5';
+    } else if (stock === 'disponible') {
+      sql += ' AND p.stock >= 5';
+    }
+
+    if (precio_min !== '' && !isNaN(Number(precio_min))) {
+      sql += ' AND p.precio >= ?';
+      params.push(Number(precio_min));
+    }
+
+    if (precio_max !== '' && !isNaN(Number(precio_max))) {
+      sql += ' AND p.precio <= ?';
+      params.push(Number(precio_max));
+    }
+
+    const sqlPaginada = `${sql} ORDER BY ${columnaOrden} ${direccionOrden}, p.id ASC LIMIT ? OFFSET ?`;
     const sqlCount = `SELECT COUNT(*) AS total FROM (${sql})`;
 
     db.serialize(() => {
